@@ -1,6 +1,6 @@
 # Ambiance
 
-https://ambiance-fa477.web.app/
+www.ambiance.dev
 
 ## Available Scripts
 
