@@ -84,7 +84,7 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
   ambiances,
   fullscreen,
 }) => {
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [ytVideoShown, setYtVideoShown] = useState(true);
   const [currentAmbianceIndex, setCurrentAmbianceIndex] = useState<number>(
     getRandomAbianceIndex(ambiances, -1),
