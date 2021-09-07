@@ -40,6 +40,10 @@ export const worldOfWarcraft: Ambiance[] = [
     name: 'Undercity',
     code: 'WaG9K6Agx-0'
   },
+  {
+    name: 'Ironforge',
+    code: 'aFbCofgwdXo'
+  },
 
   // Races
   {
@@ -87,6 +91,10 @@ export const worldOfWarcraft: Ambiance[] = [
   {
     name: 'Jade Forest',
     code: 'nWcbYcU1eaQ'
+  },
+  {
+    name: 'Dun Morogh',
+    code: 'YfMn7UfZzGc'
   },
 
   // Raids
