@@ -16,6 +16,10 @@ const reactPlayerStyle: ReactPlayerProps['style'] = {
 const ReactPlayerContainer = styled.div<{ hidden: boolean; fullscreen: boolean }>`
   padding: ${({ fullscreen }) => (fullscreen ? '0' : '0 30px 0')};
 
+  @media (min-width: 1024px) {
+    padding: 0;
+  }
+
   ${(props) =>
     props.hidden
       ? css`
