@@ -11,10 +11,37 @@ export type Ambiance = {
 };
 
 export const worldOfWarcraft: Ambiance[] = [
+  // Cities
   {
-    name: 'Eastern Plaguelands',
-    code: 'rGiwjDZfW5s',
+    name: 'Stormwind',
+    code: 'roMWEeV2P4U'
   },
+  {
+    name: 'Orgrimmar',
+    code: 'L_QA-ZUAOHk'
+  },
+  {
+    name: 'Gilneas',
+    code: 'R8jsJQnKhMo'
+  },
+  {
+    name: 'Boralus',
+    code: 'K3hjVijzrtM'
+  },
+  {
+    name: 'Suramar',
+    code: 'ACgoXvkhlPE'
+  },
+  {
+    name: 'Dalaran (Broken Isles)',
+    code: '1hRjNoUl4WQ'
+  },
+  {
+    name: 'Undercity',
+    code: 'WaG9K6Agx-0'
+  },
+
+  // Races
   {
     name: 'Blood Elves',
     code: 'NLWRKwiG7lA',
@@ -23,9 +50,19 @@ export const worldOfWarcraft: Ambiance[] = [
     name: 'Draenei',
     code: 'eYfomyIugEQ'
   },
+
+  // Random locations
   {
-    name: 'Gilneas',
-    code: 'R8jsJQnKhMo'
+    name: 'Teldrassil',
+    code: 'BV-v9bdMQp0'
+  },
+  {
+    name: 'Ashenvale',
+    code: 'xTPn_Nk_KrM'
+  },
+  {
+    name: 'Eastern Plaguelands',
+    code: 'rGiwjDZfW5s',
   },
   {
     name: 'Grizzly Hills',
@@ -35,7 +72,42 @@ export const worldOfWarcraft: Ambiance[] = [
     name: 'Elwynn Forest',
     code: 'MW4fASDkQXA'
   },
-  { // TODO: Move to its own Overwatch section
+  {
+    name: 'Nagrand (Draenor)',
+    code: '0msy-ALryyw'
+  },
+  {
+    name: 'Kun-Lai Summit',
+    code: 'FIeql1dS2GM'
+  },
+  {
+    name: 'Valley of the Four Winds',
+    code: '50EOOzhovjg'
+  },
+  {
+    name: 'Jade Forest',
+    code: 'nWcbYcU1eaQ'
+  },
+
+  // Raids
+  {
+    name: 'Icecrown Citadel',
+    code: 'ne-JwpCXUbM'
+  },
+
+  // Taverns
+  {
+    name: 'Horde Taverns',
+    code: 'HrvA2eAHcJ4'
+  },
+  {
+    name: 'Alliance Taverns',
+    code: 'Oeo2VCCtUZQ'
+  },
+
+
+  // TODO: Move to its own Overwatch section
+  {
     name: 'Overwatch - Lofi',
     code: 'dp4miziEOvQ'
   }

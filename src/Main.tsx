@@ -11,7 +11,7 @@ export const Main: React.FC = () => {
 
   return (
     <FullScreen handle={fullscreen}>
-      <div id="MainContainer">
+      <div id="MainContainer" data-testid='main'>
         <GifBackground src={wowGif} show={true} />
         <MainControls fullscreen={fullscreen} />
         <YoutubePlayer ambiances={worldOfWarcraft} fullscreen={fullscreen} />

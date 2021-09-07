@@ -13,28 +13,30 @@ const reactPlayerStyle: ReactPlayerProps['style'] = {
   borderRadius: '8px',
 };
 
-const ReactPlayerContainer = styled.div<{hidden: boolean, fullscreen: boolean}>`
-  padding: ${({fullscreen}) => fullscreen ? '0' : '0 30px 0'};
+const ReactPlayerContainer = styled.div<{ hidden: boolean; fullscreen: boolean }>`
+  padding: ${({ fullscreen }) => (fullscreen ? '0' : '0 30px 0')};
 
-  ${props => props.hidden
-    ? css`
-      pointer-events: none;
-      user-select: none;
-      position: fixed;
-      top: 100%;
-      left: 100%;
-    ` : css`
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 0;
-      background: black;
-  `}
+  ${(props) =>
+    props.hidden
+      ? css`
+          pointer-events: none;
+          user-select: none;
+          position: fixed;
+          top: 100%;
+          left: 100%;
+        `
+      : css`
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 0;
+          background: black;
+        `}
 `;
 
 const InnerContainer = styled.div`
@@ -75,10 +77,13 @@ export const getRandomAbianceIndex = (arr: Ambiance[], currentIndex: number): nu
 
 type YoutubePlayerProps = {
   ambiances: Ambiance[];
-  fullscreen: FullScreenHandle
+  fullscreen: FullScreenHandle;
 };
 
-export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({ ambiances, fullscreen }) => {
+export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
+  ambiances,
+  fullscreen,
+}) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [ytVideoShown, setYtVideoShown] = useState(true);
   const [currentAmbianceIndex, setCurrentAmbianceIndex] = useState<number>(
@@ -100,14 +105,18 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({ ambiances, fullscr
 
   function handleBack() {
     if (currentAmbianceIndex === 0) {
-      setCurrentAmbianceIndex(ambiances.length - 1)
+      setCurrentAmbianceIndex(ambiances.length - 1);
     } else {
       setCurrentAmbianceIndex(currentAmbianceIndex - 1);
     }
   }
 
   function handleRestart() {
-    reactPlayerRef.current?.seekTo(1, 'seconds')
+    reactPlayerRef.current?.seekTo(1, 'seconds');
+  }
+
+  function handleOnReady() {
+    setIsPlaying(true);
   }
 
   function handleStarted() {
@@ -115,21 +124,21 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({ ambiances, fullscr
   }
 
   function handleFastForward() {
-    const nextTime = (currentTime || 0) + (60 * 10) // Add 10 minutes
+    const nextTime = (currentTime || 0) + 60 * 10; // Add 10 minutes
 
-    reactPlayerRef.current?.seekTo(nextTime, 'seconds')
+    reactPlayerRef.current?.seekTo(nextTime, 'seconds');
   }
 
   // TODO: Move this up to MainControls and use global state
   function toggleHide() {
-    setYtVideoShown(!ytVideoShown)
+    setYtVideoShown(!ytVideoShown);
   }
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isPlaying) {
       interval = setInterval(() => {
-        setCurrentTime(reactPlayerRef.current?.getCurrentTime())
+        setCurrentTime(reactPlayerRef.current?.getCurrentTime());
       }, 1000);
     } else if (!isPlaying && currentTime !== 0) {
       // @ts-ignore
@@ -151,7 +160,7 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({ ambiances, fullscr
             icon={isPlaying ? 'pause' : 'play'}
             onClick={() => setIsPlaying(!isPlaying)}
           />
-          <Button icon='fastForward' onClick={handleFastForward} />
+          <Button icon="fastForward" onClick={handleFastForward} />
           <Button icon="shuffle" onClick={handleShuffle} />
           <Button icon="back" onClick={handleBack} />
           <Button icon="skip" onClick={handleSkip} />
@@ -164,7 +173,9 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({ ambiances, fullscr
         <span style={{ color: 'white', fontSize: '20px' }}>
           {ambiances[currentAmbianceIndex].name}
           <br />
-          {!!currentTime && new Date(currentTime * 1000).toISOString().substr(11, 8)} / {!!totalTime && new Date(totalTime * 1000).toISOString().substr(11, 8)}
+          {!!currentTime &&
+            new Date(currentTime * 1000).toISOString().substr(11, 8)} /{' '}
+          {!!totalTime && new Date(totalTime * 1000).toISOString().substr(11, 8)}
         </span>
       </MediaControlContainer>
       <ReactPlayerContainer hidden={!ytVideoShown} fullscreen={fullscreen.active}>
@@ -184,14 +195,14 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({ ambiances, fullscr
               },
             }}
             playsinline={true}
-            // onReady={}
+            onReady={handleOnReady}
             // onError={}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
             // onBuffer={}
             // onBufferEnd={}
-            onStart={() => handleStarted()}
-            onEnded={() => handleShuffle()}
+            onStart={handleStarted}
+            onEnded={handleShuffle}
             ref={reactPlayerRef}
           />
         </InnerContainer>
