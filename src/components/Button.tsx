@@ -1,4 +1,5 @@
 import React from "react";
+// import ReactTooltip from "react-tooltip";
 import { Icon, IconName } from "./Icon";
 
 interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
@@ -16,8 +17,10 @@ export const Button: React.FC<ButtonProps> = ({
   text
 }) => {
   return (
-    // TODO: Maybe add tooltips?
+    <>
+      {/* {tooltip && <ReactTooltip place="top" type="dark" effect="solid"/>} */}
       <button
+        data-tip={tooltip}
         onClick={onClick}
         type="button"
         style={{
@@ -32,6 +35,7 @@ export const Button: React.FC<ButtonProps> = ({
         {icon && <Icon icon={icon} />}
         {text && <span style={{ marginLeft: 8 }}>{text}</span>}
       </button>
+    </>
   );
 }
 

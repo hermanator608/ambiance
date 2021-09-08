@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
 import styled, { css } from 'styled-components';
 import { Ambiance } from '../config/ambiance';
-import Button from './Button';
 import { ReactPlayerProps } from 'react-player';
 import { FullScreenHandle } from 'react-full-screen';
+import { FlexColumn } from '../globalStyles';
+import Button from './Button';
 
 const reactPlayerStyle: ReactPlayerProps['style'] = {
   pointerEvents: 'none',
@@ -82,20 +83,22 @@ const InnerContainer = styled.div`
 const MediaControlContainer = styled.div`
   z-index: 6;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   width: 100%;
 
   button {
-    margin-right: 15px;
+    margin-bottom: 25px;
+  }
+
+  @media (min-width: 500px) {
+    flex-direction: row;
+
+    button {
+      margin-bottom: 0;
+      margin-right: 20px;
+    }
   }
 `;
-
-const controlsButtonsStyle = {
-  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-};
 
 export const getRandomAbianceIndex = (arr: Ambiance[], currentIndex: number): number => {
   const randomIndex = Math.floor(Math.random() * arr.length);
@@ -178,36 +181,34 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
   }, [isPlaying, currentTime]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <MediaControlContainer>
-        <div style={controlsButtonsStyle}>
-          <Button
-            icon={isPlaying ? 'pause' : 'play'}
-            onClick={() => setIsPlaying(!isPlaying)}
-          />
-          <Button icon="fastForward" onClick={handleFastForward} />
-          <Button icon="shuffle" onClick={handleShuffle} />
-          <Button icon="back" onClick={handleBack} />
-          <Button icon="skip" onClick={handleSkip} />
-          <Button icon="restart" onClick={handleRestart} />
-          <Button icon="eye" onClick={toggleHide} />
-          {/* TODO: Maybe volume? */}
-        </div>
-      </MediaControlContainer>
-      <MediaControlContainer>
-        <span style={{ color: 'white', fontSize: '20px' }}>
-          {ambiances[currentAmbianceIndex].name}
-          <br />
-          {!!currentTime &&
-            new Date(currentTime * 1000).toISOString().substr(11, 8)} /{' '}
-          {!!totalTime && new Date(totalTime * 1000).toISOString().substr(11, 8)}
-        </span>
-      </MediaControlContainer>
+    <>
+      <FlexColumn>
+        <MediaControlContainer>
+          {/* <div style={controlsButtonsStyle}> */}
+            <Button
+              icon={isPlaying ? 'pause' : 'play'}
+              tooltip={isPlaying ? 'pause' : 'play'}
+              onClick={() => setIsPlaying(!isPlaying)}
+            />
+            <Button icon="fastForward" tooltip='Fast Forward 10m' onClick={handleFastForward} />
+            <Button icon="shuffle" tooltip='Shuffle' onClick={handleShuffle} />
+            <Button icon="back" tooltip='Back' onClick={handleBack} />
+            <Button icon="skip" tooltip='Skip' onClick={handleSkip} />
+            <Button icon="restart" tooltip='Restart' onClick={handleRestart} />
+            <Button icon="eye" tooltip='Hide Video' onClick={toggleHide} />
+            {/* TODO: Maybe volume? */}
+          {/* </div> */}
+        </MediaControlContainer>
+        <MediaControlContainer>
+          <span style={{ color: 'white', fontSize: '20px' }}>
+            {ambiances[currentAmbianceIndex].name}
+            <br />
+            {!!currentTime &&
+              new Date(currentTime * 1000).toISOString().substr(11, 8)} /{' '}
+            {!!totalTime && new Date(totalTime * 1000).toISOString().substr(11, 8)}
+          </span>
+        </MediaControlContainer>
+      </FlexColumn>
       <ReactPlayerContainer hidden={!ytVideoShown} fullscreen={fullscreen.active}>
         <InnerContainer>
           <ReactPlayer
@@ -237,6 +238,6 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
           />
         </InnerContainer>
       </ReactPlayerContainer>
-    </div>
+    </>
   );
 };
