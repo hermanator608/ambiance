@@ -13,13 +13,15 @@ const reactPlayerStyle: ReactPlayerProps['style'] = {
   borderRadius: '8px',
 };
 
+const commonStyles = css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+`
 const ReactPlayerContainer = styled.div<{ hidden: boolean; fullscreen: boolean }>`
-  padding: ${({ fullscreen }) => (fullscreen ? '0' : '0 30px 0')};
-
-  @media (min-width: 1024px) {
-    padding: 0;
-  }
-
   ${(props) =>
     props.hidden
       ? css`
@@ -40,18 +42,42 @@ const ReactPlayerContainer = styled.div<{ hidden: boolean; fullscreen: boolean }
           bottom: 0;
           z-index: 0;
           background: black;
-        `}
+  `}
+
+  iframe {
+    ${commonStyles}
+  }
 `;
 
 const InnerContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  ${commonStyles}
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
+
+  @media (min-aspect-ratio: 16/9) {
+    height: 300%;
+    top: -100%;
+  }
+  @media (max-aspect-ratio: 16/9) {
+    width: 300%;
+    left: -100%;
+  }
+
+  @media (max-width: 500px) {
+    width: 400%;
+    left: -150%;
+  }
 `;
+
+// TODO: Add inset shadow
+// const InsetShadow = styled.div`
+//   ${commonStyles}
+//   box-shadow: inset 0 0 50px #000000;
+//   z-index: 10;
+// `;
 
 const MediaControlContainer = styled.div`
   z-index: 6;

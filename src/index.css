@@ -13,20 +13,7 @@ code {
 }
 
 :root {
-  /* prettier-ignore */
-  --dim-green-glow: 0px 0px 1px hsl(120, 100%, 80%), 0px 0px 10px green;
-  /* prettier-ignore */
-  --green-glow-drop-shadow: drop-shadow(0px 0px 2px hsl(120, 100%, 80%)) drop-shadow(0px 0px 8px green);
-  /* prettier-ignore */
-  --red-glow-drop-shadow: drop-shadow(0px 0px 2px hsl(120, 100%, 80%)) drop-shadow(0px 0px 8px brown);
-  /* prettier-ignore */
-  --green-glow-small: 0px 0px 1px hsl(120, 100%, 80%), 0px 0px 2px hsl(120, 100%, 80%), 0px 0px 10px green;
-  /* prettier-ignore */
-  --green-glow: 0px 0px 2px hsl(120, 100%, 80%), 0px 0px 15px green, 0px 0px 60px green;
-  /* prettier-ignore */
-  --red-glow: 0px 0px 1px hsl(0, 100%, 80%), 0px 0px 2px hsl(0, 100%, 80%), 0px 0px 15px hsl(0, 100%, 50%), 0px 0px 60px red;
-  /* prettier-ignore */
-  --blue-glow: 0px 0px 1px hsl(192, 100%, 80%), 0px 0px 16px hsl(244, 90%, 49%), 0px 0px 30px hsl(244, 100%, 50%), 0px 0px 60px white;
+  --brown-glow-drop-shadow: drop-shadow(0px 0px 2px hsl(120, 100%, 80%)) drop-shadow(0px 0px 8px brown);
 }
 
 #MainContainer {
@@ -64,7 +51,7 @@ input {
   /* line-height: 1; */
   /* transform: translateZ(100px); */
   /* backface-visibility: hidden; */
-  filter: var(--red-glow-drop-shadow)
+  filter: var(--brown-glow-drop-shadow)
 }
 
 button,
