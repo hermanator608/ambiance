@@ -2,6 +2,7 @@ import React from 'react'
 import * as CSS from 'csstype'
 import Button from './Button';
 import { FullScreenHandle } from 'react-full-screen';
+import { logEventClickWrapper } from '../util/logEventClickWrapper';
 
 const controlStyle: CSS.Properties = {
   zIndex: 6,
@@ -22,10 +23,17 @@ type MainControlsProps = {
 }
 
 export const MainControls: React.FC<MainControlsProps> = ({fullscreen}) => {
+  const handleClick = logEventClickWrapper({
+    onClick: () => fullscreen.active ? fullscreen.exit() : fullscreen.enter(),
+    eventData: {
+      actionId: fullscreen.active?  'exitFullscreen' : 'enterFullscreen'
+    }
+  })
+
   return (
     <div style={controlStyle}>
       <div style={controlsButtonsStyle}>
-        <Button icon={'fullscreen'} onClick={() => fullscreen.active ? fullscreen.exit() : fullscreen.enter()} />
+        <Button icon='fullscreen' onClick={handleClick} />
       </div>
     </div>
   );

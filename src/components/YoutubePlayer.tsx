@@ -6,6 +6,7 @@ import { ReactPlayerProps } from 'react-player';
 import { FullScreenHandle } from 'react-full-screen';
 import { FlexColumn } from '../globalStyles';
 import Button from './Button';
+import { logEventClickWrapper } from '../util/logEventClickWrapper';
 
 const reactPlayerStyle: ReactPlayerProps['style'] = {
   pointerEvents: 'none',
@@ -180,6 +181,8 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
     return () => clearInterval(interval);
   }, [isPlaying, currentTime]);
 
+  const logData = { currentAmbiance: ambiances[currentAmbianceIndex].name }
+
   return (
     <>
       <FlexColumn>
@@ -188,14 +191,16 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
             <Button
               icon={isPlaying ? 'pause' : 'play'}
               tooltip={isPlaying ? 'pause' : 'play'}
-              onClick={() => setIsPlaying(!isPlaying)}
+              onClick={
+                logEventClickWrapper({eventData: { ...logData, actionId: isPlaying ? 'pause' : 'play' },  onClick: () => setIsPlaying(!isPlaying) })
+              }
             />
-            <Button icon="fastForward" tooltip='Fast Forward 10m' onClick={handleFastForward} />
-            <Button icon="shuffle" tooltip='Shuffle' onClick={handleShuffle} />
-            <Button icon="back" tooltip='Back' onClick={handleBack} />
-            <Button icon="skip" tooltip='Skip' onClick={handleSkip} />
-            <Button icon="restart" tooltip='Restart' onClick={handleRestart} />
-            <Button icon="eye" tooltip='Hide Video' onClick={toggleHide} />
+            <Button icon="fastForward" tooltip='Fast Forward 10m' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'fastForward' },  onClick: handleFastForward })} />
+            <Button icon="shuffle" tooltip='Shuffle' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'shuffle' },  onClick: handleShuffle })} />
+            <Button icon="back" tooltip='Back' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'back' },  onClick: handleBack })} />
+            <Button icon="skip" tooltip='Skip' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'skip' },  onClick: handleSkip })} />
+            <Button icon="restart" tooltip='Restart' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'restart' },  onClick: handleRestart })} />
+            <Button icon="eye" tooltip='Toggle Video' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'toggleVideo' },  onClick: toggleHide })} />
             {/* TODO: Maybe volume? */}
           {/* </div> */}
         </MediaControlContainer>
