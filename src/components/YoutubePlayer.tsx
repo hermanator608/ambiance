@@ -81,7 +81,7 @@ const InnerContainer = styled.div`
 //   z-index: 10;
 // `;
 
-const MediaControlContainer = styled.div`
+const MediaContainerBase = styled.div`
   z-index: 6;
   display: flex;
   flex-direction: column;
@@ -101,11 +101,17 @@ const MediaControlContainer = styled.div`
   }
 `;
 
-export const getRandomAbianceIndex = (arr: Ambiance[], currentIndex: number): number => {
+const MediaControlContainer = styled(MediaContainerBase)`
+  @media (max-width: 500px) {
+    width: 10%;
+  }
+`;
+
+export const getRandomAmbianceIndex = (arr: Ambiance[], currentIndex: number): number => {
   const randomIndex = Math.floor(Math.random() * arr.length);
 
   return randomIndex === currentIndex
-    ? getRandomAbianceIndex(arr, currentIndex)
+    ? getRandomAmbianceIndex(arr, currentIndex)
     : randomIndex;
 };
 
@@ -121,7 +127,7 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [ytVideoShown, setYtVideoShown] = useState(true);
   const [currentAmbianceIndex, setCurrentAmbianceIndex] = useState<number>(
-    getRandomAbianceIndex(ambiances, -1),
+    getRandomAmbianceIndex(ambiances, -1),
   );
   const [totalTime, setTotalTime] = useState<number | undefined>(0);
   const [currentTime, setCurrentTime] = useState<number | undefined>(0);
@@ -129,7 +135,7 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
   const reactPlayerRef = useRef<ReactPlayer>(null);
 
   const handleShuffle = useCallback(() => {
-    const randomAbianceIndex = getRandomAbianceIndex(ambiances, currentAmbianceIndex);
+    const randomAbianceIndex = getRandomAmbianceIndex(ambiances, currentAmbianceIndex);
     setCurrentAmbianceIndex(randomAbianceIndex);
   }, [currentAmbianceIndex, ambiances]);
 
@@ -204,7 +210,7 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
             {/* TODO: Maybe volume? */}
           {/* </div> */}
         </MediaControlContainer>
-        <MediaControlContainer>
+        <MediaContainerBase>
           <span style={{ color: 'white', fontSize: '20px' }}>
             {ambiances[currentAmbianceIndex].name}
             <br />
@@ -212,7 +218,7 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
               new Date(currentTime * 1000).toISOString().substr(11, 8)} /{' '}
             {!!totalTime && new Date(totalTime * 1000).toISOString().substr(11, 8)}
           </span>
-        </MediaControlContainer>
+        </MediaContainerBase>
       </FlexColumn>
       <ReactPlayerContainer hidden={!ytVideoShown} fullscreen={fullscreen.active}>
         <InnerContainer>

@@ -18,6 +18,11 @@ const firebaseConfig = {
 };
 
 export const initFirebase = (): void => {
+  // Do not start firebase in dev
+  if (process.env.NODE_ENV === 'development') {
+    return
+  }
+
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   // const analytics =
