@@ -118,11 +118,13 @@ export const getRandomAmbianceIndex = (arr: Ambiance[], currentIndex: number): n
 type YoutubePlayerProps = {
   ambiances: Ambiance[];
   fullscreen: FullScreenHandle;
+  toggleShow(): void;
 };
 
 export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
   ambiances,
   fullscreen,
+  toggleShow
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [ytVideoShown, setYtVideoShown] = useState(true);
@@ -171,6 +173,7 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
 
   // TODO: Move this up to MainControls and use global state
   function toggleHide() {
+    toggleShow()
     setYtVideoShown(!ytVideoShown);
   }
 
