@@ -1,12 +1,15 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import ReactPlayer from 'react-player/youtube';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import ReactPlayer, { YouTubePlayerProps as ReactPlayerYouTubeProps } from 'react-player/youtube';
 import styled, { css } from 'styled-components';
 import { Ambiance } from '../config/ambiance';
 import { ReactPlayerProps } from 'react-player';
 import { FullScreenHandle } from 'react-full-screen';
+import {Slider, SliderProps} from '@mui/material'
 import { FlexColumn } from '../globalStyles';
 import Button from './Button';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
+import debounce from 'lodash.debounce'
+import {DebouncedFunc} from 'lodash'
 
 const reactPlayerStyle: ReactPlayerProps['style'] = {
   pointerEvents: 'none',
@@ -48,6 +51,21 @@ const ReactPlayerContainer = styled.div<{ hidden: boolean; fullscreen: boolean }
 
   iframe {
     ${commonStyles}
+  }
+`;
+
+const VolumeSlider = styled(Slider)`
+  color: white;
+  width: 100%;
+  margin-top: 0;
+
+  @media (min-width: 500px) {
+    width: 400px;
+    margin-top: 12px;
+  }
+
+  h1 {
+    filter: none;
   }
 `;
 
@@ -126,7 +144,8 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
   fullscreen,
   toggleShow
 }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [volume, setVolume] = useState(1)
   const [ytVideoShown, setYtVideoShown] = useState(true);
   const [currentAmbianceIndex, setCurrentAmbianceIndex] = useState<number>(
     getRandomAmbianceIndex(ambiances, -1),
@@ -157,10 +176,6 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
     reactPlayerRef.current?.seekTo(1, 'seconds');
   }
 
-  function handleOnReady() {
-    setIsPlaying(true);
-  }
-
   function handleStarted() {
     setTotalTime(reactPlayerRef.current?.getDuration());
   }
@@ -177,18 +192,20 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
     setYtVideoShown(!ytVideoShown);
   }
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isPlaying) {
-      interval = setInterval(() => {
-        setCurrentTime(reactPlayerRef.current?.getCurrentTime());
-      }, 1000);
-    } else if (!isPlaying && currentTime !== 0) {
-      // @ts-ignore
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying, currentTime]);
+  const handleVolume: NonNullable<SliderProps['onChange']> = (_event, value) => {
+    console.log(value)
+    const newVolume = Array.isArray(value) ? value[0] : value
+    setVolume(newVolume)
+  }
+
+  const debounceVolumeHandler = useMemo<DebouncedFunc<NonNullable<SliderProps['onChange']>>>(
+    debounce(handleVolume, 300),
+    [handleVolume]
+  );
+
+  const handleOnProgress: ReactPlayerYouTubeProps['onProgress'] = (data) => {
+    setCurrentTime(data.playedSeconds);
+  }
 
   const logData = { currentAmbiance: ambiances[currentAmbianceIndex].name }
 
@@ -214,6 +231,18 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
           {/* </div> */}
         </MediaControlContainer>
         <MediaContainerBase>
+          <VolumeSlider
+            aria-label="Volume"
+            value={volume}
+            onChange={debounceVolumeHandler}
+            valueLabelDisplay="off"
+            step={.1}
+            marks
+            min={0}
+            max={1}
+          />
+        </MediaContainerBase>
+        <MediaContainerBase>
           <span style={{ color: 'white', fontSize: '20px' }}>
             {ambiances[currentAmbianceIndex].name}
             <br />
@@ -232,7 +261,7 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
             style={reactPlayerStyle}
             width="100vw"
             height="200vw"
-            // volume={playerVolume}
+            volume={volume}
             config={{
               playerVars: {
                 modestbranding: true,
@@ -240,14 +269,15 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
               },
             }}
             playsinline={true}
-            onReady={handleOnReady}
-            // onError={}
+            // onReady={handleOnReady}
+            // onError={} // TODO: Implement Error Handling
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
-            // onBuffer={}
-            // onBufferEnd={}
+            // onBuffer={() => setIsBuffering(true)}
+            // onBufferEnd={() => setIsBuffering(false)}
             onStart={handleStarted}
             onEnded={handleShuffle}
+            onProgress={handleOnProgress}
             ref={reactPlayerRef}
           />
         </InnerContainer>
