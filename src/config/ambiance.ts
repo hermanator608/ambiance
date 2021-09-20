@@ -70,7 +70,7 @@ export const worldOfWarcraft: Ambiance[] = [
   },
   {
     name: 'Revendreth',
-    code: 'zkH-vxrB58',
+    code: 'zkH-vxrB58w',
     group: 'Shadowlands',
   },
   {
