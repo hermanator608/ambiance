@@ -1,14 +1,15 @@
 import React from 'react'
 import * as CSS from 'csstype'
 import Button from './Button';
-import { FullScreenHandle } from 'react-full-screen';
+import { useFullScreenHandle } from 'react-full-screen';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
+import { Selector } from './Selector';
 
 const controlStyle: CSS.Properties = {
   zIndex: 6,
   display: 'flex',
   justifyContent: 'space-between',
-  alignItems: 'end',
+  alignItems: 'center',
   width: '100%'
 }
 
@@ -18,11 +19,9 @@ const controlsButtonsStyle = {
   alignItems: "center",
 };
 
-type MainControlsProps = {
-  fullscreen: FullScreenHandle
-}
+export const MainControls: React.FC = () => {
+  const fullscreen = useFullScreenHandle()
 
-export const MainControls: React.FC<MainControlsProps> = ({fullscreen}) => {
   const handleClick = logEventClickWrapper({
     onClick: () => fullscreen.active ? fullscreen.exit() : fullscreen.enter(),
     eventData: {
@@ -35,6 +34,7 @@ export const MainControls: React.FC<MainControlsProps> = ({fullscreen}) => {
       <div style={controlsButtonsStyle}>
         <Button icon='fullscreen' onClick={handleClick} />
       </div>
+      <Selector />
     </div>
   );
 };

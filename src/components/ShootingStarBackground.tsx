@@ -1,5 +1,7 @@
 import React from 'react'
+import { useRecoilState } from 'recoil';
 import styled, { css, keyframes } from 'styled-components';
+import { videoShownState } from '../state';
 
 const starsCount = 20
 
@@ -60,7 +62,7 @@ const NightFall = styled.div`
 
 function createShootingStartCSS() {
   let styles = '';
-  
+
   for (let i = 0; i < starsCount; i += 1) {
     const delay = Math.floor(Math.random() * 9999)
     const top = Math.floor(Math.random() * 400)
@@ -71,7 +73,7 @@ function createShootingStartCSS() {
         top: calc(50% - ${top - 200}px);
         left: calc(50% - ${left}px);
         animation-delay: ${delay}ms;
-        
+
         &::before,
         &::after {
           animation-delay: ${delay}ms;
@@ -92,7 +94,7 @@ const ShootingStar = styled.div`
   border-radius: 999px;
   filter: drop-shadow(0 0 6px rgba(105, 155, 255, 1));
   animation: ${tail} 3000ms ease-in-out infinite, ${shooting} 3000ms ease-in-out infinite;
-  
+
 
   ::before {
     content: '';
@@ -122,13 +124,9 @@ const ShootingStar = styled.div`
   ${createShootingStartCSS()}
 `;
 
-type BackgroundProps = {
-  show: boolean
-}
-
-
-export const ShootingStartBackground: React.FC<BackgroundProps> = ({ show }) => {
-  if (!show) return null;
+export const ShootingStartBackground: React.FC = () => {
+  const [videoShown] = useRecoilState(videoShownState);
+  if (videoShown) return null;
 
   const shootingStars: React.ReactElement[] = []
   for (let i = 0; i < starsCount; i++) {

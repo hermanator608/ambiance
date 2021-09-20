@@ -1,5 +1,5 @@
 {
-  "name": "chill",
+  "name": "ambiance",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -31,6 +31,7 @@
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
   },
   "scripts": {
+    "dev": "yarn start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

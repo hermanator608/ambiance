@@ -1,15 +1,18 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import ReactPlayer, { YouTubePlayerProps as ReactPlayerYouTubeProps } from 'react-player/youtube';
+import ReactPlayer, {
+  YouTubePlayerProps as ReactPlayerYouTubeProps,
+} from 'react-player/youtube';
 import styled, { css } from 'styled-components';
-import { Ambiance } from '../config/ambiance';
 import { ReactPlayerProps } from 'react-player';
-import { FullScreenHandle } from 'react-full-screen';
-import {Slider, SliderProps} from '@mui/material'
+import { useFullScreenHandle } from 'react-full-screen';
+import { Slider, SliderProps } from '@mui/material';
 import { FlexColumn } from '../globalStyles';
 import Button from './Button';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
-import debounce from 'lodash.debounce'
-import {DebouncedFunc} from 'lodash'
+import debounce from 'lodash.debounce';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { currentAmbianceCategoryState, currentAmbianceIndexState, videoShownState } from '../state';
+import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
 
 const reactPlayerStyle: ReactPlayerProps['style'] = {
   pointerEvents: 'none',
@@ -25,7 +28,7 @@ const commonStyles = css`
   width: 100%;
   height: 100%;
   pointer-events: none;
-`
+`;
 const ReactPlayerContainer = styled.div<{ hidden: boolean; fullscreen: boolean }>`
   ${(props) =>
     props.hidden
@@ -47,7 +50,7 @@ const ReactPlayerContainer = styled.div<{ hidden: boolean; fullscreen: boolean }
           bottom: 0;
           z-index: 0;
           background: black;
-  `}
+        `}
 
   iframe {
     ${commonStyles}
@@ -125,118 +128,146 @@ const MediaControlContainer = styled(MediaContainerBase)`
   }
 `;
 
-export const getRandomAmbianceIndex = (arr: Ambiance[], currentIndex: number): number => {
-  const randomIndex = Math.floor(Math.random() * arr.length);
 
-  return randomIndex === currentIndex
-    ? getRandomAmbianceIndex(arr, currentIndex)
-    : randomIndex;
-};
 
-type YoutubePlayerProps = {
-  ambiances: Ambiance[];
-  fullscreen: FullScreenHandle;
-  toggleShow(): void;
-};
-
-export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
-  ambiances,
-  fullscreen,
-  toggleShow
-}) => {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [volume, setVolume] = useState(1)
-  const [ytVideoShown, setYtVideoShown] = useState(true);
-  const [currentAmbianceIndex, setCurrentAmbianceIndex] = useState<number>(
-    getRandomAmbianceIndex(ambiances, -1),
+export const YoutubePlayer: React.FC = () => {
+  // Global State
+  const fullscreen = useFullScreenHandle();
+  const [videoShown, setVideoShown] = useRecoilState(videoShownState);
+  const [currentAmbianceIndex, setCurrentAmbianceIndex] = useRecoilState(
+    currentAmbianceIndexState(undefined),
   );
+  const ambiances = useRecoilValue(
+    currentAmbianceCategoryState
+  );
+
+  // Local State
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [volume, setVolume] = useState(1);
   const [totalTime, setTotalTime] = useState<number | undefined>(0);
   const [currentTime, setCurrentTime] = useState<number | undefined>(0);
 
   const reactPlayerRef = useRef<ReactPlayer>(null);
 
+  // Handlers
   const handleShuffle = useCallback(() => {
     const randomAbianceIndex = getRandomAmbianceIndex(ambiances, currentAmbianceIndex);
     setCurrentAmbianceIndex(randomAbianceIndex);
-  }, [currentAmbianceIndex, ambiances]);
+  }, [currentAmbianceIndex, setCurrentAmbianceIndex, ambiances]);
 
-  function handleSkip() {
+  const handleSkip = () => {
     setCurrentAmbianceIndex((currentAmbianceIndex + 1) % ambiances.length);
-  }
+  };
 
-  function handleBack() {
+  const handleBack = () => {
     if (currentAmbianceIndex === 0) {
       setCurrentAmbianceIndex(ambiances.length - 1);
     } else {
       setCurrentAmbianceIndex(currentAmbianceIndex - 1);
     }
-  }
+  };
 
-  function handleRestart() {
+  const handleRestart = () => {
     reactPlayerRef.current?.seekTo(1, 'seconds');
-  }
+  };
 
-  function handleStarted() {
+  const handleStarted = () => {
     setTotalTime(reactPlayerRef.current?.getDuration());
-  }
+  };
 
-  function handleFastForward() {
+  const handleFastForward = () => {
     const nextTime = (currentTime || 0) + 60 * 10; // Add 10 minutes
 
     reactPlayerRef.current?.seekTo(nextTime, 'seconds');
-  }
+  };
 
-  // TODO: Move this up to MainControls and use global state
-  function toggleHide() {
-    toggleShow()
-    setYtVideoShown(!ytVideoShown);
-  }
+  const debounceVolumeHandler = useMemo(() => {
+    const handleVolume: NonNullable<SliderProps['onChange']> = (_event, value) => {
+      const newVolume = Array.isArray(value) ? value[0] : value;
+      console.log(newVolume);
+      setVolume(newVolume);
+    };
 
-  const handleVolume: NonNullable<SliderProps['onChange']> = (_event, value) => {
-    console.log(value)
-    const newVolume = Array.isArray(value) ? value[0] : value
-    setVolume(newVolume)
-  }
-
-  const debounceVolumeHandler = useMemo<DebouncedFunc<NonNullable<SliderProps['onChange']>>>(
-    debounce(handleVolume, 300),
-    [handleVolume]
-  );
+    return debounce(handleVolume, 100);
+  }, [setVolume]);
 
   const handleOnProgress: ReactPlayerYouTubeProps['onProgress'] = (data) => {
     setCurrentTime(data.playedSeconds);
-  }
+  };
 
-  const logData = { currentAmbiance: ambiances[currentAmbianceIndex].name }
+  const logData = { currentAmbiance: ambiances[currentAmbianceIndex].name };
 
   return (
     <>
       <FlexColumn>
         <MediaControlContainer>
           {/* <div style={controlsButtonsStyle}> */}
-            <Button
-              icon={isPlaying ? 'pause' : 'play'}
-              tooltip={isPlaying ? 'pause' : 'play'}
-              onClick={
-                logEventClickWrapper({eventData: { ...logData, actionId: isPlaying ? 'pause' : 'play' },  onClick: () => setIsPlaying(!isPlaying) })
-              }
-            />
-            <Button icon="fastForward" tooltip='Fast Forward 10m' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'fastForward' },  onClick: handleFastForward })} />
-            <Button icon="shuffle" tooltip='Shuffle' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'shuffle' },  onClick: handleShuffle })} />
-            <Button icon="back" tooltip='Back' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'back' },  onClick: handleBack })} />
-            <Button icon="skip" tooltip='Skip' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'skip' },  onClick: handleSkip })} />
-            <Button icon="restart" tooltip='Restart' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'restart' },  onClick: handleRestart })} />
-            <Button icon="eye" tooltip='Toggle Video' onClick={logEventClickWrapper({eventData: { ...logData, actionId: 'toggleVideo' },  onClick: toggleHide })} />
-            {/* TODO: Maybe volume? */}
+          <Button
+            icon={isPlaying ? 'pause' : 'play'}
+            tooltip={isPlaying ? 'pause' : 'play'}
+            onClick={logEventClickWrapper({
+              eventData: { ...logData, actionId: isPlaying ? 'pause' : 'play' },
+              onClick: () => setIsPlaying(!isPlaying),
+            })}
+          />
+          <Button
+            icon="fastForward"
+            tooltip="Fast Forward 10m"
+            onClick={logEventClickWrapper({
+              eventData: { ...logData, actionId: 'fastForward' },
+              onClick: handleFastForward,
+            })}
+          />
+          <Button
+            icon="shuffle"
+            tooltip="Shuffle"
+            onClick={logEventClickWrapper({
+              eventData: { ...logData, actionId: 'shuffle' },
+              onClick: handleShuffle,
+            })}
+          />
+          <Button
+            icon="back"
+            tooltip="Back"
+            onClick={logEventClickWrapper({
+              eventData: { ...logData, actionId: 'back' },
+              onClick: handleBack,
+            })}
+          />
+          <Button
+            icon="skip"
+            tooltip="Skip"
+            onClick={logEventClickWrapper({
+              eventData: { ...logData, actionId: 'skip' },
+              onClick: handleSkip,
+            })}
+          />
+          <Button
+            icon="restart"
+            tooltip="Restart"
+            onClick={logEventClickWrapper({
+              eventData: { ...logData, actionId: 'restart' },
+              onClick: handleRestart,
+            })}
+          />
+          <Button
+            icon="eye"
+            tooltip="Toggle Video"
+            onClick={logEventClickWrapper({
+              eventData: { ...logData, actionId: 'toggleVideo' },
+              onClick: () => setVideoShown(!videoShown),
+            })}
+          />
+          {/* TODO: Maybe volume? */}
           {/* </div> */}
         </MediaControlContainer>
         <MediaContainerBase>
           <VolumeSlider
+            defaultValue={1}
             aria-label="Volume"
-            value={volume}
             onChange={debounceVolumeHandler}
             valueLabelDisplay="off"
-            step={.1}
+            step={0.1}
             marks
             min={0}
             max={1}
@@ -252,7 +283,7 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
           </span>
         </MediaContainerBase>
       </FlexColumn>
-      <ReactPlayerContainer hidden={!ytVideoShown} fullscreen={fullscreen.active}>
+      <ReactPlayerContainer hidden={!videoShown} fullscreen={fullscreen.active}>
         <InnerContainer>
           <ReactPlayer
             controls={false}
@@ -285,3 +316,5 @@ export const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
     </>
   );
 };
+
+// TODO: Hide controls after a certain amount of time? Come back after mouse move

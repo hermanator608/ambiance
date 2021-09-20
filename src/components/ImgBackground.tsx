@@ -1,11 +1,11 @@
 import React from 'react'
 
-type GifBackgroundProps = {
+type ImgBackgroundProps = {
   show: boolean
   src: string
 }
 
-export const GifBackground: React.FC<GifBackgroundProps> = ({ show, src }) => {
+export const ImgBackground: React.FC<ImgBackgroundProps> = ({ show, src }) => {
   if (!show) return null;
   return (
     <img
