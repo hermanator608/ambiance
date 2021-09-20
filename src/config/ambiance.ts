@@ -181,6 +181,11 @@ export const worldOfWarcraft: Ambiance[] = [
     code: 'Oeo2VCCtUZQ',
     group: 'Miscellaneous',
   },
+  {
+    name: 'Livestream',
+    code: '2j0OPN3-u3s',
+    group: 'Miscellaneous'
+  },
 
   // TODO: Move to its own Overwatch section
   {
