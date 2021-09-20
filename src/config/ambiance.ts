@@ -28,11 +28,7 @@ export const worldOfWarcraft: Ambiance[] = [
     code: 'R8jsJQnKhMo',
     group: 'Eastern Kingdoms',
   },
-  {
-    name: 'Boralus',
-    code: 'K3hjVijzrtM',
-    group: 'Kul Tiras',
-  },
+
   {
     name: 'Suramar',
     code: 'ACgoXvkhlPE',
@@ -54,6 +50,50 @@ export const worldOfWarcraft: Ambiance[] = [
     group: 'Eastern Kingdoms',
   },
 
+  // Battle For Azeroth
+  {
+    name: 'Boralus',
+    code: 'K3hjVijzrtM',
+    group: 'Kul Tiras',
+  },
+
+  // Shadowlands
+  {
+    name: 'Bastion',
+    code: 'skLxajC4nyk',
+    group: 'Shadowlands',
+  },
+  {
+    name: 'Ardenweald',
+    code: 'OwmMI3TjXj0',
+    group: 'Shadowlands',
+  },
+  {
+    name: 'Revendreth',
+    code: 'zkH-vxrB58',
+    group: 'Shadowlands',
+  },
+  {
+    name: 'Maldraxxus',
+    code: 'YYT83lM47yk',
+    group: 'Shadowlands',
+  },
+  {
+    name: 'Oribos',
+    code: 'PtrhE4z9leU',
+    group: 'Shadowlands',
+  },
+  {
+    name: 'The Maw',
+    code: 'gvcFcZDhg-I',
+    group: 'Shadowlands'
+  },
+  {
+    name: 'Korthia',
+    code: 't_Z75KVAl4Y',
+    group: 'Shadowlands'
+  },
+
   // Races
   {
     name: 'Blood Elves',
@@ -67,6 +107,11 @@ export const worldOfWarcraft: Ambiance[] = [
   },
 
   // Random locations
+  {
+    name: 'Tirisfal Glades (Rain)',
+    code: 'b02OhyWNZv8',
+    group: 'Eastern Kingdoms'
+  },
   {
     name: 'Teldrassil',
     code: 'BV-v9bdMQp0',
