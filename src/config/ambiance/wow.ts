@@ -1,15 +1,4 @@
-// export const ambiances = [
-//   {
-//     name: "World of Warcraft - Lofi"
-//   }
-// ]
-
-export type Ambiance = {
-  name: string;
-  code: string;
-  group: string;
-  segments?: number[]; // TODO: If video has chapters
-};
+import { Ambiance } from "./ambiance";
 
 export const worldOfWarcraft: Ambiance[] = [
   // Cities
@@ -185,12 +174,5 @@ export const worldOfWarcraft: Ambiance[] = [
     name: 'Livestream',
     code: '2j0OPN3-u3s',
     group: 'Miscellaneous'
-  },
-
-  // TODO: Move to its own Overwatch section
-  {
-    name: 'Overwatch - Lofi',
-    code: 'dp4miziEOvQ',
-    group: 'Overwatch',
   },
 ];

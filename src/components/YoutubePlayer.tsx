@@ -29,6 +29,7 @@ const commonStyles = css`
   height: 100%;
   pointer-events: none;
 `;
+
 const ReactPlayerContainer = styled.div<{ hidden: boolean; fullscreen: boolean }>`
   ${(props) =>
     props.hidden
@@ -296,6 +297,9 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
               playerVars: {
                 modestbranding: true,
                 color: 'black',
+                onUnstarted: () => {
+                  console.error('Failed to auto-start')
+                }
               },
             }}
             playsinline={true}

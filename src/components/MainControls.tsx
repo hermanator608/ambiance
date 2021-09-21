@@ -4,6 +4,10 @@ import Button from './Button';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import { Selector } from './Selector';
 import { FullScreenHandle } from 'react-full-screen';
+import { useRecoilState } from 'recoil';
+import { currentAmbianceCategoryState, currentAmbianceIndexState } from '../state';
+import { worldOfWarcraft, lofi, Ambiance } from '../config/ambiance';
+import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
 
 const controlStyle: CSS.Properties = {
   zIndex: 6,
@@ -15,11 +19,17 @@ const controlStyle: CSS.Properties = {
 
 const controlsButtonsStyle = {
   display: "flex",
-  justifyContent: "flex-end",
+  justifyContent: "space-between",
   alignItems: "center",
+  
 };
 
 export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscreen}) => {
+  const [currentAmbianceIndex, setCurrentAmbianceIndex] = useRecoilState(
+    currentAmbianceIndexState(undefined),
+  );
+  const [, setCurrentAmbianceCategoryState] = useRecoilState(currentAmbianceCategoryState)
+
   const handleClick = logEventClickWrapper({
     onClick: () => fullscreen.active ? fullscreen.exit() : fullscreen.enter(),
     eventData: {
@@ -27,12 +37,41 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
     }
   })
 
+  const handleCategoryChanger = (category: Ambiance[]) => {
+    setCurrentAmbianceCategoryState(category)
+    setCurrentAmbianceIndex(getRandomAmbianceIndex(category, currentAmbianceIndex))
+  }
+
   return (
     <div style={controlStyle}>
       <div style={controlsButtonsStyle}>
         <Button icon='fullscreen' onClick={handleClick} />
       </div>
-      <Selector />
+      <div style={controlsButtonsStyle}>
+        <Button 
+          icon='wow'
+          onClick={
+            logEventClickWrapper({
+              onClick: () => handleCategoryChanger(worldOfWarcraft),
+              eventData: {
+                actionId: 'wowCategory'
+              }
+            })
+          }
+        />
+        <Button 
+          icon='lofi'
+          onClick={
+            logEventClickWrapper({
+              onClick: () => handleCategoryChanger(lofi),
+              eventData: {
+                actionId: 'lofiCategory'
+              }
+            })
+          }
+        />
+        <Selector />
+      </div>
     </div>
   );
 };

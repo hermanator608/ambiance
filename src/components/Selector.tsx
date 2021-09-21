@@ -3,7 +3,7 @@ import React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { currentAmbianceCategoryState, currentAmbianceIndexState } from '../state';
 import { UseAutocompleteProps } from '@mui/core';
 
@@ -23,7 +23,7 @@ export const Selector: React.FC = () => {
   const ambiances = useRecoilValue(
     currentAmbianceCategoryState
   );
-  const setCurrentAmbianceIndex = useSetRecoilState(currentAmbianceIndexState(undefined));
+  const [currentAmbianceIndex, setCurrentAmbianceIndex] = useRecoilState(currentAmbianceIndexState(undefined));
   const matches = useMediaQuery('(min-width:500px)');
 
   const options = ambiances.map<Option>((a, index) => ({
@@ -48,6 +48,7 @@ export const Selector: React.FC = () => {
   return (
     <Wrapper>
       <Autocomplete
+        value={options[currentAmbianceIndex]}
         options={options.sort((a, b) => -b.group.localeCompare(a.group))}
         groupBy={(option) => option.group}
         getOptionLabel={(option) => option.title}

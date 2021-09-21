@@ -11,7 +11,7 @@ export const videoShownState = atom({
 
 export const currentAmbianceCategoryState = atom({
   key: "currentAmbianceCategory",
-  default: worldOfWarcraft
+  default: worldOfWarcraft,
 });
 
 export const currentAmbianceIndexState = atomFamily({
