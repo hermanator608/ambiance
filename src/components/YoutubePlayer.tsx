@@ -4,7 +4,7 @@ import ReactPlayer, {
 } from 'react-player/youtube';
 import styled, { css } from 'styled-components';
 import { ReactPlayerProps } from 'react-player';
-import { useFullScreenHandle } from 'react-full-screen';
+import { FullScreenHandle } from 'react-full-screen';
 import { Slider, SliderProps } from '@mui/material';
 import { FlexColumn } from '../globalStyles';
 import Button from './Button';
@@ -130,9 +130,8 @@ const MediaControlContainer = styled(MediaContainerBase)`
 
 
 
-export const YoutubePlayer: React.FC = () => {
+export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscreen}) => {
   // Global State
-  const fullscreen = useFullScreenHandle();
   const [videoShown, setVideoShown] = useRecoilState(videoShownState);
   const [currentAmbianceIndex, setCurrentAmbianceIndex] = useRecoilState(
     currentAmbianceIndexState(undefined),

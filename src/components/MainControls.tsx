@@ -1,9 +1,9 @@
 import React from 'react'
 import * as CSS from 'csstype'
 import Button from './Button';
-import { useFullScreenHandle } from 'react-full-screen';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import { Selector } from './Selector';
+import { FullScreenHandle } from 'react-full-screen';
 
 const controlStyle: CSS.Properties = {
   zIndex: 6,
@@ -19,9 +19,7 @@ const controlsButtonsStyle = {
   alignItems: "center",
 };
 
-export const MainControls: React.FC = () => {
-  const fullscreen = useFullScreenHandle()
-
+export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscreen}) => {
   const handleClick = logEventClickWrapper({
     onClick: () => fullscreen.active ? fullscreen.exit() : fullscreen.enter(),
     eventData: {

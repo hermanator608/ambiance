@@ -11,8 +11,8 @@ export const Main: React.FC = () => {
     <FullScreen handle={fullscreen}>
       <div id="MainContainer" data-testid='main'>
         <ShootingStartBackground />
-        <MainControls />
-        <YoutubePlayer />
+        <MainControls fullscreen={fullscreen} />
+        <YoutubePlayer fullscreen={fullscreen} />
       </div>
     </FullScreen>
   );
