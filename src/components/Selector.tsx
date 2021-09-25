@@ -8,9 +8,10 @@ import { currentAmbianceCategoryState, currentAmbianceIndexState } from '../stat
 import { UseAutocompleteProps } from '@mui/core';
 
 const Wrapper = styled.div`
+  z-index: 6;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
+  margin-bottom: 20px;
 
   fieldset:hover {
     border-color: #2196f3 !important;

@@ -2,12 +2,13 @@ import React from 'react'
 import * as CSS from 'csstype'
 import Button from './Button';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
-import { Selector } from './Selector';
 import { FullScreenHandle } from 'react-full-screen';
 import { useRecoilState } from 'recoil';
 import { currentAmbianceCategoryState, currentAmbianceIndexState } from '../state';
 import { worldOfWarcraft, lofi, Ambiance } from '../config/ambiance';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
+import { lotr } from '../config/ambiance/lotr';
+import { zelda } from '../config/ambiance/zelda';
 
 const controlStyle: CSS.Properties = {
   zIndex: 6,
@@ -60,6 +61,28 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
           }
         />
         <Button 
+          icon='lotr'
+          onClick={
+            logEventClickWrapper({
+              onClick: () => handleCategoryChanger(lotr),
+              eventData: {
+                actionId: 'wowCategory'
+              }
+            })
+          }
+        />
+        <Button 
+          icon='zelda'
+          onClick={
+            logEventClickWrapper({
+              onClick: () => handleCategoryChanger(zelda),
+              eventData: {
+                actionId: 'wowCategory'
+              }
+            })
+          }
+        />
+        <Button 
           icon='lofi'
           onClick={
             logEventClickWrapper({
@@ -70,7 +93,6 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
             })
           }
         />
-        <Selector />
       </div>
     </div>
   );

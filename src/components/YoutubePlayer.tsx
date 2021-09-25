@@ -129,8 +129,6 @@ const MediaControlContainer = styled(MediaContainerBase)`
   }
 `;
 
-
-
 export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscreen}) => {
   // Global State
   const [videoShown, setVideoShown] = useRecoilState(videoShownState);
@@ -275,8 +273,6 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
         </MediaContainerBase>
         <MediaContainerBase>
           <span style={{ color: 'white', fontSize: '20px' }}>
-            {ambiances[currentAmbianceIndex].name}
-            <br />
             {!!currentTime &&
               new Date(currentTime * 1000).toISOString().substr(11, 8)} /{' '}
             {!!totalTime && new Date(totalTime * 1000).toISOString().substr(11, 8)}

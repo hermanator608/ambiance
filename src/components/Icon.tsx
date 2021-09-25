@@ -1,8 +1,10 @@
 import React from "react";
 import styled from 'styled-components'
-import { FaExpandAlt, FaEye, FaForward, FaPause, FaPlay, FaRandom, FaStepBackward, FaStepForward, FaUndo } from "react-icons/fa";
-import lofi from '../images/lofi.png'
-import wow from '../images/wow.png'
+import { FaExpandAlt, FaEye, FaForward, FaPause, FaPlay, FaRandom, FaStepBackward, FaStepForward, FaUndo, FaInfoCircle, FaSpinner } from "react-icons/fa";
+import lofi from '../images/lofi.png';
+import wow from '../images/wow.png';
+import lotr from '../images/lotr.png';
+import zelda from '../images/zelda.png';
 
 // https://react-icons.github.io/react-icons/icons?name=fa
 const IconMap = {
@@ -14,18 +16,22 @@ const IconMap = {
   'shuffle': FaRandom,
   'fullscreen': FaExpandAlt,
   'eye': FaEye,
-  'fastForward': FaForward
+  'fastForward': FaForward,
+  'info': FaInfoCircle,
+  'spinner': FaSpinner
 }
 
 const ImgMap = {
   'wow': wow,
-  'lofi': lofi
+  'lofi': lofi,
+  'lotr': lotr,
+  'zelda': zelda
 }
 
 const size = 30
 
 const CustomImg = styled.img`
-  width: ${size}px;
+  /* width: ${size}px; */
   height: ${size}px;
 `;
 
