@@ -7,12 +7,14 @@ import { ReactPlayerProps } from 'react-player';
 import { FullScreenHandle } from 'react-full-screen';
 import { Slider, SliderProps } from '@mui/material';
 import { FlexColumn } from '../globalStyles';
+import {Icon} from './Icon'
 import Button from './Button';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import debounce from 'lodash.debounce';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { currentAmbianceCategoryState, currentAmbianceIndexState, videoShownState } from '../state';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
+import { DotDotDot } from './DotDotDot';
 
 const reactPlayerStyle: ReactPlayerProps['style'] = {
   pointerEvents: 'none',
@@ -96,13 +98,6 @@ const InnerContainer = styled.div`
   }
 `;
 
-// TODO: Add inset shadow
-// const InsetShadow = styled.div`
-//   ${commonStyles}
-//   box-shadow: inset 0 0 50px #000000;
-//   z-index: 10;
-// `;
-
 const MediaContainerBase = styled.div`
   z-index: 6;
   display: flex;
@@ -129,6 +124,15 @@ const MediaControlContainer = styled(MediaContainerBase)`
   }
 `;
 
+const CenteredDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const MarginDiv = styled.div`
+  margin-right: 12px;
+`;
+
 export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscreen}) => {
   // Global State
   const [videoShown, setVideoShown] = useRecoilState(videoShownState);
@@ -146,6 +150,8 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
   const [currentTime, setCurrentTime] = useState<number | undefined>(0);
 
   const reactPlayerRef = useRef<ReactPlayer>(null);
+
+  const currentAmbiance = ambiances[currentAmbianceIndex]
 
   // Handlers
   const handleShuffle = useCallback(() => {
@@ -166,7 +172,7 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
   };
 
   const handleRestart = () => {
-    reactPlayerRef.current?.seekTo(1, 'seconds');
+    reactPlayerRef.current?.seekTo(currentAmbiance.startTimeS || 1, 'seconds');
   };
 
   const handleStarted = () => {
@@ -193,7 +199,11 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
     setCurrentTime(data.playedSeconds);
   };
 
-  const logData = { currentAmbiance: ambiances[currentAmbianceIndex].name };
+  const logData = { currentAmbiance: currentAmbiance.name };
+  let url = `https://www.youtube.com/embed/${currentAmbiance.code}`;
+  if (!currentAmbiance.livestream || !!currentAmbiance.startTimeS) {
+    url += `?start=${currentAmbiance.startTimeS || 1}`
+  }
 
   return (
     <>
@@ -208,14 +218,16 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
               onClick: () => setIsPlaying(!isPlaying),
             })}
           />
-          <Button
-            icon="fastForward"
-            tooltip="Fast Forward 10m"
-            onClick={logEventClickWrapper({
-              eventData: { ...logData, actionId: 'fastForward' },
-              onClick: handleFastForward,
-            })}
-          />
+          {!currentAmbiance.livestream &&
+            <Button
+              icon="fastForward"
+              tooltip="Fast Forward 10m"
+              onClick={logEventClickWrapper({
+                eventData: { ...logData, actionId: 'fastForward' },
+                onClick: handleFastForward,
+              })}
+            />
+          }
           <Button
             icon="shuffle"
             tooltip="Shuffle"
@@ -240,14 +252,16 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
               onClick: handleSkip,
             })}
           />
-          <Button
-            icon="restart"
-            tooltip="Restart"
-            onClick={logEventClickWrapper({
-              eventData: { ...logData, actionId: 'restart' },
-              onClick: handleRestart,
-            })}
+          {!currentAmbiance.livestream &&
+            <Button
+              icon="restart"
+              tooltip="Restart"
+              onClick={logEventClickWrapper({
+                eventData: { ...logData, actionId: 'restart' },
+                onClick: handleRestart,
+              })}
           />
+          }
           <Button
             icon="eye"
             tooltip="Toggle Video"
@@ -273,9 +287,18 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
         </MediaContainerBase>
         <MediaContainerBase>
           <span style={{ color: 'white', fontSize: '20px' }}>
-            {!!currentTime &&
-              new Date(currentTime * 1000).toISOString().substr(11, 8)} /{' '}
-            {!!totalTime && new Date(totalTime * 1000).toISOString().substr(11, 8)}
+            {currentAmbiance.livestream 
+              ? <CenteredDiv>
+                  <MarginDiv>
+                    <Icon icon='live' />
+                  </MarginDiv>
+                  Live Stream <DotDotDot />
+                </CenteredDiv>
+              : <>
+                  {!!currentTime && new Date(currentTime * 1000).toISOString().substr(11, 8)} /{' '}
+                  {!!totalTime && new Date(totalTime * 1000).toISOString().substr(11, 8)}
+                </>
+            }
           </span>
         </MediaContainerBase>
       </FlexColumn>
@@ -284,7 +307,7 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
           <ReactPlayer
             controls={false}
             playing={isPlaying}
-            url={`https://www.youtube.com/embed/${ambiances[currentAmbianceIndex].code}?start=1`}
+            url={url}
             style={reactPlayerStyle}
             width="100vw"
             height="200vw"

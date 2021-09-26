@@ -66,7 +66,7 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
             logEventClickWrapper({
               onClick: () => handleCategoryChanger(lotr),
               eventData: {
-                actionId: 'wowCategory'
+                actionId: 'lotrCategory'
               }
             })
           }
@@ -77,7 +77,7 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
             logEventClickWrapper({
               onClick: () => handleCategoryChanger(zelda),
               eventData: {
-                actionId: 'wowCategory'
+                actionId: 'zeldaCategory'
               }
             })
           }

@@ -4,7 +4,8 @@ export const zelda: Ambiance[] = [
   {
     name: 'Rainy Towns',
     code: 'usqdhf51lOI',
-    group: 'BotW'
+    group: 'BotW',
+    startTimeS: 6,
   },
   {
     name: 'Daytime',
