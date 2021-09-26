@@ -59,5 +59,9 @@ export const channels = {
   'Cafe Music BGM': {
     link: 'https://www.youtube.com/channel/UCJhjE7wbdYAae1G25m0tHAA',
     name: 'Cafe Music BGM'
+  },
+  'New Bliss': {
+    link: 'https://www.youtube.com/channel/UC-gjtyoUTzGEwWM5Y1J4J7Q',
+    name: 'New Bliss'
   }
 }
