@@ -20,8 +20,36 @@ export const channels = {
     link: 'https://www.youtube.com/channel/UCyD59CI7beJDU493glZpxgA',
     name: 'lofi geek'
   },
-  'STEEZYASFUCK': {
+  STEEZYASFUCK: {
     link: 'https://www.youtube.com/channel/UCsIg9WMfxjZZvwROleiVsQg',
     name: 'STEEZYASFUCK'
+  },
+  Everness: {
+    link: 'https://www.youtube.com/channel/UCa3SDs8cPme7tD9S8BIVYrw',
+    name: 'Everness'
+  },
+  Meisio: {
+    link: 'https://www.youtube.com/channel/UCAmE2TXadPvh2Jtk9RWOgfw',
+    name: 'Meisio'
+  },
+  'Luna Ambience': {
+    link: 'https://www.youtube.com/channel/UC3jN6scZ5RiG6Sv0k2Mb94w',
+    name: 'Luna Ambience'
+  },
+  'Ambient Worlds': {
+    link: 'https://www.youtube.com/channel/UCfR8HhkbpDAwvYxrecNg4Mg',
+    name: 'Ambient Worlds'
+  },
+  'Lofi Girl': {
+    link: 'https://www.youtube.com/channel/UCSJ4gkVC6NrvII8umztf0Ow',
+    name: 'Lofi Girl'
+  },
+  'Calmed by Nature': {
+    link: 'https://www.youtube.com/channel/UCJuMbdKSMThk2RpALASyXVQ',
+    name: 'Calmed by Nature'
+  },
+  'Cold Water': {
+    link: 'https://www.youtube.com/channel/UCpi4NSNZrV3oBtgpdaEGeyw',
+    name: 'Cold Water'
   }
 }

@@ -39,16 +39,19 @@ body {
 
 button,
 select,
-.pointer {
+.pointer,
+a {
   cursor: url("./images/cursors/wow_active.png"), pointer !important;
 }
 
 h1,
+h3,
+p,
 span,
 button,
 select,
 input {
-  filter: var(--brown-glow-drop-shadow)
+  filter: var(--brown-glow-drop-shadow);
 }
 
 button,

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from 'styled-components'
-import { FaExpandAlt, FaEye, FaForward, FaPause, FaPlay, FaRandom, FaStepBackward, FaStepForward, FaUndo, FaInfoCircle, FaBroadcastTower } from "react-icons/fa";
+import { FaExpandAlt, FaEye, FaForward, FaPause, FaPlay, FaRandom, FaStepBackward, FaStepForward, FaUndo, FaInfoCircle, FaBroadcastTower, FaTwitter } from "react-icons/fa";
 import lofi from '../images/lofi.png';
 import wow from '../images/wow.png';
 import lotr from '../images/lotr.png';
@@ -18,7 +18,8 @@ const IconMap = {
   'eye': FaEye,
   'fastForward': FaForward,
   'info': FaInfoCircle,
-  'live': FaBroadcastTower
+  'live': FaBroadcastTower,
+  'twitter': FaTwitter
 }
 
 const ImgMap = {

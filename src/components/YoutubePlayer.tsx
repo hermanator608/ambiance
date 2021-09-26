@@ -119,9 +119,9 @@ const MediaContainerBase = styled.div`
 `;
 
 const MediaControlContainer = styled(MediaContainerBase)`
-  @media (max-width: 500px) {
+  /* @media (max-width: 500px) {
     width: 10%;
-  }
+  } */
 `;
 
 const CenteredDiv = styled.div`
@@ -287,7 +287,7 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
         </MediaContainerBase>
         <MediaContainerBase>
           <span style={{ color: 'white', fontSize: '20px' }}>
-            {currentAmbiance.livestream 
+            {currentAmbiance.livestream
               ? <CenteredDiv>
                   <MarginDiv>
                     <Icon icon='live' />

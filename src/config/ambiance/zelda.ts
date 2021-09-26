@@ -1,4 +1,5 @@
 import { Ambiance } from "./ambiance";
+import { channels } from "./channels";
 
 export const zelda: Ambiance[] = [
   {
@@ -6,10 +7,12 @@ export const zelda: Ambiance[] = [
     code: 'usqdhf51lOI',
     group: 'BotW',
     startTimeS: 6,
+    channel: channels['Luna Ambience']
   },
   {
     name: 'Daytime',
     code: 'kGTDtAqruEs',
-    group: 'BotW'
+    group: 'BotW',
+    channel: channels['Ambient Worlds']
   }
 ]

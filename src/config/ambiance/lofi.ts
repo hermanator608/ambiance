@@ -7,14 +7,14 @@ export const lofi: Ambiance[] = [
     code: '5qap5aO4i9A',
     group: 'Lofi Girl',
     livestream: true,
-    channel: undefined
+    channel: channels['Lofi Girl']
   },
   {
     name: 'Sleep/Chill',
     code: 'DWcJFNfaw9c',
     group: 'Lofi Girl',
     livestream: true,
-    channel: undefined
+    channel: channels['Lofi Girl']
   },
 
   {
@@ -30,7 +30,7 @@ export const lofi: Ambiance[] = [
     code: 'c0_ejQQcrwI',
     group: 'Coffee Shop',
     startTimeS: 6,
-    channel: undefined
+    channel: channels['Calmed by Nature']
   },
   {
     name: 'Lofi Hip Hop Cafe',
@@ -44,7 +44,7 @@ export const lofi: Ambiance[] = [
     name: 'Soft Rain Jazz Piano',
     code: 'GA9GigGuf24',
     group: 'Jazz',
-    channel: undefined
+    channel: channels['Cold Water']
   },
 
   {
