@@ -5,10 +5,8 @@ import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import { FullScreenHandle } from 'react-full-screen';
 import { useRecoilState } from 'recoil';
 import { currentAmbianceCategoryState, currentAmbianceIndexState } from '../state';
-import { worldOfWarcraft, lofi, Ambiance } from '../config/ambiance';
+import { worldOfWarcraft, lofi, Ambiance, coffee, lotr, zelda } from '../config/ambiance';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
-import { lotr } from '../config/ambiance/lotr';
-import { zelda } from '../config/ambiance/zelda';
 
 const controlStyle: CSS.Properties = {
   zIndex: 6,
@@ -22,7 +20,7 @@ const controlsButtonsStyle = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  
+
 };
 
 export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscreen}) => {
@@ -49,7 +47,7 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
         <Button icon='fullscreen' onClick={handleClick} />
       </div>
       <div style={controlsButtonsStyle}>
-        <Button 
+        <Button
           icon='wow'
           onClick={
             logEventClickWrapper({
@@ -60,7 +58,7 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
             })
           }
         />
-        <Button 
+        <Button
           icon='lotr'
           onClick={
             logEventClickWrapper({
@@ -71,7 +69,7 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
             })
           }
         />
-        <Button 
+        <Button
           icon='zelda'
           onClick={
             logEventClickWrapper({
@@ -82,7 +80,18 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
             })
           }
         />
-        <Button 
+        <Button
+          icon='coffee'
+          onClick={
+            logEventClickWrapper({
+              onClick: () => handleCategoryChanger(coffee),
+              eventData: {
+                actionId: 'coffeeCategory'
+              }
+            })
+          }
+        />
+        <Button
           icon='lofi'
           onClick={
             logEventClickWrapper({

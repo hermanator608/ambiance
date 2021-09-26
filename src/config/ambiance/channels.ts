@@ -51,5 +51,13 @@ export const channels = {
   'Cold Water': {
     link: 'https://www.youtube.com/channel/UCpi4NSNZrV3oBtgpdaEGeyw',
     name: 'Cold Water'
+  },
+  'Coffee Shop Vibes': {
+    link: 'https://www.youtube.com/channel/UCJIOFQLGwB3GH9K9waxwynQ',
+    name: 'Coffee Shop Vibes'
+  },
+  'Cafe Music BGM': {
+    link: 'https://www.youtube.com/channel/UCJhjE7wbdYAae1G25m0tHAA',
+    name: 'Cafe Music BGM'
   }
 }
