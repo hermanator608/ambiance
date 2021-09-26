@@ -10,7 +10,7 @@ export const Twitter: React.FC = () => {
         rel="noopener noreferrer"
         href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
           text,
-        )}&url=${encodeURIComponent('ambiance.dev')}`}
+        )}&url=${encodeURIComponent('https://ambiance.dev')}`}
       >
       <Button icon='twitter' />
     </a>
