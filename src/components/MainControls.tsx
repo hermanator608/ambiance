@@ -7,6 +7,7 @@ import { useRecoilState } from 'recoil';
 import { currentAmbianceCategoryState, currentAmbianceIndexState } from '../state';
 import { worldOfWarcraft, lofi, Ambiance, coffee, lotr, zelda } from '../config/ambiance';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
+import { earth } from '../config/ambiance/earth';
 
 const controlStyle: CSS.Properties = {
   zIndex: 6,
@@ -76,6 +77,17 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
               onClick: () => handleCategoryChanger(zelda),
               eventData: {
                 actionId: 'zeldaCategory'
+              }
+            })
+          }
+        />
+        <Button
+          icon='world'
+          onClick={
+            logEventClickWrapper({
+              onClick: () => handleCategoryChanger(earth),
+              eventData: {
+                actionId: 'worldCategory'
               }
             })
           }

@@ -63,5 +63,9 @@ export const channels = {
   'New Bliss': {
     link: 'https://www.youtube.com/channel/UC-gjtyoUTzGEwWM5Y1J4J7Q',
     name: 'New Bliss'
+  },
+  'Visual Escape': {
+    link: 'https://www.youtube.com/channel/UC-lTO5rbkJmgHS9AGzQJpsQ',
+    name: 'Visual Escape'
   }
 }

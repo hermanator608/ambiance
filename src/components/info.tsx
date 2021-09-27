@@ -34,7 +34,6 @@ const InfoSection = styled.div<{ fadeInState: boolean }>`
 
   @media (min-width: 500px) {
     width: 500px;
-    height: 200px;
     right: 6;
   }
 `;

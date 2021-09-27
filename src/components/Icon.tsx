@@ -14,6 +14,7 @@ import {
   FaBroadcastTower,
   FaTwitter,
   FaCoffee,
+  FaGlobeAmericas,
 } from 'react-icons/fa';
 import lofi from '../images/lofi.png';
 import wow from '../images/wow.png';
@@ -35,6 +36,7 @@ const IconMap = {
   live: FaBroadcastTower,
   twitter: FaTwitter,
   coffee: FaCoffee,
+  world: FaGlobeAmericas
 };
 
 const ImgMap = {
