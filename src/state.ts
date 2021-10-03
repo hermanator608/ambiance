@@ -22,7 +22,7 @@ export const currentAmbianceIndexState = atomFamily({
       const ambiances = get(currentAmbianceCategoryState);
       return getRandomAmbianceIndex(ambiances, -1);
     },
-  }),
+  })
 });
 
 // export const currentAmbianceState = selector({

@@ -7,14 +7,19 @@ import { ReactPlayerProps } from 'react-player';
 import { FullScreenHandle } from 'react-full-screen';
 import { Slider, SliderProps } from '@mui/material';
 import { FlexColumn } from '../globalStyles';
-import {Icon} from './Icon'
+import { Icon } from './Icon';
 import Button from './Button';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import debounce from 'lodash.debounce';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { currentAmbianceCategoryState, currentAmbianceIndexState, videoShownState } from '../state';
+import {
+  currentAmbianceCategoryState,
+  currentAmbianceIndexState,
+  videoShownState,
+} from '../state';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
 import { DotDotDot } from './DotDotDot';
+import { Pause } from './Pause';
 
 const reactPlayerStyle: ReactPlayerProps['style'] = {
   pointerEvents: 'none',
@@ -133,15 +138,15 @@ const MarginDiv = styled.div`
   margin-right: 12px;
 `;
 
-export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscreen}) => {
+export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
+  fullscreen,
+}) => {
   // Global State
   const [videoShown, setVideoShown] = useRecoilState(videoShownState);
   const [currentAmbianceIndex, setCurrentAmbianceIndex] = useRecoilState(
     currentAmbianceIndexState(undefined),
   );
-  const ambiances = useRecoilValue(
-    currentAmbianceCategoryState
-  );
+  const ambiances = useRecoilValue(currentAmbianceCategoryState);
 
   // Local State
   const [isPlaying, setIsPlaying] = useState(true);
@@ -151,7 +156,7 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
 
   const reactPlayerRef = useRef<ReactPlayer>(null);
 
-  const currentAmbiance = ambiances[currentAmbianceIndex]
+  const currentAmbiance = ambiances[currentAmbianceIndex];
 
   // Handlers
   const handleShuffle = useCallback(() => {
@@ -159,17 +164,17 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
     setCurrentAmbianceIndex(randomAbianceIndex);
   }, [currentAmbianceIndex, setCurrentAmbianceIndex, ambiances]);
 
-  const handleSkip = () => {
-    setCurrentAmbianceIndex((currentAmbianceIndex + 1) % ambiances.length);
-  };
+  // const handleSkip = () => {
+  //   setCurrentAmbianceIndex((currentAmbianceIndex + 1) % ambiances.length);
+  // };
 
-  const handleBack = () => {
-    if (currentAmbianceIndex === 0) {
-      setCurrentAmbianceIndex(ambiances.length - 1);
-    } else {
-      setCurrentAmbianceIndex(currentAmbianceIndex - 1);
-    }
-  };
+  // const handleBack = () => {
+  //   if (currentAmbianceIndex === 0) {
+  //     setCurrentAmbianceIndex(ambiances.length - 1);
+  //   } else {
+  //     setCurrentAmbianceIndex(currentAmbianceIndex - 1);
+  //   }
+  // };
 
   const handleRestart = () => {
     reactPlayerRef.current?.seekTo(currentAmbiance.startTimeS || 1, 'seconds');
@@ -202,14 +207,13 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
   const logData = { currentAmbiance: currentAmbiance.name };
   let url = `https://www.youtube.com/embed/${currentAmbiance.code}`;
   if (!currentAmbiance.livestream || !!currentAmbiance.startTimeS) {
-    url += `?start=${currentAmbiance.startTimeS || 1}`
+    url += `?start=${currentAmbiance.startTimeS || 1}`;
   }
 
   return (
     <>
       <FlexColumn>
         <MediaControlContainer>
-          {/* <div style={controlsButtonsStyle}> */}
           <Button
             icon={isPlaying ? 'pause' : 'play'}
             tooltip={isPlaying ? 'pause' : 'play'}
@@ -218,16 +222,6 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
               onClick: () => setIsPlaying(!isPlaying),
             })}
           />
-          {!currentAmbiance.livestream &&
-            <Button
-              icon="fastForward"
-              tooltip="Fast Forward 10m"
-              onClick={logEventClickWrapper({
-                eventData: { ...logData, actionId: 'fastForward' },
-                onClick: handleFastForward,
-              })}
-            />
-          }
           <Button
             icon="shuffle"
             tooltip="Shuffle"
@@ -236,7 +230,27 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
               onClick: handleShuffle,
             })}
           />
-          <Button
+          {!currentAmbiance.livestream && (
+            <>
+              <Button
+                icon="fastForward"
+                tooltip="Fast Forward 10m"
+                onClick={logEventClickWrapper({
+                  eventData: { ...logData, actionId: 'fastForward' },
+                  onClick: handleFastForward,
+                })}
+              />
+              <Button
+                icon="restart"
+                tooltip="Restart"
+                onClick={logEventClickWrapper({
+                  eventData: { ...logData, actionId: 'restart' },
+                  onClick: handleRestart,
+                })}
+              />
+            </>
+          )}
+          {/* <Button
             icon="back"
             tooltip="Back"
             onClick={logEventClickWrapper({
@@ -251,17 +265,7 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
               eventData: { ...logData, actionId: 'skip' },
               onClick: handleSkip,
             })}
-          />
-          {!currentAmbiance.livestream &&
-            <Button
-              icon="restart"
-              tooltip="Restart"
-              onClick={logEventClickWrapper({
-                eventData: { ...logData, actionId: 'restart' },
-                onClick: handleRestart,
-              })}
-          />
-          }
+          /> */}
           <Button
             icon="eye"
             tooltip="Toggle Video"
@@ -270,8 +274,6 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
               onClick: () => setVideoShown(!videoShown),
             })}
           />
-          {/* TODO: Maybe volume? */}
-          {/* </div> */}
         </MediaControlContainer>
         <MediaContainerBase>
           <VolumeSlider
@@ -287,21 +289,24 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
         </MediaContainerBase>
         <MediaContainerBase>
           <span style={{ color: 'white', fontSize: '20px' }}>
-            {currentAmbiance.livestream
-              ? <CenteredDiv>
-                  <MarginDiv>
-                    <Icon icon='live' />
-                  </MarginDiv>
-                  Live Stream <DotDotDot />
-                </CenteredDiv>
-              : <>
-                  {!!currentTime && new Date(currentTime * 1000).toISOString().substr(11, 8)} /{' '}
-                  {!!totalTime && new Date(totalTime * 1000).toISOString().substr(11, 8)}
-                </>
-            }
+            {currentAmbiance.livestream ? (
+              <CenteredDiv>
+                <MarginDiv>
+                  <Icon icon="live" />
+                </MarginDiv>
+                Live Stream <DotDotDot />
+              </CenteredDiv>
+            ) : (
+              <>
+                {!!currentTime &&
+                  new Date(currentTime * 1000).toISOString().substr(11, 8)}{' '}
+                / {!!totalTime && new Date(totalTime * 1000).toISOString().substr(11, 8)}
+              </>
+            )}
           </span>
         </MediaContainerBase>
       </FlexColumn>
+      <Pause isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
       <ReactPlayerContainer hidden={!videoShown} fullscreen={fullscreen.active}>
         <InnerContainer>
           <ReactPlayer
@@ -317,8 +322,8 @@ export const YoutubePlayer: React.FC<{fullscreen: FullScreenHandle}> = ({fullscr
                 modestbranding: true,
                 color: 'black',
                 onUnstarted: () => {
-                  console.error('Failed to auto-start')
-                }
+                  console.error('Failed to auto-start');
+                },
               },
             }}
             playsinline={true}

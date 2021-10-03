@@ -1,4 +1,4 @@
-import { Ambiance } from "./ambiance";
+import { Ambiance } from "./types";
 import { channels } from "./channels";
 
 export const earth: Ambiance[] = [
