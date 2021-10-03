@@ -1,4 +1,5 @@
-import styled from 'styled-components'
+import { useMediaQuery } from '@mui/material';
+import styled from 'styled-components';
 
 const Area = styled.div`
   position: absolute;
@@ -12,15 +13,15 @@ const Area = styled.div`
   justify-content: center;
 `;
 
-export const Pause: React.FC<{isPlaying: boolean; setIsPlaying: (playing: boolean) => void}> = ({
-  isPlaying,
-  setIsPlaying
-}) => {
+export const Pause: React.FC<{
+  isPlaying: boolean;
+  setIsPlaying: (playing: boolean) => void;
+}> = ({ isPlaying, setIsPlaying }) => {
+  const matches = useMediaQuery('(min-width:500px)');
+
   function togglePlaying() {
-      setIsPlaying(!isPlaying);
+    setIsPlaying(!isPlaying);
   }
 
-  return (
-    <Area className='pause' onClick={togglePlaying} />
-  );
-}
+  return matches ? <Area className="pause" onClick={togglePlaying} /> : null;
+};
