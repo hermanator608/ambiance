@@ -5,8 +5,6 @@ import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import Button from './Button';
 import Fade from '@mui/material/Fade';
 import { Twitter } from './Twitter';
-import { useRecoilValue } from 'recoil';
-import { currentAmbianceCategoryNameState, currentAmbianceIndexState } from '../state';
 
 const Container = styled.div`
   z-index: 6;
