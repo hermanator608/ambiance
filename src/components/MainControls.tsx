@@ -4,10 +4,9 @@ import Button from './Button';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import { FullScreenHandle } from 'react-full-screen';
 import { useRecoilState } from 'recoil';
-import { currentAmbianceCategoryState, currentAmbianceIndexState } from '../state';
-import { worldOfWarcraft, lofi, Ambiance, coffee, lotr, zelda } from '../config/ambiance';
+import { currentAmbianceCategoryNameState, currentAmbianceIndexState } from '../state';
+import { AmbianceName, ambianceCategories } from '../config/ambiance';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
-import { earth } from '../config/ambiance/earth';
 
 const controlStyle: CSS.Properties = {
   zIndex: 6,
@@ -28,7 +27,7 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
   const [currentAmbianceIndex, setCurrentAmbianceIndex] = useRecoilState(
     currentAmbianceIndexState(undefined),
   );
-  const [, setCurrentAmbianceCategoryState] = useRecoilState(currentAmbianceCategoryState)
+  const [currentAmbianceCategoryName, setCurrentAmbianceCategoryNameState] = useRecoilState(currentAmbianceCategoryNameState)
 
   const handleClick = logEventClickWrapper({
     onClick: () => fullscreen.active ? fullscreen.exit() : fullscreen.enter(),
@@ -37,9 +36,9 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
     }
   })
 
-  const handleCategoryChanger = (category: Ambiance[]) => {
-    setCurrentAmbianceCategoryState(category)
-    setCurrentAmbianceIndex(getRandomAmbianceIndex(category, currentAmbianceIndex))
+  const handleCategoryChanger = (category: AmbianceName) => {
+    setCurrentAmbianceCategoryNameState(category)
+    setCurrentAmbianceIndex(getRandomAmbianceIndex(ambianceCategories[category], currentAmbianceIndex))
   }
 
   return (
@@ -50,9 +49,10 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
       <div style={controlsButtonsStyle}>
         <Button
           icon='wow'
+          highlighted={currentAmbianceCategoryName === 'worldOfWarcraft'}
           onClick={
             logEventClickWrapper({
-              onClick: () => handleCategoryChanger(worldOfWarcraft),
+              onClick: () => handleCategoryChanger('worldOfWarcraft'),
               eventData: {
                 actionId: 'wowCategory'
               }
@@ -61,9 +61,10 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
         />
         <Button
           icon='lotr'
+          highlighted={currentAmbianceCategoryName === 'lotr'}
           onClick={
             logEventClickWrapper({
-              onClick: () => handleCategoryChanger(lotr),
+              onClick: () => handleCategoryChanger('lotr'),
               eventData: {
                 actionId: 'lotrCategory'
               }
@@ -71,10 +72,23 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
           }
         />
         <Button
-          icon='zelda'
+          icon='harryPotter'
+          highlighted={currentAmbianceCategoryName === 'harryPotter'}
           onClick={
             logEventClickWrapper({
-              onClick: () => handleCategoryChanger(zelda),
+              onClick: () => handleCategoryChanger('harryPotter'),
+              eventData: {
+                actionId: 'harryPotterCategory'
+              }
+            })
+          }
+        />
+        <Button
+          icon='zelda'
+          highlighted={currentAmbianceCategoryName === 'zelda'}
+          onClick={
+            logEventClickWrapper({
+              onClick: () => handleCategoryChanger('zelda'),
               eventData: {
                 actionId: 'zeldaCategory'
               }
@@ -83,9 +97,10 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
         />
         <Button
           icon='world'
+          highlighted={currentAmbianceCategoryName === 'earth'}
           onClick={
             logEventClickWrapper({
-              onClick: () => handleCategoryChanger(earth),
+              onClick: () => handleCategoryChanger('earth'),
               eventData: {
                 actionId: 'worldCategory'
               }
@@ -94,9 +109,10 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
         />
         <Button
           icon='coffee'
+          highlighted={currentAmbianceCategoryName === 'coffee'}
           onClick={
             logEventClickWrapper({
-              onClick: () => handleCategoryChanger(coffee),
+              onClick: () => handleCategoryChanger('coffee'),
               eventData: {
                 actionId: 'coffeeCategory'
               }
@@ -105,9 +121,10 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
         />
         <Button
           icon='lofi'
+          highlighted={currentAmbianceCategoryName === 'lofi'}
           onClick={
             logEventClickWrapper({
-              onClick: () => handleCategoryChanger(lofi),
+              onClick: () => handleCategoryChanger('lofi'),
               eventData: {
                 actionId: 'lofiCategory'
               }

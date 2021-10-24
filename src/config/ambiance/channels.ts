@@ -24,6 +24,18 @@ export const channels = {
     link: 'https://www.youtube.com/channel/UCsIg9WMfxjZZvwROleiVsQg',
     name: 'STEEZYASFUCK'
   },
+  Helynt: {
+    link: 'https://www.youtube.com/channel/UCLMVehWkOvFlGMeIetyFIxg',
+    name: 'Helynt'
+  },
+  'Chillhop Music': {
+    link: 'https://www.youtube.com/channel/UCOxqgCwgOqC2lMqC5PYz_Dg',
+    name: 'Chillhop Music'
+  },
+  'Chill with Taiki': {
+    link: 'https://www.youtube.com/channel/UCKdURsjh1xT1vInYBy82n6g',
+    name: 'Chill with Taiki'
+  },
   Everness: {
     link: 'https://www.youtube.com/channel/UCa3SDs8cPme7tD9S8BIVYrw',
     name: 'Everness'

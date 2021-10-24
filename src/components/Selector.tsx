@@ -4,8 +4,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { currentAmbianceCategoryState, currentAmbianceIndexState } from '../state';
+import { currentAmbianceCategoryNameState, currentAmbianceIndexState } from '../state';
 import { UseAutocompleteProps } from '@mui/core';
+import { ambianceCategories } from '../config/ambiance';
 
 const Wrapper = styled.div`
   z-index: 6;
@@ -21,13 +22,13 @@ const Wrapper = styled.div`
 type Option = { title: string; id: string; group: string; index: number };
 
 export const Selector: React.FC = () => {
-  const ambiances = useRecoilValue(
-    currentAmbianceCategoryState
+  const currentAmbianceName = useRecoilValue(
+    currentAmbianceCategoryNameState
   );
   const [currentAmbianceIndex, setCurrentAmbianceIndex] = useRecoilState(currentAmbianceIndexState(undefined));
   const matches = useMediaQuery('(min-width:500px)');
 
-  const options = ambiances.map<Option>((a, index) => ({
+  const options = ambianceCategories[currentAmbianceName].map<Option>((a, index) => ({
     title: a.name,
     id: a.code,
     group: a.group,

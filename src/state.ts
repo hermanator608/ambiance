@@ -1,5 +1,5 @@
 import { atom, atomFamily, selectorFamily } from "recoil";
-import { worldOfWarcraft } from "./config/ambiance";
+import { ambianceCategories, AmbianceName } from "./config/ambiance";
 import { getRandomAmbianceIndex } from "./util/getRandomAmbianceIndex";
 
 // TODO: Setup LS? Query Strings?
@@ -9,30 +9,29 @@ export const videoShownState = atom({
   default: true,
 });
 
-export const currentAmbianceCategoryState = atom({
+export const currentAmbianceCategoryNameState = atom<AmbianceName>({
   key: "currentAmbianceCategory",
-  default: worldOfWarcraft,
+  default: 'worldOfWarcraft',
 });
+
+// export const currentAmbianceCategoryState = selector({
+//   key: "currentAmbianceCategory",
+//   get: ({
+//       get
+//   }) => {
+//     const ambianceName = get(currentAmbianceCategoryNameState);
+
+//     return ambianceCategories[ambianceName]
+//   },
+// });
 
 export const currentAmbianceIndexState = atomFamily({
   key: 'currentAmbianceIndex',
   default: selectorFamily<number, number | undefined>({
     key: 'currentAmbianceIndex/Default',
     get: () => ({get}) => {
-      const ambiances = get(currentAmbianceCategoryState);
-      return getRandomAmbianceIndex(ambiances, -1);
+      const ambianceName = get(currentAmbianceCategoryNameState);
+      return getRandomAmbianceIndex(ambianceCategories[ambianceName], -1);
     },
   })
 });
-
-// export const currentAmbianceState = selector({
-//   key: "currentAmbiance",
-//   get: ({
-//       get
-//   }) => {
-//     const ambiances = get(currentAmbianceCategoryState);
-//     const currentAmbianceIndex = get(currentAmbianceIndexState(undefined));
-
-//     return ambiances[currentAmbianceIndex]
-//   },
-// });

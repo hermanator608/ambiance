@@ -13,13 +13,14 @@ import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import debounce from 'lodash.debounce';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
-  currentAmbianceCategoryState,
+  currentAmbianceCategoryNameState,
   currentAmbianceIndexState,
   videoShownState,
 } from '../state';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
 import { DotDotDot } from './DotDotDot';
 import { Pause } from './Pause';
+import { ambianceCategories } from '../config/ambiance';
 
 const reactPlayerStyle: ReactPlayerProps['style'] = {
   pointerEvents: 'none',
@@ -146,7 +147,7 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
   const [currentAmbianceIndex, setCurrentAmbianceIndex] = useRecoilState(
     currentAmbianceIndexState(undefined),
   );
-  const ambiances = useRecoilValue(currentAmbianceCategoryState);
+  const ambianceName = useRecoilValue(currentAmbianceCategoryNameState);
 
   // Local State
   const [isPlaying, setIsPlaying] = useState(true);
@@ -156,6 +157,7 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
 
   const reactPlayerRef = useRef<ReactPlayer>(null);
 
+  const ambiances = ambianceCategories[ambianceName];
   const currentAmbiance = ambiances[currentAmbianceIndex];
 
   // Handlers

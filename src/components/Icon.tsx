@@ -21,6 +21,7 @@ import lofi from '../images/lofi.png';
 import wow from '../images/wow.png';
 import lotr from '../images/lotr.png';
 import zelda from '../images/zelda.png';
+import harryPotter from '../images/harryPotter.png'
 
 // https://react-icons.github.io/react-icons/icons?name=fa
 const IconMap = {
@@ -46,6 +47,7 @@ const ImgMap = {
   lofi,
   lotr,
   zelda,
+  harryPotter
 };
 
 const size = 30;

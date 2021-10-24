@@ -6,6 +6,7 @@ interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   text?: string
   tooltip?: string
   icon?: IconProps['icon']
+  highlighted?: boolean
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -14,7 +15,8 @@ export const Button: React.FC<ButtonProps> = ({
   className,
   tooltip,
   icon,
-  text
+  text,
+  highlighted
 }) => {
   return (
     <>
@@ -28,6 +30,7 @@ export const Button: React.FC<ButtonProps> = ({
           alignItems: "center",
           ...style,
           ...(text ? {} : { lineHeight: 0 }),
+          ...(highlighted ? { filter: 'var(--yellow-glow-drop-shadow)' } : {}),
         }}
         className={className}
         title={tooltip}
