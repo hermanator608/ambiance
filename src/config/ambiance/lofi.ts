@@ -24,15 +24,23 @@ export const lofi: Ambiance[] = [
     channel: channels['STEEZYASFUCK'],
   },
   {
-    name: 'Lofi Hip Hop Halloween',
-    code: 'qJSLmjzLnAM',
-    group: 'Spooky Szn',
-    channel: channels['lofi geek']
+    name: 'Rain Lofi',
+    code: '0n0leLcHI7E',
+    group: 'Coffee Shop',
+    livestream: true,
+    channel: channels['lofi geek'],
   },
   {
-    name: 'Lofi Hip Hop Cafe',
-    code: 'm84_47Zw488',
+    name: 'Lofi Cafe',
+    code: 'ORBwkXsUNEs',
     group: 'Coffee Shop',
+    livestream: true,
+    channel: channels['lofi geek'],
+  },
+  {
+    name: 'Study with Lofi Geek 📚',
+    code: 'N4pDQm7-Me8',
+    group: 'Lofi',
     livestream: true,
     channel: channels['lofi geek'],
   },
@@ -47,6 +55,12 @@ export const lofi: Ambiance[] = [
     code: 'pIA9ztlyzMA',
     group: 'Gaming',
     channel: channels.Helynt
+  },
+  {
+    name: 'Crackling Fireplace',
+    code: 'yimlIZEJwPY',
+    group: 'Jazz',
+    channel: channels['Chillhop Music']
   },
   {
     name: 'Zelda Lofi Study Beats',
@@ -70,19 +84,22 @@ export const lofi: Ambiance[] = [
     name: 'Chillhop - Jazzy/Lofi hip hop beats',
     code: '5yx6BWlEVcY',
     group: 'Lofi',
-    channel: channels['Chillhop Music']
+    channel: channels['Chillhop Music'],
+    livestream: true
   },
   {
     name: 'lofi hip hop radio',
-    code: '5yx6BWlEVcY',
+    code: '7NOSDKb0HlU',
     group: 'Lofi',
-    channel: channels['Chillhop Music']
+    channel: channels['Chillhop Music'],
+    livestream: true
   },
   {
     name: 'japanese night cafe vibes',
     code: '9FvvbVI5rYA',
     group: 'Coffee Shop',
-    channel: channels['Chill with Taiki']
+    channel: channels['Chill with Taiki'],
+    startTimeS: 5
   },
   {
     name: 'korean cafe vibes',
@@ -99,14 +116,14 @@ export const lofi: Ambiance[] = [
   },
   {
     name: '24/7 CHILL LOFI HIP HOP RADIO',
-    code: 'VfW86fnQL5w',
+    code: 'G72M3qnq58Q',
     group: 'Hip Hop',
     channel: channels['Chill with Taiki'],
     livestream: true
   },
   {
     name: 'Tokyo Lofi Hip Hop',
-    code: 'f2nSrRqqLds',
+    code: 'OY3kgC9WRkY',
     group: 'Hip Hop',
     livestream: true,
     channel: channels['lofi geek'],
@@ -151,7 +168,7 @@ export const lofi: Ambiance[] = [
   },
   {
     name: 'Video Game Study Lounge',
-    code: '8txpDvFnh5o',
+    code: 'aL14iT2ix0w',
     group: 'Gaming',
     livestream: true,
     channel: channels.GameChops,

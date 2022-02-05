@@ -4,7 +4,7 @@ import { channels } from "./channels";
 export const coffee: Ambiance[] = [
   {
     name: 'Soft Rain Jazz Piano',
-    code: 'GA9GigGuf24',
+    code: 'w7pe1fSIXSE',
     group: 'Jazz',
     channel: channels['Cold Water']
   },
@@ -16,15 +16,15 @@ export const coffee: Ambiance[] = [
     channel: channels['Calmed by Nature'],
   },
   {
-    name: '',
+    name: 'Cozy Fall Coffee Shop',
     code: 'VMAPTo7RVCo',
     group: 'Jazz',
     channel: channels['Calmed by Nature'],
     startTimeS: 6,
   },
   {
-    name: 'Lofi Hip Hop Cafe',
-    code: '3K1UoQmKZY4',
+    name: 'coffee shop ☕ calm lofi',
+    code: '78mYkbfsXRM',
     group: 'Lofi Coffee',
     livestream: true,
     channel: channels['lofi geek'],
@@ -43,10 +43,10 @@ export const coffee: Ambiance[] = [
     channel: channels["Coffee Shop Vibes"]
   },
   {
-    name: 'Cafe Crackling Fireplace',
-    code: 'wSEWdmmk_1o',
+    name: 'Crackling Fireplace',
+    code: 'yimlIZEJwPY',
     group: 'Jazz',
-    channel: channels['Coffee Shop Vibes']
+    channel: channels['Chillhop Music']
   },
   {
     name: 'Tokyo Cafe Live',
