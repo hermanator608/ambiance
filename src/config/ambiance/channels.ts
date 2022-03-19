@@ -79,5 +79,9 @@ export const channels = {
   'Visual Escape': {
     link: 'https://www.youtube.com/channel/UC-lTO5rbkJmgHS9AGzQJpsQ',
     name: 'Visual Escape'
+  },
+  'Chilli Music': {
+    link: 'https://www.youtube.com/channel/UCGv9D6jI_5qb12RzoEU4aEA',
+    name: 'Chilli Music'
   }
 }

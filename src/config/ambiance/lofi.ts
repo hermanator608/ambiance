@@ -25,7 +25,7 @@ export const lofi: Ambiance[] = [
   },
   {
     name: 'Rain Lofi',
-    code: '0n0leLcHI7E',
+    code: 'zamNv893kHI',
     group: 'Coffee Shop',
     livestream: true,
     channel: channels['lofi geek'],
@@ -109,28 +109,45 @@ export const lofi: Ambiance[] = [
   },
   {
     name: '[24/7 study with me] chill study',
-    code: 'QgD5A2v3cp0',
+    code: 'azV9PMW5-Ro',
     group: 'Study',
     channel: channels['Chill with Taiki'],
     livestream: true
   },
   {
     name: '24/7 CHILL LOFI HIP HOP RADIO',
-    code: 'G72M3qnq58Q',
+    code: 'qH3fETPsqXU',
     group: 'Hip Hop',
     channel: channels['Chill with Taiki'],
     livestream: true
   },
   {
+    name: 'Chill Drive',
+    code: 't2pU3iTkv3w',
+    group: 'Hip Hop',
+    channel: channels['Chilli Music'],
+    livestream: true
+  },
+  {
+    name: 'Rap Hip Hop Lofi',
+    code: 'aLqc8TdoLJ0',
+    group: 'Hip Hop',
+    channel: {
+      link: 'https://www.youtube.com/channel/UCv7qaGzuEfLhKxAZf4eZONg',
+      name: 'Ivy Station Records'
+    },
+    livestream: true
+  },
+  {
     name: 'Tokyo Lofi Hip Hop',
-    code: 'OY3kgC9WRkY',
+    code: 'jWIqKujW0NY',
     group: 'Hip Hop',
     livestream: true,
     channel: channels['lofi geek'],
   },
   {
     name: 'Lofi Space Station',
-    code: 'pDv6y6txivM',
+    code: 'G4BFBy_9xOg',
     group: 'Space',
     livestream: true,
     channel: channels['lofi geek'],
@@ -168,7 +185,7 @@ export const lofi: Ambiance[] = [
   },
   {
     name: 'Video Game Study Lounge',
-    code: 'aL14iT2ix0w',
+    code: '-gWIzxbt5F8',
     group: 'Gaming',
     livestream: true,
     channel: channels.GameChops,
