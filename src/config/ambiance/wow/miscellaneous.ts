@@ -69,4 +69,12 @@ export const miscellaneous = [
     group: 'Azeroth',
     channel: channels.Meisio
   },
+
+  // Island
+  {
+    name: 'Exile\'s Reach',
+    code: 'xlJnuZbjz4g',
+    group: 'Azeroth',
+    channel: channels.Meisio
+  },
 ]

@@ -26,6 +26,12 @@ export const kalimdor = [
     channel: channels.Meisio
   },
   {
+    name: 'Darkshore (BFA)',
+    code: 'mC85RfCyja4',
+    group: 'Kalimdor',
+    channel: channels.Meisio
+  },
+  {
     name: 'Stonetalon Mountains (Vanilla)',
     code: 'Jd1rlP36gv8',
     group: 'Kalimdor',

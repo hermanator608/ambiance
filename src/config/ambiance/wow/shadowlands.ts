@@ -43,4 +43,10 @@ export const shadowlands = [
     group: 'Shadowlands',
     channel: channels.Meisio,
   },
+  {
+    name: 'Zereth Mortis',
+    code: 'iS_DAcfCeyE',
+    group: 'Shadowlands',
+    channel: channels.Meisio
+  }
 ]

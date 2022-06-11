@@ -43,4 +43,16 @@ export const pandaria = [
     group: 'Pandaria',
     channel: channels.Meisio
   },
+  {
+    name: 'Dread Wastes',
+    code: '1a2Sd_ig5EE',
+    group: 'Pandaria',
+    channel: channels.Meisio
+  },
+  {
+    name: 'Vale of Eternal Blossoms',
+    code: '7g3R6WRN0UM',
+    group: 'Pandaria',
+    channel: channels.Meisio
+  },
 ]
