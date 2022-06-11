@@ -138,4 +138,10 @@ export const harryPotter: Ambiance[] = [
     group: 'Hogwarts',
     channel: channels['Ambient Worlds']
   },
+  {
+    name: 'Hogsmeade',
+    code: 'LgZjI7JRi1I',
+    group: 'Hogwarts',
+    channel: channels['Ambient Worlds']
+  },
 ]
