@@ -21,8 +21,14 @@ export const lotr: Ambiance[] = [
     channel: channels['Ambient Worlds']
   },
   {
-    name: 'Gondor',
+    name: 'Gondor (Rain)',
     code: 'eVCR3X6OfSc',
+    group: 'LotR',
+    channel: channels['Ambient Worlds']
+  },
+  {
+    name: 'Gondor',
+    code: '8vnHJNjwuqg',
     group: 'LotR',
     channel: channels['Ambient Worlds']
   },
@@ -38,7 +44,7 @@ export const lotr: Ambiance[] = [
     code: 'YkrsubNxvTU',
     group: 'LotR',
     channel: channels['Ambient Worlds'],
-    startTimeS: 8
+    startTimeS: 10
   },
   {
     name: 'Mirkwood - The Woodland Realm',
@@ -48,16 +54,28 @@ export const lotr: Ambiance[] = [
     startTimeS: 14
   },
   {
-    name: 'Rivendell',
-    code: 'LYb4K1gwxIQ',
+    name: 'Rivendell (Night)',
+    code: '4_llliYdW2Y',
     group: 'LotR',
     channel: channels['Ambient Worlds'],
   },
-
+  {
+    name: 'Rivendell',
+    code: 'GrNzFy2QiUU',
+    group: 'LotR',
+    channel: channels['Ambient Worlds'],
+    startTimeS: 10
+  },
+  {
+    name: 'The Grey Havens',
+    code: 'LQaVUkm1MG8',
+    group: 'LotR',
+    channel: channels['Ambient Worlds']
+  },
   {
     name: 'The Shire Visual Escape',
     code: 'K69tbUo3vGs',
-    group: 'Hobbit',
+    group: 'LotR',
     channel: channels['Visual Escape'],
     startTimeS: 12
   },
@@ -69,9 +87,41 @@ export const lotr: Ambiance[] = [
   },
   {
     name: 'Erebor',
-    code: 'MdoKubHbTKI',
-    group: 'Hobbit',
+    code: '14NQO35mpPo',
+    group: 'LotR',
     channel: channels['Ambient Worlds'],
     startTimeS: 15
+  },
+  {
+    name: 'Gandalf\'s Fireworks - Shire',
+    code: 'LtcTnQrr4DI',
+    group: 'LotR',
+    channel: channels['Ambient Worlds']
+  },
+  {
+    name: 'Minas Morgul',
+    code: 'OfNgf78cTzU',
+    group: 'LotR',
+    channel: channels['Ambient Worlds']
+  },
+  {
+    name: 'Mordor',
+    code: 'wnF9bn_LThM',
+    group: 'LotR',
+    channel: channels['Ambient Worlds']
+  },
+  {
+    name: 'Misty Mountains',
+    code: 'BSFbKIW8HGs',
+    group: 'Hobbit',
+    channel: channels['Ambient Worlds'],
+    startTimeS: 6
+  },
+  {
+    name: 'The Green Dragon Inn',
+    code: 'JvV4q5etWFs',
+    group: 'Hobbit',
+    channel: channels['Ambient Worlds'],
+    startTimeS: 17
   },
 ]

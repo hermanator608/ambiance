@@ -2,6 +2,19 @@
 
 www.ambiance.dev
 
+## TODO:
+
+Some ideas for potential improvements. Not in any particular order
+
+* Create "Study With Me" section with videos from https://www.youtube.com/c/TheSherryFormula and https://www.youtube.com/c/%E9%98%BF%E9%B2%8D
+* Add ability to "Favorite" a section, which makes it so that section plays automatically on startup (Probably use localstorage)
+* Global settings section which lists "Favorite" playlist, allows you to "Shuffle" from all playlists, etc
+* Auto skip videos that fail to load (YoutubePlayer component can hook into errors)
+* Add keyboard shortcuts for common actions (Skip, shuffle, volume up/down, etc)
+* Implement Local Storage
+  * Store volume setting (Localstorage)
+  * Store current song/playlist
+
 ## Available Scripts
 
 In the project directory, you can run:

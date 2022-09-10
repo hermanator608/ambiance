@@ -283,7 +283,7 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
             aria-label="Volume"
             onChange={debounceVolumeHandler}
             valueLabelDisplay="off"
-            step={0.1}
+            step={0.02}
             marks
             min={0}
             max={1}

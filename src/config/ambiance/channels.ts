@@ -83,5 +83,21 @@ export const channels = {
   'Chilli Music': {
     link: 'https://www.youtube.com/channel/UCGv9D6jI_5qb12RzoEU4aEA',
     name: 'Chilli Music'
+  },
+  'Sam Cisco': {
+    link: 'https://www.youtube.com/c/SamCisco',
+    name: 'Sam Cisco'
+  },
+  'Nomadic Ambience': {
+    link: 'https://www.youtube.com/c/NomadicAmbience',
+    name: 'Nomadic Ambience'
+  },
+  'The Sherry Formula': {
+    link: 'https://www.youtube.com/c/TheSherryFormula',
+    name: 'The Sherry Formula'
+  },
+  'College Music': {
+    link: 'https://www.youtube.com/c/CollegeMusic',
+    name: 'College Music'
   }
 }

@@ -4,51 +4,47 @@ import { channels } from './channels';
 export const lofi: Ambiance[] = [
   {
     name: 'Relax/Study',
-    code: '5qap5aO4i9A',
+    code: 'jfKfPfyJRdk',
     group: 'Lofi Girl',
     livestream: true,
     channel: channels['Lofi Girl'],
   },
   {
     name: 'Morning Coffee',
-    code: '5qap5aO4i9A',
+    code: '1fueZCTYkpA',
     group: 'Lofi Girl',
-    livestream: true,
     channel: channels['Lofi Girl'],
   },
   {
     name: 'Cozy Winter',
     code: '_tV5LEBDs7w',
     group: 'Lofi Girl',
-    livestream: true,
     channel: channels['Lofi Girl'],
   },
   {
     name: 'Soothing Breeze',
     code: 'gnZImHvA0ME',
     group: 'Lofi Girl',
-    livestream: true,
+    channel: channels['Lofi Girl'],
+  },
+  {
+    name: 'Lazy Sunday',
+    code: 'zFhfksjf_mY',
+    group: 'Lofi Girl',
     channel: channels['Lofi Girl'],
   },
   {
     name: '1 A.M Study Session',
-    code: 'gnZImHvA0ME',
+    code: 'lTRiuFIWV54',
     group: 'Lofi Girl',
-    livestream: true,
     channel: channels['Lofi Girl'],
   },
   {
     name: 'Sleep/Chill',
-    code: '1fueZCTYkpA',
+    code: 'rUxyKA_-grg',
     group: 'Lofi Girl',
     channel: channels['Lofi Girl'],
-  },
-  {
-    name: 'Coffee Shop Hip-Hop Beats',
-    code: '-5KAN9_CzSA',
-    group: 'Coffee Shop',
-    livestream: true,
-    channel: channels['STEEZYASFUCK'],
+    livestream: true
   },
   {
     name: 'Coffee Shop Hip-Hop Beats',
@@ -86,7 +82,7 @@ export const lofi: Ambiance[] = [
   {
     name: 'Crackling Fireplace',
     code: 'yimlIZEJwPY',
-    group: 'Jazz',
+    group: 'Lofi',
     channel: channels['Chillhop Music']
   },
   {
@@ -174,7 +170,7 @@ export const lofi: Ambiance[] = [
   },
   {
     name: 'Lofi Space Station',
-    code: 'bSfBOFV1JEE',
+    code: '3k42V5tkD6s',
     group: 'Space',
     livestream: true,
     channel: channels['lofi geek'],
@@ -212,9 +208,21 @@ export const lofi: Ambiance[] = [
   },
   {
     name: 'Video Game Study Lounge',
-    code: 'pyF6XscWbDw',
+    code: 'IJF9SLjLt-M',
     group: 'Gaming',
     livestream: true,
     channel: channels.GameChops,
   },
+  {
+    name: 'Lord of the Rings',
+    code: 'HBpUNPBA_qk',
+    group: 'LotR',
+    channel: channels['Ambient Worlds']
+  },
+  {
+    name: 'mellow/chill instrumental beats',
+    code: 'XDh0JcxrbPM',
+    group: 'Lofi',
+    channel: channels['College Music']
+  }
 ];
