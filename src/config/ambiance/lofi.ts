@@ -44,19 +44,26 @@ export const lofi: Ambiance[] = [
     code: 'rUxyKA_-grg',
     group: 'Lofi Girl',
     channel: channels['Lofi Girl'],
-    livestream: true
+    livestream: true,
   },
   {
     name: 'Coffee Shop Hip-Hop Beats',
-    code: '-5KAN9_CzSA',
+    code: 'e3L1PIY1pN8',
     group: 'Coffee Shop',
     livestream: true,
     channel: channels['STEEZYASFUCK'],
   },
   {
+    name: 'lofi Hip-Hop Radio',
+    code: 'e3L1PIY1pN8',
+    group: 'Lofi',
+    livestream: true,
+    channel: channels['STEEZYASFUCK'],
+  },
+  {
     name: 'Rain Lofi',
-    code: 'zamNv893kHI',
-    group: 'Coffee Shop',
+    code: 'aVNe2w0AljU',
+    group: 'Lofi',
     livestream: true,
     channel: channels['lofi geek'],
   },
@@ -71,95 +78,97 @@ export const lofi: Ambiance[] = [
     name: 'Nintendo Lofi Study Beats',
     code: '7JMvn0wfABQ',
     group: 'Gaming',
-    channel: channels.Helynt
+    channel: channels.Helynt,
   },
   {
     name: 'Late Night Gaming - Chill Lofi Beats',
     code: 'pIA9ztlyzMA',
     group: 'Gaming',
-    channel: channels.Helynt
+    channel: channels.Helynt,
   },
   {
     name: 'Crackling Fireplace',
     code: 'yimlIZEJwPY',
     group: 'Lofi',
-    channel: channels['Chillhop Music']
+    channel: channels['Chillhop Music'],
   },
   {
     name: 'Zelda Lofi Study Beats',
     code: '4A62af30atA',
     group: 'Gaming',
-    channel: channels.Helynt
+    channel: channels.Helynt,
+  },
+  {
+    name: 'Nintendo Synthwave Mix',
+    code: 'jpyMaQ6afLk',
+    group: 'Gaming',
+    channel: channels.Helynt,
   },
   {
     name: 'Minecraft Lofi Study Beats',
     code: 'RvLk1pGAEqA',
     group: 'Gaming',
-    channel: channels.Helynt
+    channel: channels.Helynt,
   },
   {
-    name: 'Pokémon lofi mix',
-    code: 'mTBBAVaEYyU',
+    name: 'Pokémon lofi Beats',
+    code: 'vR60tNCGCIE',
     group: 'Gaming',
-    channel: channels.Helynt
+    channel: channels.Helynt,
   },
   {
     name: 'Chillhop - Jazzy/Lofi hip hop beats',
     code: '5yx6BWlEVcY',
     group: 'Lofi',
     channel: channels['Chillhop Music'],
-    livestream: true
+    livestream: true,
   },
   {
     name: 'lofi hip hop radio',
     code: '7NOSDKb0HlU',
     group: 'Lofi',
     channel: channels['Chillhop Music'],
-    livestream: true
+    livestream: true,
   },
   {
     name: 'japanese night cafe vibes',
     code: '9FvvbVI5rYA',
     group: 'Coffee Shop',
     channel: channels['Chill with Taiki'],
-    startTimeS: 5
+    startTimeS: 5,
   },
   {
     name: 'korean cafe vibes',
     code: 'Xry_g0Vp5MY',
     group: 'Coffee Shop',
-    channel: channels['Chill with Taiki']
+    channel: channels['Chill with Taiki'],
   },
   {
     name: '[24/7 study with me] chill study',
     code: 'azV9PMW5-Ro',
     group: 'Study',
     channel: channels['Chill with Taiki'],
-    livestream: true
+    livestream: true,
   },
   {
     name: '24/7 CHILL LOFI HIP HOP RADIO',
     code: 'qH3fETPsqXU',
     group: 'Hip Hop',
     channel: channels['Chill with Taiki'],
-    livestream: true
+    livestream: true,
   },
   {
     name: 'Chill Drive',
-    code: 't2pU3iTkv3w',
+    code: 'kMiBrqV_4FA',
     group: 'Hip Hop',
     channel: channels['Chilli Music'],
-    livestream: true
   },
   {
-    name: 'Rap Hip Hop Lofi',
-    code: 'aLqc8TdoLJ0',
-    group: 'Hip Hop',
-    channel: {
-      link: 'https://www.youtube.com/channel/UCv7qaGzuEfLhKxAZf4eZONg',
-      name: 'Ivy Station Records'
-    },
-    livestream: true
+    name: 'coffee to go! ☕ jazzy lofi beats',
+    code: '2gliGzb2_1I',
+    group: 'Coffee Shop',
+    channel: channels.TheJazzHopCafé,
+    livestream: true,
   },
   {
     name: 'Tokyo Lofi Hip Hop',
@@ -207,8 +216,20 @@ export const lofi: Ambiance[] = [
     channel: channels.GameChops,
   },
   {
+    name: 'Chilltendo Deluxe',
+    code: 'c5V-qL1HRho',
+    group: 'Gaming',
+    channel: channels.GameChops,
+  },
+  {
+    name: 'Poké & Chill',
+    code: '2DVpys50LVE',
+    group: 'Gaming',
+    channel: channels.GameChops,
+  },
+  {
     name: 'Video Game Study Lounge',
-    code: 'IJF9SLjLt-M',
+    code: 'nTdJ0P4fXDg',
     group: 'Gaming',
     livestream: true,
     channel: channels.GameChops,
@@ -217,12 +238,27 @@ export const lofi: Ambiance[] = [
     name: 'Lord of the Rings',
     code: 'HBpUNPBA_qk',
     group: 'LotR',
-    channel: channels['Ambient Worlds']
+    channel: channels['Ambient Worlds'],
   },
   {
     name: 'mellow/chill instrumental beats',
-    code: 'XDh0JcxrbPM',
+    code: 'QwXHcgZUnFI',
     group: 'Lofi',
-    channel: channels['College Music']
-  }
+    livestream: true,
+    channel: channels['College Music'],
+  },
+  {
+    name: 'Good Vibes Only - Hip-Hop',
+    code: 'aGSYKFb_zxg',
+    group: 'Hip Hop',
+    livestream: true,
+    channel: channels['LTB Music'],
+  },
+  {
+    name: 'Chill Village - Deep Focus Lofi',
+    code: 'cUswBpG0lwY',
+    group: 'Lofi',
+    livestream: true,
+    channel: channels['LTB Music'],
+  },
 ];

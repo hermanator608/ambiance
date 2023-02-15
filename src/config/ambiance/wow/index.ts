@@ -11,6 +11,7 @@ import { zuldazar } from './zuldazar';
 import { shadowlands } from './shadowlands';
 import { miscellaneous } from './miscellaneous';
 import { outland } from './outland';
+import { dragonIsles } from './dragonIsles';
 
 export const worldOfWarcraft: Ambiance[] = [
   ...easternKingdoms,
@@ -19,10 +20,11 @@ export const worldOfWarcraft: Ambiance[] = [
   ...northrend,
   ...pandaria,
   ...draenor,
+  ...dragonIsles,
   ...brokenIsles,
   ...argus,
   ...kulTiras,
   ...zuldazar,
   ...shadowlands,
-  ...miscellaneous
+  ...miscellaneous,
 ];

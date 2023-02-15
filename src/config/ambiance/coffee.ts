@@ -1,5 +1,5 @@
-import { Ambiance } from "./types";
-import { channels } from "./channels";
+import { Ambiance } from './types';
+import { channels } from './channels';
 
 export const coffee: Ambiance[] = [
   {
@@ -31,70 +31,71 @@ export const coffee: Ambiance[] = [
     channel: channels['lofi geek'],
   },
   {
-    name: "Autum Rooftop Cafe",
+    name: 'Autum Rooftop Cafe',
     code: 'vNZOQiQHBaY',
     group: 'Jazz',
-    channel: channels["Coffee Shop Vibes"]
+    channel: channels['Coffee Shop Vibes'],
   },
   {
-    name: "Smooth Jazz Music 24/7",
+    name: 'Smooth Jazz Music 24/7',
     code: 'mtcPfhRatL4',
     group: 'Jazz',
-    channel: channels["Coffee Shop Vibes"]
+    livestream: true,
+    channel: channels['Coffee Shop Vibes'],
   },
   {
-    name: "Seaside Coffee Shop",
+    name: 'Seaside Coffee Shop',
     code: 'KJFWkgrwxJQ',
     group: 'Jazz',
-    channel: channels["Coffee Shop Vibes"]
+    channel: channels['Coffee Shop Vibes'],
   },
   {
-    name: "Village Coffee Shop",
+    name: 'Village Coffee Shop',
     code: 's-WCKIhXm4E',
     group: 'Jazz',
-    channel: channels["Coffee Shop Vibes"]
+    channel: channels['Coffee Shop Vibes'],
   },
   {
-    name: "Cozy Spring Coffee Shop",
+    name: 'Cozy Spring Coffee Shop',
     code: 'aO4bs4rnLpg',
     group: 'Jazz',
-    channel: channels["Coffee Shop Vibes"]
+    channel: channels['Coffee Shop Vibes'],
   },
   {
     name: 'Tokyo Cafe Live',
     code: '6uddGul0oAc',
     livestream: true,
     group: 'Jazz',
-    channel: channels['Cafe Music BGM']
+    channel: channels['Cafe Music BGM'],
   },
   {
     name: 'Royal Library',
     code: 'CHFif_y2TyM',
     group: 'Library',
-    channel: channels['New Bliss']
+    channel: channels['New Bliss'],
   },
   {
     name: 'Cozy Christmas',
     code: 'FvMA_kX_qjA',
-    group: 'Holidays'
+    group: 'Holidays',
   },
   {
     name: 'Weekend Book Cafe',
     code: 'P1HrmvPvxtc',
     group: 'Library',
-    startTimeS: 14
+    startTimeS: 14,
   },
   {
     name: 'Coffee Shop Sounds',
     code: 'gaGrHUekGrc',
     group: 'Real Sounds',
-    channel: channels['Nomadic Ambience']
+    channel: channels['Nomadic Ambience'],
   },
   {
     name: 'STUDY and WORK AMBIENCE 24/7 for DEEP FOCUS',
     code: '6avAha_GoBQ',
     group: 'Study With Me',
     channel: channels['The Sherry Formula'],
-    livestream: true
+    livestream: true,
   },
-]
+];
