@@ -198,6 +198,12 @@ export const lofi: Ambiance[] = [
     channel: channels['Overwatch League'],
   },
   {
+    name: 'Overwatch 2 - Lofi',
+    code: 'b_anhQUwD0Q',
+    group: 'Gaming',
+    channel: channels['Overwatch League'],
+  },
+  {
     name: 'World of Warcraft - Lofi',
     code: 'UWrslj9JQnc',
     group: 'Gaming',
