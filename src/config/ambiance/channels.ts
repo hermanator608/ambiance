@@ -112,4 +112,24 @@ export const channels = {
     link: 'https://www.youtube.com/@TheJazzHopCafe',
     name: 'TheJazzHopCafé',
   },
+  SlowWalkthroughs: {
+    link: 'https://www.youtube.com/@SlowWalkthroughs',
+    name: 'Slow Walkthroughs / Video Game Ambience',
+  },
+  Ramsiene: {
+    link: 'https://www.youtube.com/@Ramsiene',
+    name: 'Ramsiene',
+  },
+  asmrsoupe: {
+    link: 'https://www.youtube.com/@asmrsoupe',
+    name: 'asmrsoupe',
+  },
+  LynfinityMusic: {
+    link: 'https://www.youtube.com/@LynfinityMusic',
+    name: 'LynfinityMusic',
+  },
+  SwitchPlaythroughs: {
+    link: 'https://www.youtube.com/@switchplaythroughs',
+    name: 'Switch Playthroughs',
+  },
 };
