@@ -10,6 +10,13 @@ export const lofi: Ambiance[] = [
     channel: channels['Lofi Girl'],
   },
   {
+    name: 'Synthwave Radio 🌌',
+    code: 'MVPTGNGiI-4',
+    group: 'Lofi Girl',
+    livestream: true,
+    channel: channels['Lofi Girl'],
+  },
+  {
     name: 'Morning Coffee',
     code: '1fueZCTYkpA',
     group: 'Lofi Girl',
@@ -93,8 +100,8 @@ export const lofi: Ambiance[] = [
     channel: channels['Chillhop Music'],
   },
   {
-    name: 'Zelda Lofi Study Beats',
-    code: '4A62af30atA',
+    name: 'Animal Crossing Lofi Beats',
+    code: 'OPVQMGOuMYI',
     group: 'Gaming',
     channel: channels.Helynt,
   },
