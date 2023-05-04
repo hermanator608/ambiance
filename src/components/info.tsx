@@ -5,6 +5,10 @@ import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import Button from './Button';
 import Fade from '@mui/material/Fade';
 import { Twitter } from './Twitter';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { currentAmbianceIndexState } from '../state';
+import { ambianceCategories } from '../config/ambiance';
+import { currentAmbianceCategoryNameState } from '../state';
 
 const Container = styled.div`
   z-index: 6;
@@ -48,6 +52,11 @@ const Links = styled.div`
 `;
 
 export const Info: React.FC = () => {
+  const currentAmbianceIndex = useRecoilValue(currentAmbianceIndexState(undefined));
+  const ambianceName = useRecoilValue(currentAmbianceCategoryNameState);
+  const ambiances = ambianceCategories[ambianceName];
+  const currentAmbiance = ambiances[currentAmbianceIndex];
+
   const [showInfo, setShowInfo] = useState(false);
   const onClick = () => setShowInfo(!showInfo);
 
@@ -69,11 +78,24 @@ export const Info: React.FC = () => {
               );
             })}
           </Links>
-          <p>Say hi on <a target="_blank" rel="noopener noreferrer" href='https://twitter.com/Brandon_Herman9'>twitter</a>! Would love to hear your feedback on how to make Ambiance.dev better.</p>
+          <p>
+            Say hi on{' '}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://twitter.com/Brandon_Herman9"
+            >
+              twitter
+            </a>
+            ! Would love to hear your feedback on how to make Ambiance.dev better.
+          </p>
         </InfoSection>
       </Fade>
-      <Container style={{flexDirection: 'row'}}>
-        <Twitter />
+      <Container style={{ flexDirection: 'row', justifyItems: 'center' }}>
+        {currentAmbiance.channel && (
+          <a style={{ color: 'white', fontSize: '24px' }} href={currentAmbiance.channel?.link}>{currentAmbiance.channel?.name}</a>
+        )}
+
         <Button
           icon="info"
           onClick={logEventClickWrapper({
@@ -83,6 +105,7 @@ export const Info: React.FC = () => {
             },
           })}
         />
+        <Twitter />
       </Container>
     </Container>
   );
