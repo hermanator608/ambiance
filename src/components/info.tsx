@@ -5,7 +5,7 @@ import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import Button from './Button';
 import Fade from '@mui/material/Fade';
 import { Twitter } from './Twitter';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { currentAmbianceIndexState } from '../state';
 import { ambianceCategories } from '../config/ambiance';
 import { currentAmbianceCategoryNameState } from '../state';
