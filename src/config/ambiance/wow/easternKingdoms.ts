@@ -152,6 +152,12 @@ export const easternKingdoms = [
     channel: channels.Everness
   },
   {
+    name: 'Duskwood 2',
+    code: 'oxK1ubI0JTo',
+    group: 'Eastern Kingdoms',
+    channel: channels.Meisio
+  },
+  {
     name: 'Stranglethorn Vale',
     code: 'Gli5allDOa8',
     group: 'Eastern Kingdoms',

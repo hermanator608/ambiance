@@ -132,4 +132,12 @@ export const channels = {
     link: 'https://www.youtube.com/@switchplaythroughs',
     name: 'Switch Playthroughs',
   },
+  HogwartsLegacy: {
+    link: 'https://www.youtube.com/@HogwartsLegacy',
+    name: 'Hogwarts Legacy'
+  },
+  MovingSoundcloud: {
+    link: 'https://www.youtube.com/@MovingSoundcloud',
+    name: 'MovingSoundcloud'
+  }
 };

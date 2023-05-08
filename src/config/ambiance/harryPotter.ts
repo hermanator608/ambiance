@@ -144,4 +144,17 @@ export const harryPotter: Ambiance[] = [
     group: 'Hogwarts',
     channel: channels['Ambient Worlds']
   },
+  {
+    name: 'Hogwarts Legacy | Study Themes',
+    code: 'Ea57QWSeZqc',
+    group: 'Hogwarts Legacy',
+    channel: channels['HogwartsLegacy']
+  },
+  {
+    name: 'Hogwarts Legacy: A Rainy Spring Night',
+    code: 'jB5yCBg9TaQ',
+    group: 'Hogwarts Legacy',
+    startTimeS: 7,
+    channel: channels['MovingSoundcloud']
+  },
 ]
