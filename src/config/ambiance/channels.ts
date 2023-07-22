@@ -16,6 +16,10 @@ export const channels = {
     link: 'https://www.youtube.com/channel/UCiAInBL9kUzz1XRxk66v-gw',
     name: 'Overwatch League',
   },
+  Diablo: {
+    link: 'https://www.youtube.com/Diablo',
+    name: 'Diablo',
+  },
   'lofi geek': {
     link: 'https://www.youtube.com/channel/UCyD59CI7beJDU493glZpxgA',
     name: 'lofi geek',
