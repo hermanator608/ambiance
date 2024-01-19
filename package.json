@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mui/core": "5.0.0-alpha.54",
     "@mui/material": "^5.15.5",
-    "@mui/styled-engine": "^5.15.5",
-    "@mui/styled-engine-sc": "^5.0.0",
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@6.0.0-alpha.12",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.12",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.1.2",
     "@testing-library/user-event": "^14.5.2",
@@ -26,6 +27,15 @@
     "styled-components": "^6.1.8",
     "typescript": "^5.3.3",
     "web-vitals": "^3.5.1"
+  },
+  "resolutions": {
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@^6.0.0-alpha.12"
+  },
+  "overrides": {
+    "styled-components": "^6.1.8",
+    "@mui/system": {
+      "@mui/styled-engine": "npm:@mui/styled-engine-sc@^6.0.0-alpha.12"
+    }
   },
   "scripts": {
     "dev": "yarn start",
