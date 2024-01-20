@@ -20,7 +20,7 @@
     "react-full-screen": "^1.1.0",
     "react-icons": "^4.2.0",
     "react-player": "^2.9.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.1",
     "react-tooltip": "^4.2.21",
     "recoil": "^0.4.1",
     "styled-components": "^5.3.1",
@@ -60,5 +60,8 @@
     "@types/lodash.debounce": "^4.0.6",
     "@types/styled-components": "^5.1.14",
     "source-map-explorer": "^2.5.2"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
