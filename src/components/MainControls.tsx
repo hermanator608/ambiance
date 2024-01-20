@@ -60,6 +60,18 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
           }
         />
         <Button
+          icon='bg3'
+          highlighted={currentAmbianceCategoryName === 'bg3'}
+          onClick={
+            logEventClickWrapper({
+              onClick: () => handleCategoryChanger('bg3'),
+              eventData: {
+                actionId: 'bg3Category'
+              }
+            })
+          }
+        />
+        <Button
           icon='lotr'
           highlighted={currentAmbianceCategoryName === 'lotr'}
           onClick={

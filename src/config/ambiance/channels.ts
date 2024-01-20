@@ -143,5 +143,9 @@ export const channels = {
   MovingSoundcloud: {
     link: 'https://www.youtube.com/@MovingSoundcloud',
     name: 'MovingSoundcloud'
+  }, 
+  VideoGamesAmbience: {
+    link: "https://www.youtube.com/@VideoGamesAmbience",
+    name: 'VideoGamesAmbience'
   }
 };
