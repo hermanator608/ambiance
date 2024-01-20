@@ -1,5 +1,4 @@
 import React from 'react'
-import * as CSS from 'csstype'
 import Button from './Button';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import { FullScreenHandle } from 'react-full-screen';
@@ -8,7 +7,7 @@ import { currentAmbianceCategoryNameState, currentAmbianceIndexState } from '../
 import { AmbianceName, ambianceCategories } from '../config/ambiance';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
 
-const controlStyle: CSS.Properties = {
+const controlStyle = {
   zIndex: 6,
   display: 'flex',
   justifyContent: 'space-between',
