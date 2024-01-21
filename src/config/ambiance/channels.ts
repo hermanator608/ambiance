@@ -143,5 +143,18 @@ export const channels = {
   MovingSoundcloud: {
     link: 'https://www.youtube.com/@MovingSoundcloud',
     name: 'MovingSoundcloud'
-  }
+  },
+  'Cozy Coffee Shop': {
+    link: 'https://www.youtube.com/@cozycoffeeshopofficial',
+    name: 'Cozy Coffee Shop'
+  },
+  'The Guild of Ambience': {
+    link: 'https://www.youtube.com/@GuildofAmbience',
+    name: 'The Guild of Ambience'
+  },
+  'Winter Whale': {
+    link: 'https://www.youtube.com/@WinterWhale',
+    name: 'Winter Whale'
+  },
+  
 };

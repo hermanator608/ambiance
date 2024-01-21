@@ -20,7 +20,8 @@ export const harryPotter: Ambiance[] = [
     name: 'Hogwarts Classroom',
     code: 'BQrxsyGTztM',
     group: 'Classrooms',
-    channel: channels['Ambient Worlds']
+    channel: channels['Ambient Worlds'],
+    startTimeS: 30
   },
   {
     name: 'Dumbledore\'s Office',
@@ -61,28 +62,28 @@ export const harryPotter: Ambiance[] = [
   {
     name: 'Gryffindor Common Room',
     code: 'q_8FXTPDj-A',
-    group: 'Four Houses',
+    group: 'Common Rooms',
     channel: channels['Ambient Worlds'],
     startTimeS: 12
   },
   {
     name: 'Slytherin Common Room',
     code: '-aadskAxEEw',
-    group: 'Four Houses',
+    group: 'Common Rooms',
     channel: channels['Ambient Worlds'],
     startTimeS: 20
   },
   {
     name: 'Hufflepuff Common Room',
     code: 'xczn2_hYoUI',
-    group: 'Four Houses',
+    group: 'Common Rooms',
     channel: channels['Ambient Worlds'],
     startTimeS: 20
   },
   {
     name: 'Ravenclaw Common Room',
     code: 'xczn2_hYoUI',
-    group: 'Four Houses',
+    group: 'Common Rooms',
     channel: channels['Ambient Worlds'],
     startTimeS: 18
   },
@@ -110,7 +111,7 @@ export const harryPotter: Ambiance[] = [
   {
     name: 'Winter at Hogwarts',
     code: 'NQ0HkV4Zp_o',
-    group: 'Seasons',
+    group: 'Hogwarts',
     channel: channels['Ambient Worlds'],
     startTimeS: 20
   },
@@ -141,7 +142,7 @@ export const harryPotter: Ambiance[] = [
   {
     name: 'Hogsmeade',
     code: 'LgZjI7JRi1I',
-    group: 'Hogwarts',
+    group: 'Locations',
     channel: channels['Ambient Worlds']
   },
   {

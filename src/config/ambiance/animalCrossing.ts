@@ -5,13 +5,13 @@ export const animalCrossing: Ambiance[] = [
   {
     name: 'ANIMAL CROSSING New Horizons | Fall Vibes Mix',
     code: 'VLKZbZfsLG4',
-    group: 'Fall',
+    group: 'Seasons',
     channel: channels['SlowWalkthroughs'],
   },
   {
     name: 'The Roost',
     code: '2dlCY7XNIfQ',
-    group: 'Coffee',
+    group: 'The Roost Cafe',
     channel: channels.Ramsiene,
   },
   {
@@ -35,12 +35,12 @@ export const animalCrossing: Ambiance[] = [
   {
     name: 'The Roost Cafe in the Forest',
     code: 'in3JvGFk5qI',
-    group: 'Coffee',
+    group: 'The Roost Cafe',
     channel: channels.asmrsoupe,
   },
   {
-    name: 'ACNH Full Soundtrack',
-    code: 'uzkdJs7mH7U',
+    name: 'Animal Crossing New Horizons - Full OST',
+    code: 'zru-TLye9jo',
     group: 'Soundtrack',
     channel: channels.LynfinityMusic,
   },

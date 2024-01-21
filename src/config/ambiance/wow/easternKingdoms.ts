@@ -10,7 +10,7 @@ export const easternKingdoms = [
   {
     name: 'Westfall',
     code: 'Z3O2r5K8e9A',
-    group: 'Eastern Kigndoms',
+    group: 'Eastern Kingdoms',
     channel: channels.Everness
   },
   {
@@ -216,5 +216,12 @@ export const easternKingdoms = [
     code: 'z6AAolBpPNE',
     group: 'Eastern Kingdoms',
     channel: channels.Meisio
-  }
+  },
+  {
+    name: 'Battle for Lordaeron',
+    code: 'ZdINJ9RHapM',
+    group: 'Eastern Kingdoms',
+    channel: channels.Meisio,
+  },
+
 ]

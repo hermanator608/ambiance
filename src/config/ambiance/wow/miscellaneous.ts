@@ -50,15 +50,9 @@ export const miscellaneous = [
 
   // BFA
   {
-    name: 'Battle for Lordaeron',
-    code: 'ZdINJ9RHapM',
-    group: 'Battle For Azeroth',
-    channel: channels.Meisio,
-  },
-  {
     name: 'Nazjatar',
     code: 'DfshvcEA3_k',
-    group: 'Battle For Azeroth',
+    group: 'Azeroth',
     channel: channels.Meisio,
   },
 
