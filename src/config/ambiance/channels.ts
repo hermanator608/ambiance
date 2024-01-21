@@ -147,5 +147,10 @@ export const channels = {
   VideoGamesAmbience: {
     link: "https://www.youtube.com/@VideoGamesAmbience",
     name: 'VideoGamesAmbience'
+  },
+  MerowyngerDE: {
+    link: "https://www.youtube.com/@merowyngerDE",
+    name: 'MerowyngerDE'
   }
+
 };

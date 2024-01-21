@@ -97,5 +97,47 @@ export const bg3: Ambiance[] = [
         code: 'sXWrm1_9u0w',
         group: 'Locations',
         channel: channels['VideoGamesAmbience'],
+    },
+    {
+        name: 'Camp at Baldurs Gate',
+        code: 'EcgDLZTlEWg',
+        group: 'Locations',
+        channel: channels['MerowyngerDE'],
+    },
+    {
+        name: 'Ambient City + Rivington Tracks',
+        code: 'hY01TZcn5as',
+        group: 'Locations',
+        startTimeS: 20,
+        channel: channels['SlowWalkthroughs'],
+    },
+    {
+        name: 'Dramatic Strings + Combat Soundtrack',
+        code: 'PkWSK6lvQAU',
+        group: 'Locations',
+        startTimeS: 20,
+        channel: channels['SlowWalkthroughs'],
+    },
+    {
+        name: 'Soft Ambient Mix | Relaxing Music',
+        code: '8fJBKq7kHH4',
+        group: 'Locations',
+        startTimeS: 20,
+        channel: channels['SlowWalkthroughs'],
+    },
+    {
+        name: 'Emerald Grove Ambient Music Mix',
+        code: '9Ig7ZruBvgI',
+        group: 'Locations',
+        startTimeS: 20,
+        channel: channels['SlowWalkthroughs'],
+    },
+    {
+        name: 'Camp Music Mix',
+        code: 'BmzBLzoI7Ck',
+        group: 'Locations',
+        startTimeS: 20,
+        channel: channels['SlowWalkthroughs'],
     }
+    
 ]

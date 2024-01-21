@@ -16,7 +16,9 @@ import coffeeDefault from '../images/cursors/coffee_default.png';
 import coffeeActive from '../images/cursors/coffee_active.png';
 import lofiDefault from '../images/cursors/lofi_default.gif';
 import lofiActive from '../images/cursors/lofi_active.gif';
-import bg3Active from '../images/cursors/Mysterious_Artefact_Icon.png';
+import bg3Default from '../images/cursors/dnd_default.png';
+import bg3Active from '../images/cursors/dnd_active.png';
+
 
 type MouseStyle = {
   default: string;
@@ -38,7 +40,7 @@ const getMouseStyle = (ambianceCategoryName: AmbianceName): MouseStyle | undefin
     case 'lofi':
         return { default: lofiDefault, pointer: lofiActive };
     case 'bg3':
-        return { default: bg3Active, pointer: bg3Active};
+        return { default: bg3Default, pointer: bg3Active};
     default:
       return undefined;
   }
