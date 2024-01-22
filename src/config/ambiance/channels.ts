@@ -171,6 +171,13 @@ export const channels = {
   'The Vault of Ambience': {
     link: 'https://www.youtube.com/channel/UCKCrKo2agNNuPMhywozxIIg',
     name: 'The Vault of Ambience'
+  }, 
+  VideoGamesAmbience: {
+    link: "https://www.youtube.com/@VideoGamesAmbience",
+    name: 'VideoGamesAmbience'
+  },
+  MerowyngerDE: {
+    link: "https://www.youtube.com/@merowyngerDE",
+    name: 'MerowyngerDE'
   }
-  
 };
