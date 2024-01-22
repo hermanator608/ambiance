@@ -23,6 +23,7 @@ import lotr from '../images/lotr.png';
 import zelda from '../images/zelda.png';
 import harryPotter from '../images/harryPotter.png'
 import animalCrossing from '../images/animalCrossing.png'
+import bg3  from '../images/bauldersGate3.png';
 
 // https://react-icons.github.io/react-icons/icons?name=fa
 const IconMap = {
@@ -49,7 +50,8 @@ const ImgMap = {
   lotr,
   zelda,
   harryPotter,
-  animalCrossing
+  animalCrossing,
+  bg3
 };
 
 const size = 30;
