@@ -23,6 +23,7 @@ import lotr from '../images/lotr.png';
 import zelda from '../images/zelda.png';
 import harryPotter from '../images/harryPotter.png'
 import animalCrossing from '../images/animalCrossing.png'
+import { IconBaseProps, IconType } from 'react-icons';
 
 // https://react-icons.github.io/react-icons/icons?name=fa
 const IconMap = {
@@ -64,13 +65,15 @@ export type ImgName = keyof typeof ImgMap;
 
 export interface IconProps {
   icon: IconName | ImgName;
+  color?: IconBaseProps['color']
+  size?: number
 }
 
 function isImgType(name: IconName | ImgName): name is ImgName {
   return Object.keys(ImgMap).includes(name);
 }
 
-export const Icon: React.FC<IconProps> = ({ icon }) => {
+export const Icon: React.FC<IconProps> = ({ icon, color, size }) => {
   if (isImgType(icon)) {
     const imgSrc = ImgMap[icon];
 
@@ -78,6 +81,6 @@ export const Icon: React.FC<IconProps> = ({ icon }) => {
   } else {
     const IconComponent = IconMap[icon];
 
-    return <IconComponent color="white" size={size} />;
+    return <IconComponent color={!!color ? color : "white"} size={!!size ? size : 30} />;
   }
 };

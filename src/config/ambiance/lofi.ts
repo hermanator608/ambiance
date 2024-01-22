@@ -62,7 +62,7 @@ export const lofi: Ambiance[] = [
   },
   {
     name: 'Lofi Hip-Hop Radio',
-    code: 'KC_oey5dbmI',
+    code: 'rPjez8z61rI',
     group: 'Hip Hop',
     livestream: true,
     channel: channels['STEEZYASFUCK'],
@@ -75,9 +75,9 @@ export const lofi: Ambiance[] = [
     channel: channels['lofi geek'],
   },
   {
-    name: 'Lofi Cafe',
-    code: 'YVlqbYQ_sHg',
-    group: 'Coffee Shop',
+    name: 'Lofi Hip Hop Beats 24/7 Radio',
+    code: 'IRp0zhUFi-M',
+    group: 'Hip Hop',
     livestream: true,
     channel: channels['lofi geek'],
   },
@@ -185,8 +185,8 @@ export const lofi: Ambiance[] = [
     channel: channels['lofi geek'],
   },
   {
-    name: 'Space Hip Hop',
-    code: 'qi9i4IVHQRE',
+    name: 'Space Lofi Hip Hop Radio',
+    code: '8Yqx3we3WJ4',
     group: 'Hip Hop',
     livestream: true,
     channel: channels['lofi geek'],
