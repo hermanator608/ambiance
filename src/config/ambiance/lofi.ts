@@ -303,4 +303,22 @@ export const lofi: Ambiance[] = [
     livestream: true,
     channel: channels['lofi geek'],
   },
+  {
+    name: 'Together at BlizzCon',
+    code: '4NRPEe7YnCQ',
+    group: 'Blizzard',
+    channel: channels['World of Warcraft'],
+  },
+  {
+    name: 'Journey to BlizzCon',
+    code: 'vJpo5dW3Ze4',
+    group: 'Blizzard',
+    channel: channels['World of Warcraft'],
+  },
+  {
+    name: 'Waiting for BlizzCon',
+    code: '-uxi6_5cFqw',
+    group: 'Blizzard',
+    channel: channels['World of Warcraft'],
+  },
 ];

@@ -75,4 +75,25 @@ export const zelda: Ambiance[] = [
     group: 'Breath of the Wild',
     channel: channels['Sam Cisco']
   },
+  {
+    name: 'Great Sky Island',
+    code: 'iLZbRyLwdgo',
+    group: 'Tears of the Kingdom',
+    channel: channels['Ollie Ambience'],
+    startTimeS: 90
+  },
+  {
+    name: 'A Night in Hateno Village',
+    code: 'OOP9CZ1jc7Q',
+    group: 'Tears of the Kingdom',
+    channel: channels['Ollie Ambience'],
+    startTimeS: 90
+  },
+  {
+    name: 'Dragonhead Island',
+    code: '7Pkzq74BLYM',
+    group: 'Tears of the Kingdom',
+    channel: channels['Ichigo Soda']
+  },
+
 ]

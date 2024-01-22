@@ -43,5 +43,11 @@ export const earth: Ambiance[] = [
     code: 'Nl_yp-4G0cA',
     group: 'North America',
     channel: channels['Visual Escape']
+  },
+  {
+    name: 'Oregon',
+    code: 'g0xrTiU1grA',
+    group: 'North America',
+    channel: channels['Visual Escape']
   }
 ]

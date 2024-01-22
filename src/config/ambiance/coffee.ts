@@ -169,6 +169,113 @@ export const coffee: Ambiance[] = [
     channel: channels['Winter Whale'],
     startTimeS: 5,
   },
-
+  {
+    name: 'Dark Classical Academia',
+    code: 'D9km3yXmR8k',
+    group: 'Library',
+    channel: channels['StudyMD']
+  },
+  {
+    name: 'Autumn in The Shire',
+    code: 'ouNrlys4mhc',
+    group: 'Fantasy',
+    channel: channels['The Vault of Ambience']
+  },
+  {
+    name: 'The Forest Hideout',
+    code: 'WllMlJrXdZo',
+    group: 'Fantasy',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 40,
+  },
+  {
+    name: 'The Magic Fairy',
+    code: 'coqHciiixMA',
+    group: 'Fantasy',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 30,
+  },
+  {
+    name: 'Winter in The Shire',
+    code: 'joVyr9TTIl4',
+    group: 'Fantasy',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 20,
+  },
+  {
+    name: 'VICTORIAN AMBIENCE',
+    code: 'Np17CRS0pkw',
+    group: 'Fantasy',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 25,
+  },
+  {
+    name: 'Hobbits Hearth',
+    code: 'cOElKnUVHxE',
+    group: 'Fantasy',
+    channel: channels['The Vault of Ambience']
+  },
+  {
+    name: 'COZY AUTUMN AMBIENCE',
+    code: 'Qfu8-Lj03xk',
+    group: 'Seasons',
+    channel: channels['The Vault of Ambience']
+  },
+  {
+    name: 'COZY MEDIEVAL TAVERN AMBIENCE',
+    code: 'fnNiYXeaOBo',
+    group: 'Fantasy',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 25
+  },
+  {
+    name: 'Dawn of Enchantment',
+    code: 'xCRm7f8e79A',
+    group: 'Fantasy',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 15
+  },
+  {
+    name: 'Enchanted Reading Nook',
+    code: 'RbNUfrrX1l4',
+    group: 'Library',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 10
+  },
+  {
+    name: 'Cozy French Bakery & Cafe',
+    code: 'VuA3kmHf34w',
+    group: 'Coffee Shops and Cafes',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 10
+  },
+  {
+    name: 'Coffee Shop Ambience with Bossa Nova Music',
+    code: 'phWjaWEYVn4',
+    group: 'Coffee Shops and Cafes',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 10
+  },
+  {
+    name: 'Magic Bookstore in the Woods',
+    code: '-lrqKzmPDvQ',
+    group: 'Library',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 20
+  },
+  {
+    name: 'Night at The Witchers Tavern',
+    code: 'vWZ2ZU7NmoE',
+    group: 'Fantasy',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 15
+  },
+  {
+    name: 'Cozy Tavern',
+    code: 'O738AtAwacI',
+    group: 'Fantasy',
+    channel: channels['The Vault of Ambience'],
+    startTimeS: 15
+  }
 
 ];

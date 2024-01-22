@@ -156,5 +156,21 @@ export const channels = {
     link: 'https://www.youtube.com/@WinterWhale',
     name: 'Winter Whale'
   },
+  'Ollie Ambience': {
+    link: 'https://www.youtube.com/@ollieambience',
+    name: 'Ollie Ambience'
+  },
+  'Ichigo Soda': {
+    link: 'https://www.youtube.com/@ichigosoda_ambience',
+    name: 'Ichigo Soda'
+  },
+  'StudyMD': {
+    link: 'https://www.youtube.com/@StudyMD',
+    name: 'StudyMD'
+  },
+  'The Vault of Ambience': {
+    link: 'https://www.youtube.com/channel/UCKCrKo2agNNuPMhywozxIIg',
+    name: 'The Vault of Ambience'
+  }
   
 };
