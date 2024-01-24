@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   }
 `;
 
-type Option = { title: string; id: string; group: string; index: number; live: boolean|undefined };
+type Option = { title: string; id: string; group: string; index: number; live?: boolean };
 
 export const Selector: React.FC = () => {
   const currentAmbianceName = useRecoilValue(
