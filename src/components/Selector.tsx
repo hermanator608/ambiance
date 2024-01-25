@@ -7,6 +7,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { currentAmbianceCategoryNameState, currentAmbianceIndexState } from '../state';
 import { UseAutocompleteProps } from '@mui/core';
 import { ambianceCategories } from '../config/ambiance';
+import { Icon } from './Icon';
+import { Box } from '@mui/material';
 
 const Wrapper = styled.div`
   z-index: 6;
@@ -19,7 +21,7 @@ const Wrapper = styled.div`
   }
 `;
 
-type Option = { title: string; id: string; group: string; index: number };
+type Option = { title: string; id: string; group: string; index: number; live?: boolean };
 
 export const Selector: React.FC = () => {
   const currentAmbianceName = useRecoilValue(
@@ -33,6 +35,7 @@ export const Selector: React.FC = () => {
     id: a.code,
     group: a.group,
     index,
+    live: a.livestream,
   }));
 
   const onChangeHandler: UseAutocompleteProps<
@@ -54,8 +57,16 @@ export const Selector: React.FC = () => {
         options={options.sort((a, b) => -b.group.localeCompare(a.group))}
         groupBy={(option) => option.group}
         getOptionLabel={(option) => option.title}
+        renderOption={(props, option) => (
+          <Box component='li' {...props}>
+            {option.live === true 
+              ? <><Icon icon='live' color='black' size={20}/> &nbsp; {option.title}</>
+              : <>{option.title}</>
+            }
+          </Box>
+        )}
         sx={{
-          width: matches ? 300 : 200,
+          width: matches ? 400 : 200,
         }}
         renderInput={(params) => (
           <TextField {...params} label="Ambiance Selector" sx={{ color: 'white' }} />

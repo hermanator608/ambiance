@@ -143,6 +143,34 @@ export const channels = {
   MovingSoundcloud: {
     link: 'https://www.youtube.com/@MovingSoundcloud',
     name: 'MovingSoundcloud'
+  },
+  'Cozy Coffee Shop': {
+    link: 'https://www.youtube.com/@cozycoffeeshopofficial',
+    name: 'Cozy Coffee Shop'
+  },
+  'The Guild of Ambience': {
+    link: 'https://www.youtube.com/@GuildofAmbience',
+    name: 'The Guild of Ambience'
+  },
+  'Winter Whale': {
+    link: 'https://www.youtube.com/@WinterWhale',
+    name: 'Winter Whale'
+  },
+  'Ollie Ambience': {
+    link: 'https://www.youtube.com/@ollieambience',
+    name: 'Ollie Ambience'
+  },
+  'Ichigo Soda': {
+    link: 'https://www.youtube.com/@ichigosoda_ambience',
+    name: 'Ichigo Soda'
+  },
+  'StudyMD': {
+    link: 'https://www.youtube.com/@StudyMD',
+    name: 'StudyMD'
+  },
+  'The Vault of Ambience': {
+    link: 'https://www.youtube.com/channel/UCKCrKo2agNNuPMhywozxIIg',
+    name: 'The Vault of Ambience'
   }, 
   VideoGamesAmbience: {
     link: "https://www.youtube.com/@VideoGamesAmbience",
@@ -152,5 +180,4 @@ export const channels = {
     link: "https://www.youtube.com/@merowyngerDE",
     name: 'MerowyngerDE'
   }
-
 };

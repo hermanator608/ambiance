@@ -16,9 +16,12 @@ import coffeeDefault from '../images/cursors/coffee_default.png';
 import coffeeActive from '../images/cursors/coffee_active.png';
 import lofiDefault from '../images/cursors/lofi_default.gif';
 import lofiActive from '../images/cursors/lofi_active.gif';
+import animalCrossingActive from '../images/cursors/animalCrossing_active.png';
+import animalCrossingDefault from '../images/cursors/animalCrossing_default.png';
+import earthDefault from '../images/cursors/earth_default.png';
+import earthActive from '../images/cursors/earth_active.png';
 import bg3Default from '../images/cursors/dnd_default.png';
 import bg3Active from '../images/cursors/dnd_active.png';
-
 
 type MouseStyle = {
   default: string;
@@ -38,7 +41,11 @@ const getMouseStyle = (ambianceCategoryName: AmbianceName): MouseStyle | undefin
     case 'coffee':
       return { default: coffeeDefault, pointer: coffeeActive };
     case 'lofi':
-        return { default: lofiDefault, pointer: lofiActive };
+      return { default: lofiDefault, pointer: lofiActive };
+    case 'animalCrossing':
+      return { default: animalCrossingDefault, pointer: animalCrossingActive };
+    case 'earth':
+      return { default: earthDefault, pointer: earthActive };
     case 'bg3':
         return { default: bg3Default, pointer: bg3Active};
     default:
