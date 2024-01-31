@@ -27,6 +27,7 @@
     "react-tooltip": "^5.25.2",
     "recoil": "^0.7.7",
     "styled-components": "^6.1.8",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "web-vitals": "^3.5.1"
   },
@@ -45,7 +46,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "analyzeBuild": "source-map-explorer 'build/static/js/*.js'"
+    "analyzeBuild": "source-map-explorer 'build/static/js/*.js'",
+    "seedDatabase": "ts-node ./scripts/seedDatabase.ts"
   },
   "eslintConfig": {
     "extends": [
