@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore"; 
+import { getFirestore } from "firebase/firestore"; 
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -17,9 +17,8 @@ export const firebaseConfig = {
 };
 
 
-
 export const initFirebase = async(): Promise<void> => {
-  // Initialize Firebase
+  // Initialize Firebase App
   const app = initializeApp(firebaseConfig);
   
   // Only start analytics in non-dev environments
@@ -29,19 +28,6 @@ export const initFirebase = async(): Promise<void> => {
 
   // Initialize Firestore DB
   const db = getFirestore(app);
-  
-
-  //Test DB connection with read
-  /* 
-  try {
-    const querySnapshot = await getDocs(collection(db, "testing"));
-    querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data()}`);
-    });
-
-  } catch (e) {
-    console.error("Error reading document: ", e);
-  }*/
   
 }
 
