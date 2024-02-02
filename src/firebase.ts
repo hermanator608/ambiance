@@ -27,7 +27,7 @@ export const initFirebase = async(): Promise<void> => {
   }
 
   // Initialize Firestore DB
-  const db = getFirestore(app);
+  getFirestore(app);
   
 }
 
