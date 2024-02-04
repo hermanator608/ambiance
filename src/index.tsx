@@ -1,17 +1,37 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './index.css';
 import App from './App';
+import ErrorPage from './error-page';
+import AdminPage from './admin';
 import reportWebVitals from './reportWebVitals';
-import {initFirebase} from './firebase'
+import { initFirebase } from './firebase'
 
-initFirebase()
+initFirebase();
 
-ReactDOM.render(
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: "/admin",
+    element: <AdminPage />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '*',
+    element: <App />,
+    errorElement: <ErrorPage />
+  }
+]);
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>,
-  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
