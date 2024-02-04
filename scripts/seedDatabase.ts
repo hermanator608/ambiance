@@ -8,22 +8,26 @@ import { ambianceCategoryDetail, ambianceCategories } from "../src/config/ambian
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-//addChannels();
-//addWarcraft();
+addChannels();
+addAmbianceCategories();
 
 async function addChannels() {
   try {
 
+    console.log("Seeding Channels...");
     let current: keyof typeof channels;
 
     for (current in channels) {
       let entry = channels[current];
+      console.log(entry.name + ", " + entry.link);
 
       await setDoc(doc(db, "channels", current), {
         name: entry.name,
         link: entry.link,
       });
     }
+
+    console.log("Channels Seeded!")
 
   } catch (e) {
     console.error("Error: ", e);
@@ -32,14 +36,16 @@ async function addChannels() {
 }
 
 
-async function addWarcraft() {
+async function addAmbianceCategories() {
   try {
 
+    console.log("Seeding Ambiance Categories...");
     let current: keyof typeof ambianceCategories;
 
     for(current in ambianceCategories) {
       let entry = ambianceCategories[current];
       let entryDetails = ambianceCategoryDetail[current];
+      console.log(entryDetails.name);
 
       await setDoc(doc(db, "ambiance", current), {
         name: entryDetails.name,
@@ -47,6 +53,8 @@ async function addWarcraft() {
         videos: entry
       });
     }
+
+    console.log("Ambiance Categories Seeded!")
        
   } catch (e) {
     console.error("Error: ", e);
