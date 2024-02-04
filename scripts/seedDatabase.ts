@@ -4,12 +4,21 @@ import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { channels } from '../src/config/ambiance/channels';
 import { ambianceCategoryDetail, ambianceCategories } from "../src/config/ambiance/index";
 
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-addChannels();
-addAmbianceCategories();
+switch (process.argv[2]) {
+  case "channels": 
+    addChannels();
+    break;
+  case "ambiance": 
+    addAmbianceCategories();
+    break;
+  default:
+    addChannels();
+    addAmbianceCategories();
+    break;
+}
 
 async function addChannels() {
   try {
@@ -19,7 +28,6 @@ async function addChannels() {
 
     for (current in channels) {
       let entry = channels[current];
-      console.log(entry.name + ", " + entry.link);
 
       await setDoc(doc(db, "channels", current), {
         name: entry.name,
@@ -45,7 +53,6 @@ async function addAmbianceCategories() {
     for(current in ambianceCategories) {
       let entry = ambianceCategories[current];
       let entryDetails = ambianceCategoryDetail[current];
-      console.log(entryDetails.name);
 
       await setDoc(doc(db, "ambiance", current), {
         name: entryDetails.name,
