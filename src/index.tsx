@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './index.css';
 import App from './App';
 import ErrorPage from './error-page';
-import AdminPage from './admin';
+import LoginPage from './login';
 import reportWebVitals from './reportWebVitals';
 import { initFirebase } from './firebase'
 
@@ -17,15 +17,16 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />
   },
   {
-    path: "/admin",
-    element: <AdminPage />,
+    path: "/login",
+    element: <LoginPage />,
     errorElement: <ErrorPage />
   },
   {
     path: '*',
     element: <App />,
     errorElement: <ErrorPage />
-  }
+  },
+
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

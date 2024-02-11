@@ -70,3 +70,24 @@ select {
   border: none;
   text-align: left;
 }
+
+#admin-page {
+  text-align: center;
+  padding-top: 50px;
+}
+
+.admin-login-title {
+  padding-bottom: 15px;
+}
+
+.login-text-field {
+  --brown-glow-drop-shadow: none;
+
+}
+
+.login-button {
+  padding-top: 25px;
+  --brown-glow-drop-shadow: none;
+
+
+}
