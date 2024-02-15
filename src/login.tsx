@@ -17,7 +17,6 @@ export default function LoginPage() {
     signInWithEmailAndPassword(auth, username, password)
       .then((userCredential: any) => {
       // Signed in
-      var user = userCredential.user;
       alert("success!");
       setUsername("");
       setPassword("");
@@ -25,8 +24,8 @@ export default function LoginPage() {
 
     })
     .catch((error: any) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
+      console.log(error.code);
+      console.log(error.message);
     });
 
   }
@@ -37,79 +36,74 @@ export default function LoginPage() {
       setSignedIn(false);
 
     }).catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
+      console.log(error.code);
+      console.log(error.message);
     })
   }
 
  
   return (
-      <Box
-        id="admin-page"
-        component="form"
-        sx={{
-          '& > :not(style)': { m: 1, width: 'auto' },
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        
-        
-        <Typography className="admin-login-title" variant="h4">Administrative Login Page</Typography>
-        
-        {signedIn === false
-        ?<div>
-          <TextField
-            sx={{m:2}}
-            className="login-text-field" 
-            required={true}
-            defaultValue={ username }
-            label="Username"
-            variant="filled"
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setUsername(event.target.value);
-            }}
-          />
-          <TextField
-              sx={{m:2}} 
-            className="login-text-field"
-            type="password"
-            required={true}
-            defaultValue={ password }
-            label= "Password"
-            variant="filled"
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setPassword(event.target.value);
-            }} 
-          />
-          
-          <div className="login-button">
-            <Button 
-              variant="contained" 
-              size="large"
-              onClick={() => {
-                attemptLogin();
-              }}
-            > 
-            Sign In 
-            </Button>
-          </div>
-        </div>
+    <Box
+      id="admin-page"
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: 'auto' },
+      }}
+      noValidate
+      autoComplete="off"
+    >
+      <Typography className="admin-login-title" variant="h4">Administrative Login Page</Typography>
 
-        : <Button 
+      {signedIn === false
+      ?<div>
+        <TextField
+          sx={{m:2}}
+          className="login-text-field" 
+          required={true}
+          defaultValue={ username }
+          label="Username"
+          variant="filled"
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setUsername(event.target.value);
+          }}
+        />
+        <TextField
+            sx={{m:2}} 
+          className="login-text-field"
+          type="password"
+          required={true}
+          defaultValue={ password }
+          label= "Password"
+          variant="filled"
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setPassword(event.target.value);
+          }} 
+        />
+        <div className="login-button">
+          <Button 
             variant="contained" 
             size="large"
             onClick={() => {
-              attemptSignOut();
+              attemptLogin();
             }}
           > 
-            Sign Out 
+          Sign In 
           </Button>
+        </div>
+      </div>
 
-        }
-        
-      </Box> 
-    
+      : <Button 
+          variant="contained" 
+          size="large"
+          onClick={() => {
+            attemptSignOut();
+          }}
+        > 
+          Sign Out 
+        </Button>
+      } 
+
+    </Box> 
   )
 }
 
