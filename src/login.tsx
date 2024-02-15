@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -11,16 +11,6 @@ export default function LoginPage() {
   const [username, setUsername] = useState<string>("");
   const [signedIn, setSignedIn] = useState<boolean>(false);
   const auth = getAuth();
-
-
-  onAuthStateChanged(auth, (user) => {
-    if(user) {
-
-      const uid = user.uid;
-    } else {
-
-    }
-  });
 
   const attemptLogin = async () => {
 
