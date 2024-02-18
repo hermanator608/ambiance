@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore"; 
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -17,10 +18,10 @@ export const firebaseConfig = {
 };
 
 
-export const initFirebase = async(): Promise<void> => {
+export const initFirebase = async (): Promise<void> => {
   // Initialize Firebase App
   const app = initializeApp(firebaseConfig);
-  
+
   // Only start analytics in non-dev environments
   if (process.env.NODE_ENV !== 'development') {
     getAnalytics(app);
@@ -28,7 +29,9 @@ export const initFirebase = async(): Promise<void> => {
 
   // Initialize Firestore DB
   getFirestore(app);
-  
+
+  // Initialize Firebase Authentication
+  getAuth(app);
 }
 
 

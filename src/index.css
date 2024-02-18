@@ -71,23 +71,28 @@ select {
   text-align: left;
 }
 
-#admin-page {
+#login-page *, #admin-page * {
+  --brown-glow-drop-shadow: none;
+  color: black;
+}
+
+#login-page {
   text-align: center;
   padding-top: 50px;
 }
 
-.admin-login-title {
+.login-title {
   padding-bottom: 15px;
 }
 
-.login-text-field {
-  --brown-glow-drop-shadow: none;
-
+.error-placeholder{
+  height: 50px;
 }
 
-.login-button {
+.login-button-parent {
   padding-top: 25px;
-  --brown-glow-drop-shadow: none;
+}
 
-
+#admin-page {
+  text-align: center;
 }
