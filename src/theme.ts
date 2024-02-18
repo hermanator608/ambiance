@@ -29,10 +29,12 @@ export const theme = createTheme({
         notchedOutline: {
           borderColor: common.white
         },
-        focused: {
-          borderColor: common.white
+        root: {
+          "&.Mui-focused": {
+            "borderColor": "#fff"
+          }
         }
-      }
+      },
     },
     MuiTextField: {
       styleOverrides: {
