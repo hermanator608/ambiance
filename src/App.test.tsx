@@ -3,12 +3,15 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './AuthProvider';
+import { Routes } from "react-router-dom";
 
 test('renders learn react link', () => {
   render(
     <AuthProvider>
       <BrowserRouter>
-        <App />
+        <Routes>
+          <App />
+        </Routes>
       </BrowserRouter>
     </AuthProvider>
   );
