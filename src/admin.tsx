@@ -9,7 +9,7 @@ export default function AdminPage() {
 
   return (
 
-    <div id="admin-page">
+    <div id="admin-page" data-testid='admin'>
       <h1>Admin Page</h1>
       <p>Welcome {currentUser?.email}</p>
 

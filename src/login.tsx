@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -14,6 +14,13 @@ export default function LoginPage() {
   const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string | undefined>();
   const { signIn, currentUser } = useContext(AuthContext);
+
+  // Check if the current user exists
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/admin')
+    }
+  }, [currentUser, navigate])
 
   const attemptLogin = () => {
     setError(undefined);
@@ -39,7 +46,7 @@ export default function LoginPage() {
   //If user is undefined, because we're waiting on firebase response, only display loading bar
   if (currentUser === undefined) {
     return (
-      <Box id="login-page" sx={{ width: '100%' }}>
+      <Box id="login-page" sx={{ width: '100%' }} data-testid='login-spinner'>
         <CircularProgress />
       </Box>
     );
@@ -48,6 +55,7 @@ export default function LoginPage() {
   return (
     <Box
       id="login-page"
+      data-testid='login'
       component="form"
       sx={{
         '& > :not(style)': { m: 1, width: 'auto' },

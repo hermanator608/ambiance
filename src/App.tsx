@@ -8,37 +8,31 @@ import LoginPage from './login';
 import AdminPage from './admin';
 import { AuthContext } from './AuthProvider';
 import { RequireAuth } from './RequireAuth';
+import { AuthProvider } from './AuthProvider';
 
 
 const App: React.FC = () => {
-  const { currentUser } = useContext(AuthContext)
-  const navigate = useNavigate()
-
-  // Check if the current user exists on the initial render.
-  useEffect(() => {
-    if (currentUser) {
-      navigate('/admin')
-    }
-  }, [currentUser, navigate])
 
   return (
-    <RecoilRoot>
-      <ThemeProvider theme={theme}>
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/admin"
-            element={
-              <RequireAuth>
-                <AdminPage />
-              </RequireAuth>
-            }
-          />
-          <Route path="*" element={<Main />} />
-        </Routes>
-      </ThemeProvider>
-    </RecoilRoot>
+    <AuthProvider>
+      <RecoilRoot>
+        <ThemeProvider theme={theme}>
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/admin"
+              element={
+                <RequireAuth>
+                  <AdminPage />
+                </RequireAuth>
+              }
+            />
+            <Route path="*" element={<Main />} />
+          </Routes>
+        </ThemeProvider>
+      </RecoilRoot>
+    </AuthProvider>
   );
 };
 
