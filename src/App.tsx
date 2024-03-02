@@ -1,12 +1,11 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { Main } from './Main';
 import { theme } from './theme';
 import { RecoilRoot } from 'recoil';
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import LoginPage from './login';
 import AdminPage from './admin';
-import { AuthContext } from './AuthProvider';
 import { RequireAuth } from './RequireAuth';
 import { AuthProvider } from './AuthProvider';
 
