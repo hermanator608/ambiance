@@ -53,7 +53,8 @@ p,
 span,
 button,
 select,
-input {
+input,
+.app-bar {
   filter: var(--brown-glow-drop-shadow);
 }
 
@@ -71,28 +72,41 @@ select {
   text-align: left;
 }
 
-#login-page *, #admin-page * {
+#login-page *,
+#admin-page button {
   --brown-glow-drop-shadow: none;
-  color: black;
+
 }
 
 #login-page {
   text-align: center;
   padding-top: 50px;
+  color: black;
 }
 
 .login-title {
   padding-bottom: 15px;
 }
 
-.error-placeholder{
+.error-placeholder {
   height: 50px;
-}
-
-.login-button-parent {
-  padding-top: 25px;
 }
 
 #admin-page {
   text-align: center;
+  padding-bottom: 80px;
 }
+
+#videos-title {
+  padding-top: 100px;
+  color: white;
+  
+}
+
+#tree-view {
+  margin: auto;
+  width: 50%;
+  padding-top: 20px;
+}
+
+
