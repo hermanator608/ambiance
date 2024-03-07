@@ -19,7 +19,7 @@ const Container = styled.div`
   align-items: end;
 `;
 
-const InfoSection = styled.div<{ fadeInState: boolean }>`
+const InfoSection = styled.div`
   z-index: 6;
   position: absolute;
   right: 0;
@@ -60,14 +60,10 @@ export const Info: React.FC = () => {
   const [showInfo, setShowInfo] = useState(false);
   const onClick = () => setShowInfo(!showInfo);
 
-  const onAnimationEnd = () => {
-    if (!showInfo) setShowInfo(false);
-  };
-
   return (
     <Container>
       <Fade in={showInfo} timeout={600}>
-        <InfoSection fadeInState={showInfo} onAnimationEnd={onAnimationEnd}>
+        <InfoSection>
           <h3>Thank you to the following channels for the videos!</h3>
           <Links>
             {Object.values(channels).map(({ link, name }) => {
