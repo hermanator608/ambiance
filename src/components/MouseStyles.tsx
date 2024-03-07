@@ -58,8 +58,6 @@ export const MouseStyles: React.FC = () => {
 
   const currentMouse = getMouseStyle(ambianceName);
 
-  console.log(currentMouse);
-
   const GlobalMouseStyles = createGlobalStyle`
     body {
       cursor: url(${currentMouse?.default}), default !important;

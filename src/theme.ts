@@ -29,10 +29,7 @@ export const theme = createTheme({
         notchedOutline: {
           borderColor: common.white
         },
-        focused: {
-          borderColor: common.white
-        }
-      }
+      },
     },
     MuiTextField: {
       styleOverrides: {
