@@ -8,3 +8,9 @@ export type Ambiance = {
   channel?: Channel;
   livestream?: boolean;
 };
+
+export type AmbianceCategory = {
+  icon: string,
+  name: string,
+  videos: Ambiance[]
+}
