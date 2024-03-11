@@ -6,7 +6,7 @@ import { coffee } from './coffee';
 import { earth } from './earth';
 import { harryPotter } from './harryPotter';
 import { animalCrossing } from './animalCrossing';
-import {bg3} from './bg3';
+import { bg3 } from './bg3';
 
 export * from './types';
 export * from './wow';
@@ -32,7 +32,6 @@ export const ambianceCategories = {
 };
 export type AmbianceName = keyof typeof ambianceCategories;
 
-
 export const ambianceCategoryDetail = {
   worldOfWarcraft: {
     name: "World of Warcraft",
@@ -50,7 +49,7 @@ export const ambianceCategoryDetail = {
     name: "The Legend of Zelda",
     icon: "zelda"
   },
-  coffee:{
+  coffee: {
     name: "Coffee",
     icon: "coffee"
   },
@@ -70,5 +69,4 @@ export const ambianceCategoryDetail = {
     name: "Baldur's Gate 3",
     icon: "bg3"
   }
-
 }

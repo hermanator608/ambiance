@@ -70,6 +70,7 @@ export default function LoginPage() {
         value={username}
         label="Username"
         variant="filled"
+        color="secondary"
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           setUsername(event.target.value);
         }}
@@ -81,6 +82,7 @@ export default function LoginPage() {
         value={password}
         label="Password"
         variant="filled"
+        color="secondary"
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           setPassword(event.target.value);
         }}

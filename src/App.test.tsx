@@ -3,8 +3,10 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 import { MemoryRouter } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 jest.mock('firebase/auth');
+jest.mock('firebase/firestore');
 
 test('renders App on the main ambaince page with logged in user', () => {
   (getAuth as jest.Mock).mockReturnValue({

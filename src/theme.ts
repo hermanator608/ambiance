@@ -6,6 +6,9 @@ export const theme = createTheme({
     primary: {
       main: common.white
     },
+    secondary: {
+      main: common.black
+    }
 
   },
   components: {
