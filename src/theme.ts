@@ -49,6 +49,13 @@ export const theme = createTheme({
           color: common.white
         }
       }
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: common.black
+        }
+      }
     }
   }
 });
