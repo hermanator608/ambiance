@@ -93,14 +93,11 @@ select {
 }
 
 #admin-page {
-  text-align: center;
-  padding-bottom: 80px;
+  padding: 100px 0 100px 0;
 }
 
 #videos-title {
-  padding-top: 100px;
   color: white;
-  
 }
 
 #tree-view {
@@ -109,12 +106,8 @@ select {
   padding-top: 20px;
 }
 
-.build-icon{
-  color: rgb(218, 39, 39);
-}
-
-.text-field-stack, .button-stack {
+.text-field-stack,
+.button-stack {
   padding-bottom: 15px;
   padding-top: 15px;
 }
-

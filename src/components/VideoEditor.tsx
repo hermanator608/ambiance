@@ -8,23 +8,23 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { Channel } from '../config/ambiance/channels';
+import { EditVideoFn, DeleteVideoFn, AddVideoFn } from '../types';
 
 
 type VideoEditorProps = {
   documentId: string,
-  video?: Partial<Ambiance>,
-  videoUrlCode?: string,
-  editVideo?: (documentId: string, videoUrlCode: string, newData: Ambiance) => void,
-  deleteVideo?: (documentId: string, videoUrlCode: string) => void,
-  addVideo?: (documentId: string, newData: Ambiance) => void
+  currentVideo?: Partial<Ambiance>,
+  editVideo?: EditVideoFn,
+  deleteVideo?: DeleteVideoFn,
+  addVideo?: AddVideoFn
 }
 
 
 export default function VideoEditor(props: VideoEditorProps) {
-  const { video, documentId, videoUrlCode, editVideo, deleteVideo, addVideo } = props;
+  const { currentVideo, documentId, editVideo, deleteVideo, addVideo } = props;
   const [showDeleteAlert, setShowDeleteAlert] = useState<Boolean>(false);
   const [showEditAlert, setShowEditAlert] = useState<Boolean>(false);
-  const [vidData, setVidData] = useState<Partial<Ambiance> | undefined>(video);
+  const [localVideo, setLocalVideo] = useState<Partial<Ambiance> | undefined>(currentVideo);
 
   const verifyDelete = () => {
     setShowDeleteAlert(true);
@@ -35,141 +35,166 @@ export default function VideoEditor(props: VideoEditorProps) {
   }
 
   const deleteAction = () => {
-    if (!videoUrlCode || !deleteVideo) {
+    if (!currentVideo?.code || !deleteVideo) {
       return;
     }
 
-    deleteVideo(documentId, videoUrlCode);
+    deleteVideo(documentId, currentVideo.code);
     setShowDeleteAlert(false);
   }
 
   const editVideoAction = () => {
-    if (!vidData || !videoUrlCode || !editVideo) {
+    if (!localVideo || !currentVideo?.code || !editVideo) {
       return;
     }
 
-    if (!vidData.name || !vidData.code || !vidData.group) {
+    if (!localVideo.name || !localVideo.code || !localVideo.group) {
       alert("Name, Code, and Group are required");
       return;
     }
 
-    editVideo(documentId, videoUrlCode, vidData as Ambiance);
+    editVideo(documentId, currentVideo.code, localVideo as Ambiance)
     setShowEditAlert(false);
   }
 
   const addVideoAction = () => {
-    if (!vidData || !addVideo) {
+    if (!localVideo || !addVideo) {
       return;
     }
 
-    if (!vidData.name || !vidData.code || !vidData.group) {
+    if (!localVideo.name || !localVideo.code || !localVideo.group) {
       alert("Name, Code, and Group are required");
       return;
     }
 
-    addVideo(documentId, vidData as Ambiance);
-    setVidData({});
+    addVideo(documentId, localVideo as Ambiance);
+    setLocalVideo({});
   }
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: keyof Ambiance) => {
     const newVidData: Partial<Ambiance> = {
-      ...vidData,
+      ...localVideo,
       [key]: event.target.value
     }
-    setVidData(newVidData);
+    setLocalVideo(newVidData);
+  }
+
+  const handleOnChangeBoolean = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: keyof Ambiance) => {
+    const localBoolean = event.target.value === "true";
+    const newVidData: Partial<Ambiance> = {
+      ...localVideo,
+      [key]: localBoolean
+    }
+    setLocalVideo(newVidData);
+  }
+
+  const handleOnChangeInteger = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: keyof Ambiance) => {
+    let localInteger: number;
+
+    if(!event.target.value) {
+      localInteger = 0;
+    } else {
+      localInteger = parseInt(event.target.value);
+
+      if (isNaN(localInteger)) {
+        alert("Cannot set " + key + " to integer from the value: " + event.target.value);
+        return;
+      }
+    }
+
+    const newVidData: Partial<Ambiance> = {
+      ...localVideo,
+      [key]: localInteger
+    }
+    setLocalVideo(newVidData);
   }
 
   const handleOnChangeChannel = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: keyof Channel) => {
     let newChannel: Channel;
     if (key === "name") {
       newChannel = {
-        link: vidData?.channel?.link || "",
+        link: localVideo?.channel?.link || "",
         name: event.currentTarget.value
       }
     } else {
       newChannel = {
         link: event.currentTarget.value,
-        name: vidData?.channel?.name || "",
+        name: localVideo?.channel?.name || "",
       }
     }
 
     const newVidData: Partial<Ambiance> = {
-      ...vidData,
+      ...localVideo,
       channel: newChannel
     }
-    setVidData(newVidData);
+    setLocalVideo(newVidData);
   }
 
 
   return (
     <div id='Video-Editor'>
-      <Stack className='text-field-stack' direction="column" spacing={.4}>
+      <Stack className='text-field-stack' direction="column" spacing={1}>
         <TextField
-          sx={{ '& .dsoQSg': { paddingTop: '10px' } }}
-          defaultValue={vidData?.name}
+          defaultValue={localVideo?.name}
           onChange={(e) => handleOnChange(e, "name")}
           helperText="Display Name"
           size='small'
           variant="filled"
           required
-          value={vidData?.name || ""}
+          value={localVideo?.name || ""}
         />
         <TextField
-          sx={{ '& .dsoQSg': { paddingTop: '10px' } }}
-          defaultValue={vidData?.group}
+          defaultValue={localVideo?.group}
           onChange={(e) => handleOnChange(e, "group")}
           helperText="Subcategory"
           variant="filled"
           size='small'
           required
-          value={vidData?.group || ""}
+          value={localVideo?.group || ""}
         />
         <TextField
-          sx={{ '& .dsoQSg': { paddingTop: '10px' } }}
-          defaultValue={vidData?.code}
+          defaultValue={localVideo?.code}
           onChange={(e) => handleOnChange(e, "code")}
           helperText="YouTube URL"
           variant="filled"
           size='small'
           required
-          value={vidData?.code || ""}
+          value={localVideo?.code || ""}
         />
         <TextField
-          sx={{ '& .dsoQSg': { paddingTop: '10px' } }}
-          defaultValue={vidData?.channel?.name}
+          defaultValue={localVideo?.channel?.name}
           onChange={(e) => handleOnChangeChannel(e, "name")}
           helperText="Optional: YouTube channel Name"
           variant="filled"
           size='small'
-          value={vidData?.channel?.name || ""}
+          value={localVideo?.channel?.name || ""}
         />
         <TextField
-          sx={{ '& .dsoQSg': { paddingTop: '10px' } }}
-          defaultValue={vidData?.channel?.link}
+          defaultValue={localVideo?.channel?.link}
           onChange={(e) => handleOnChangeChannel(e, "link")}
           helperText="Optional: YouTube channel Link"
           variant="filled"
           size='small'
-          value={vidData?.channel?.link || ""}
+          value={localVideo?.channel?.link || ""}
         />
         <TextField
-          sx={{ '& .dsoQSg': { paddingTop: '10px' } }}
-          defaultValue={vidData?.startTimeS}
-          onChange={(e) => handleOnChange(e, "startTimeS")}
+          defaultValue={localVideo?.startTimeS}
+          onChange={(e) => handleOnChangeInteger(e, "startTimeS")}
           helperText="Optional: Video start time (seconds)"
           variant="filled"
           size='small'
-          value={vidData?.startTimeS || ""}
+          type='number'
+          inputProps={{min: "0"}}
+          value={localVideo?.startTimeS}
         />
         <TextField
-          sx={{ '& .dsoQSg': { paddingTop: '10px' } }}
-          defaultValue={vidData?.livestream ? "Yes" : "No"}
-          onChange={(e) => handleOnChange(e, "livestream")}
+          defaultValue={localVideo?.livestream ? "Yes" : "No"}
+          onChange={(e) => handleOnChangeBoolean(e, "livestream")}
           helperText="Optional: Yes / No livestream"
           variant="filled"
           size='small'
           select
-          value={vidData?.livestream || ""}
+          value={localVideo?.livestream}
         >
           <MenuItem key="true" value="true">Yes</MenuItem>
           <MenuItem key="false" value="false">No</MenuItem>
@@ -211,14 +236,14 @@ export default function VideoEditor(props: VideoEditorProps) {
         </Stack>
       }
 
-      {!addVideo &&
+      {editVideo &&
         <Stack className="button-stack" direction="row" spacing={10}>
           <Button onClick={verifyEdit} disabled={!!showEditAlert || !!showDeleteAlert} size='small' variant="contained" color='secondary'>Save Changes</Button>
           <Button onClick={verifyDelete} disabled={!!showEditAlert || !!showDeleteAlert} variant="outlined" color="error">Delete Video</Button>
         </Stack>
       }
 
-      {!editVideo &&
+      {addVideo &&
         <Stack className="button-stack" direction="row" spacing={10}>
           <Button onClick={addVideoAction} size='small' variant="contained" color='secondary'>Add Video</Button>
         </Stack>

@@ -53,7 +53,7 @@ export const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          color: common.black
+          color: common.white
         }
       }
     }

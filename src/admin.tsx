@@ -10,15 +10,15 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AddIcon from '@mui/icons-material/Add';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { Ambiance, AmbianceCategory } from './config/ambiance/types';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import VideoEditor from './components/VideoEditor';
+import { TreeIcon } from './components/TreeIcon';
 import { AMBIANCE_COLLECTION } from './constants';
 import cloneDeep from 'lodash.clonedeep';
+import { EditVideoFn, DeleteVideoFn, AddVideoFn } from './types';
 
 type SubcategoryMap = Record<string, Ambiance[]>;
 
@@ -54,25 +54,32 @@ export default function AdminPage() {
     return unsubscribe;
   }, [db, setData]);
 
-  
-  const editVideo = async (documentId: string, videoUrlCode: string, newData: Ambiance) => {
+
+  const editVideo: EditVideoFn = async (documentId, videoUrlCode, newData) => {
     if (!data) {
+      console.error("Ambiance data not available when attempting to editVideo");
       return;
     }
 
     const newVideos = cloneDeep(data[documentId].videos);
     const videoIndex = newVideos.findIndex(video => video.code === videoUrlCode);
+    if (videoIndex === -1) {
+      console.error("Index not found when attempting to editVideo");
+      return;
+    }
     newVideos[videoIndex] = newData;
 
+
     const docRef = doc(db, AMBIANCE_COLLECTION, documentId);
-    await updateDoc(docRef, {
+    return updateDoc(docRef, {
       videos: newVideos
     });
- 
+
   }
 
-  const deleteVideo = async (documentId: string, videoUrlCode: string) => {
+  const deleteVideo: DeleteVideoFn = async (documentId, videoUrlCode) => {
     if (!data) {
+      console.error("Ambiance data not available when attempting to deleteVideo");
       return;
     }
 
@@ -80,13 +87,14 @@ export default function AdminPage() {
       .filter(video => video.code !== videoUrlCode);
 
     const docRef = doc(db, AMBIANCE_COLLECTION, documentId);
-    await updateDoc(docRef, {
+    return updateDoc(docRef, {
       videos: newVideos
     });
   }
 
-  const addVideo = async (documentId: string, newData: Ambiance) => {
+  const addVideo: AddVideoFn = async (documentId, newData) => {
     if (!data) {
+      console.error("Ambiance data not available when attempting to addVideo");
       return;
     }
 
@@ -94,7 +102,7 @@ export default function AdminPage() {
     newVideos.push(newData);
 
     const docRef = doc(db, AMBIANCE_COLLECTION, documentId);
-    await updateDoc(docRef, {
+    return updateDoc(docRef, {
       videos: newVideos
     });
   }
@@ -102,6 +110,7 @@ export default function AdminPage() {
 
   const displayTreeComponent = () => {
     if (!data) {
+      console.error("Ambiance data not available when attempting to displayTreeComponent");
       return;
     }
 
@@ -127,27 +136,29 @@ export default function AdminPage() {
       };
     })
 
-    const addIcon = (
-      <Tooltip title="Add Video">
-        <IconButton color="secondary" size="small">
-          <AddIcon />
-        </IconButton>
-      </Tooltip>
-    );
 
     // key = ambiance category, i.e., animalCrossing, bg3
     const elements = Object.entries(newData).map(([documentId, ambianceDisplay], index) => (
-      <TreeItem className='tree-item' key={documentId} nodeId={documentId} label={ambianceDisplay.friendlyName} sx={{ textAlign: 'left' }}>
+      <TreeItem className='tree-item' key={documentId} nodeId={documentId} label={ambianceDisplay.friendlyName} >
         {Object.entries(ambianceDisplay.videosBySubcategory).map(([subcategory, vids]) => (
-          <TreeItem key={documentId + subcategory} nodeId={documentId + subcategory} label={subcategory} sx={{ textAlign: 'left' }}>
+          <TreeItem key={documentId + subcategory} nodeId={documentId + subcategory} label={subcategory} >
             {vids.map(vid => (
-              <TreeItem collapseIcon={<BuildCircleIcon className='build-icon' />} expandIcon={<BuildCircleIcon />} key={vid.name} nodeId={vid.name} label={vid.name} sx={{ textAlign: 'left' }} >
-                <VideoEditor videoUrlCode={vid.code} video={vid} documentId={documentId} editVideo={editVideo} deleteVideo={deleteVideo} />
+              <TreeItem
+                expandIcon={<TreeIcon tooltipText='Edit Video' icon={<BuildCircleIcon />} />}
+                collapseIcon={<TreeIcon tooltipText='Expand' icon={<BuildCircleIcon color='error' />} />}
+                key={vid.name}
+                nodeId={vid.name}
+                label={vid.name}
+              >
+                <VideoEditor currentVideo={vid} documentId={documentId} editVideo={editVideo} deleteVideo={deleteVideo} />
               </TreeItem>
             ))}
-            {/* add new collapse icon, add tooltip to edit icon above */}
-            <TreeItem nodeId={subcategory + index} expandIcon={addIcon} collapseIcon={<BuildCircleIcon className='build-icon' />}>
-              <VideoEditor documentId={documentId} addVideo={addVideo} video={{group: subcategory}}></VideoEditor>
+            <TreeItem
+              nodeId={subcategory + index}
+              expandIcon={<TreeIcon tooltipText='Add Video' icon={<AddIcon />} />}
+              collapseIcon={<TreeIcon tooltipText='Expand' icon={<BuildCircleIcon color='error' />} />}
+            >
+              <VideoEditor documentId={documentId} addVideo={addVideo} currentVideo={{ group: subcategory }}></VideoEditor>
             </TreeItem>
           </TreeItem>
         ))}
@@ -174,7 +185,7 @@ export default function AdminPage() {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar className="app-bar" >
           <Toolbar>
-            <Typography variant="h4" component="div" sx={{ flexGrow: 1, textAlign: 'left' }}>
+            <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
               <b><i>Welcome,</i></b> {currentUser?.email?.split('@')[0]}
             </Typography>
             <ButtonGroup variant='outlined' size='large' sx={{ bgcolor: 'black' }}>
@@ -186,7 +197,7 @@ export default function AdminPage() {
         </AppBar>
       </Box>
 
-      <Typography id="videos-title" variant='h1'>videos</Typography>
+      <Typography id="videos-title" variant='h1' textAlign={"center"}>videos</Typography>
       {displayTreeComponent()}
 
     </div>
