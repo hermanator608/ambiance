@@ -13,7 +13,7 @@ code {
 }
 
 :root {
-  --brown-glow-drop-shadow: drop-shadow(0px 0px 2px hsla(0, 53%, 37%, 0.508)) drop-shadow(0px 0px 8px brown);
+  --brown-glow-drop-shadow: drop-shadow(0px 0px 2px hsla(0, 53%, 37%, 0.508)) drop-shadow(0px 0px 8px rgb(166, 43, 43));
   --yellow-glow-drop-shadow: drop-shadow(0px 0px 2px hsla(0, 53%, 37%, 0.508)) drop-shadow(0px 0px 8px yellow);
   --white-glow-drop-shadow: drop-shadow(0px 0px 2px hsla(0, 53%, 37%, 0.508)) drop-shadow(0px 0px 8px white);
 }
@@ -73,9 +73,9 @@ select {
 }
 
 #login-page *,
+#Video-Editor,
 #admin-page button {
   --brown-glow-drop-shadow: none;
-
 }
 
 #login-page {
@@ -93,14 +93,11 @@ select {
 }
 
 #admin-page {
-  text-align: center;
-  padding-bottom: 80px;
+  padding: 100px 0 100px 0;
 }
 
 #videos-title {
-  padding-top: 100px;
   color: white;
-  
 }
 
 #tree-view {
@@ -109,4 +106,8 @@ select {
   padding-top: 20px;
 }
 
-
+.text-field-stack,
+.button-stack {
+  padding-bottom: 15px;
+  padding-top: 15px;
+}
