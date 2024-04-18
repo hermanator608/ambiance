@@ -63,7 +63,7 @@ export default function LoginPage() {
       noValidate
       autoComplete="off"
     >
-      <Typography className="admin-login-title" variant="h4">Administrative Login Page</Typography>
+      <Typography color='white' variant="h4">Administrative Login Page</Typography>
       <TextField
         sx={{ m: 2 }}
         required={true}
@@ -93,12 +93,12 @@ export default function LoginPage() {
         }}
       />
       <div className="error-placeholder">
-        {error && <p>{error}</p>}
+        {error && <Typography color='white'>{error}</Typography>}
       </div>
       <div className="login-button-parent">
         <Button
-          sx={{ '&:hover': { bgcolor: 'white' } }}
           variant="contained"
+          color='secondary'
           size="large"
           onClick={attemptLogin}
         >

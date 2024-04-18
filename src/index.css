@@ -73,6 +73,7 @@ select {
 }
 
 #login-page *,
+#admin-page *,
 #Video-Editor,
 #admin-page button {
   --brown-glow-drop-shadow: none;
@@ -84,20 +85,12 @@ select {
   color: black;
 }
 
-.login-title {
-  padding-bottom: 15px;
-}
-
 .error-placeholder {
   height: 50px;
 }
 
 #admin-page {
   padding: 100px 0 100px 0;
-}
-
-#videos-title {
-  color: white;
 }
 
 #tree-view {

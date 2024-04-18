@@ -9,7 +9,6 @@ export const theme = createTheme({
     secondary: {
       main: common.black
     }
-
   },
   components: {
     MuiAutocomplete: {
@@ -58,4 +57,11 @@ export const theme = createTheme({
       }
     }
   }
+});
+
+export const adminTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+
 });

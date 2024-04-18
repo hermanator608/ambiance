@@ -1,24 +1,32 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './index.css';
 import { AuthContext } from "./AuthProvider";
-import { Button, ButtonGroup } from '@mui/material';
-import { collection, getFirestore, onSnapshot, doc, updateDoc } from "firebase/firestore";
+import { Alert, Button, ButtonGroup, Snackbar } from '@mui/material';
+import { collection, getFirestore, onSnapshot, doc, updateDoc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ConstructionIcon from '@mui/icons-material/Construction';
 import AddIcon from '@mui/icons-material/Add';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { Ambiance, AmbianceCategory } from './config/ambiance/types';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import VideoEditor from './components/VideoEditor';
+import CategoryEditor from './components/AddCategory';
 import { TreeIcon } from './components/TreeIcon';
 import { AMBIANCE_COLLECTION } from './constants';
 import cloneDeep from 'lodash.clonedeep';
-import { EditVideoFn, DeleteVideoFn, AddVideoFn } from './types';
+import { EditVideoFn, DeleteVideoFn, AddVideoFn, AddCategoryFn, DeleteCategoryFn, EditCategoryFn } from './types';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import { AlertProps } from '@mui/material';
+import Construction from '@mui/icons-material/Construction';
+
 
 type SubcategoryMap = Record<string, Ambiance[]>;
 
@@ -39,6 +47,10 @@ export default function AdminPage() {
   const db = getFirestore();
   const { currentUser, signOut } = useContext(AuthContext);
   const [data, setData] = useState<Record<string, AmbianceCategory>>();
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState<AlertProps["severity"]>("info");
+  const [snackPack, setSnackPack] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, AMBIANCE_COLLECTION), (snapshot) => {
@@ -54,6 +66,35 @@ export default function AdminPage() {
     return unsubscribe;
   }, [db, setData]);
 
+  useEffect(() => {
+    if (snackPack.length && !snackBarMessage) {
+      // Set a new snack when we don't have an active one
+      setSnackBarMessage(snackPack[0]);
+      setSnackPack((prev) => prev.slice(1));
+      setOpen(true);
+    } else if (snackPack.length && snackBarMessage) {
+      // Close an active snack when a new one is added
+      setOpen(false);
+    }
+  }, [snackPack, snackBarMessage]);
+
+
+  const handleExited = () => {
+    setSnackBarMessage("");
+    setOpen(false);
+  }
+
+  const handleAddSnackBarMessage = (message: string) => {
+    setSnackPack((prev) => [...prev, message]);
+  }
+
+  const handleCloseSnackBar = (event: any, reason: any) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackBarMessage("");
+    setOpen(false);
+  };
 
   const editVideo: EditVideoFn = async (documentId, videoUrlCode, newData) => {
     if (!data) {
@@ -69,10 +110,12 @@ export default function AdminPage() {
     }
     newVideos[videoIndex] = newData;
 
-
     const docRef = doc(db, AMBIANCE_COLLECTION, documentId);
     return updateDoc(docRef, {
       videos: newVideos
+    }).then(() => {
+      setAlertSeverity("success");
+      handleAddSnackBarMessage("Successfully updated video - " + newData.name);
     });
 
   }
@@ -83,12 +126,17 @@ export default function AdminPage() {
       return;
     }
 
+    const videoToDelete = data[documentId].videos.find(video => video.code === videoUrlCode);
+
     const newVideos = cloneDeep(data[documentId].videos)
       .filter(video => video.code !== videoUrlCode);
 
     const docRef = doc(db, AMBIANCE_COLLECTION, documentId);
     return updateDoc(docRef, {
       videos: newVideos
+    }).then(() => {
+      setAlertSeverity("success");
+      handleAddSnackBarMessage("Removed video - " + videoToDelete?.name);
     });
   }
 
@@ -104,6 +152,49 @@ export default function AdminPage() {
     const docRef = doc(db, AMBIANCE_COLLECTION, documentId);
     return updateDoc(docRef, {
       videos: newVideos
+    }).then(() => {
+      setAlertSeverity("success");
+      handleAddSnackBarMessage("Successfully added video - " + newData.name);
+    });
+  }
+
+  const addCategory: AddCategoryFn = async (documentId, documentName, icon) => {
+    // CHECK IF DOCUMENTID ALREADY EXISTS
+    // Probably smarter to check backend 
+
+    const docRef = doc(db, AMBIANCE_COLLECTION, documentId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      setAlertSeverity("error");
+      handleAddSnackBarMessage("Ambiance Category - " + documentId + " already exists");
+
+    } else {
+      setDoc(doc(db, AMBIANCE_COLLECTION, documentId), {
+        name: documentName,
+        icon: icon,
+        videos: []
+      }).then(() => {
+        setAlertSeverity("success");
+        handleAddSnackBarMessage("Successfully added category - " + documentId);
+      });
+    }
+  }
+
+  const editCategory: EditCategoryFn = async (documentId, documentName, icon) => {
+    updateDoc(doc(db, AMBIANCE_COLLECTION, documentId), {
+      name: documentName,
+      icon: icon,
+    }).then(() => {
+      setAlertSeverity("success");
+      handleAddSnackBarMessage("Successfully updated category - " + documentId);
+    });
+  }
+
+  const deleteCategory: DeleteCategoryFn = async (documentId) => {
+    deleteDoc(doc(db, AMBIANCE_COLLECTION, documentId)).then(() => {
+      setAlertSeverity("success");
+      handleAddSnackBarMessage("Removed category - " + documentId);
     });
   }
 
@@ -139,29 +230,58 @@ export default function AdminPage() {
 
     // key = ambiance category, i.e., animalCrossing, bg3
     const elements = Object.entries(newData).map(([documentId, ambianceDisplay], index) => (
-      <TreeItem className='tree-item' key={documentId} nodeId={documentId} label={ambianceDisplay.friendlyName} >
+      <TreeItem
+        sx={{ padding: 1 }}
+        key={documentId}
+        nodeId={documentId}
+        label={<Typography variant='h6'>{ambianceDisplay.friendlyName}</Typography>}
+      >
+        <TreeItem
+          expandIcon={<TreeIcon tooltipText='Edit Category' icon={<BuildCircleIcon />} />}
+          collapseIcon={<TreeIcon tooltipText='Close Editor' icon={<BuildCircleIcon color='error' />} />}
+          key={documentId + 'edit_category'}
+          nodeId={documentId + 'edit_category'}
+          label={<p>Edit <i><b>{ambianceDisplay.friendlyName}</b></i> Category</p>}
+        >
+          <CategoryEditor editCategory={editCategory} deleteCategory={deleteCategory} categoryID={documentId} categoryDetails={data[documentId]}></CategoryEditor>
+        </TreeItem>
+
+        <Divider />
         {Object.entries(ambianceDisplay.videosBySubcategory).map(([subcategory, vids]) => (
-          <TreeItem key={documentId + subcategory} nodeId={documentId + subcategory} label={subcategory} >
+          <TreeItem
+            key={documentId + subcategory}
+            nodeId={documentId + subcategory}
+            label={<Typography variant='subtitle1'>{subcategory}</Typography>}
+          >
             {vids.map(vid => (
               <TreeItem
                 expandIcon={<TreeIcon tooltipText='Edit Video' icon={<BuildCircleIcon />} />}
-                collapseIcon={<TreeIcon tooltipText='Expand' icon={<BuildCircleIcon color='error' />} />}
-                key={vid.name}
-                nodeId={vid.name}
+                collapseIcon={<TreeIcon tooltipText='Close Editor' icon={<BuildCircleIcon color='error' />} />}
+                key={documentId + subcategory + vid.code + "edit_video"}
+                nodeId={documentId + subcategory + vid.code + "edit_video"}
                 label={vid.name}
               >
                 <VideoEditor currentVideo={vid} documentId={documentId} editVideo={editVideo} deleteVideo={deleteVideo} />
               </TreeItem>
             ))}
             <TreeItem
-              nodeId={subcategory + index}
+              key={documentId + subcategory + "add_video"}
+              nodeId={documentId + subcategory + "add_video"}
               expandIcon={<TreeIcon tooltipText='Add Video' icon={<AddIcon />} />}
-              collapseIcon={<TreeIcon tooltipText='Expand' icon={<BuildCircleIcon color='error' />} />}
+              collapseIcon={<TreeIcon tooltipText='Close Editor' icon={<BuildCircleIcon color='error' />} />}
             >
               <VideoEditor documentId={documentId} addVideo={addVideo} currentVideo={{ group: subcategory }}></VideoEditor>
             </TreeItem>
           </TreeItem>
         ))}
+        <TreeItem
+          key={documentId + "new_video"}
+          nodeId={documentId + "new_video"}
+          expandIcon={<TreeIcon tooltipText='Add Video' icon={<AddIcon />} />}
+          collapseIcon={<TreeIcon tooltipText='Close Editor' icon={<BuildCircleIcon color='error' />} />}
+        >
+          <VideoEditor documentId={documentId} addVideo={addVideo}></VideoEditor>
+        </TreeItem>
       </TreeItem>
     ));
 
@@ -171,9 +291,19 @@ export default function AdminPage() {
           aria-label="file system navigator"
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
-          sx={{ height: '100%', flexGrow: 1, maxWidth: 600, overflowY: 'auto', paddingLeft: 10 }}
+          sx={{ height: '100%', flexGrow: 1, maxWidth: 900, overflowY: 'auto', paddingLeft: 10 }}
         >
           {elements}
+          <TreeItem
+            sx={{ padding: 1 }}
+            nodeId='add_category'
+            expandIcon={<TreeIcon tooltipText='New Category' icon={<AddIcon />} />}
+            collapseIcon={<TreeIcon tooltipText='Close Editor' icon={<BuildCircleIcon color='error' />} />}
+          >
+            <Typography variant='h6'><i>New Ambiance Category</i></Typography>
+            <Divider />
+            <CategoryEditor addCategory={addCategory}></CategoryEditor>
+          </TreeItem>
         </TreeView>
       </div>
     )
@@ -182,13 +312,25 @@ export default function AdminPage() {
 
   return (
     <div id="admin-page" data-testid='admin'>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar className="app-bar" >
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackBar}
+        TransitionProps={{ onExited: handleExited }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          severity={alertSeverity}
+          variant="filled"
+          sx={{ width: '100%', marginTop: 10 }}
+        >
+          {snackBarMessage}
+        </Alert>
+      </Snackbar>
+      <Box sx={{ flexGrow: 1, display: "flex" }}>
+        <AppBar position="fixed" className="app-bar" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
           <Toolbar>
-            <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-              <b><i>Welcome,</i></b> {currentUser?.email?.split('@')[0]}
-            </Typography>
-            <ButtonGroup variant='outlined' size='large' sx={{ bgcolor: 'black' }}>
+            <ButtonGroup color='secondary' variant='outlined' size='large' sx={{ marginLeft: "auto" }}>
               <Button>Analytics</Button>
               <Button onClick={() => document.getElementById('videos-title')?.scrollIntoView(true)}>Videos</Button>
               <Button onClick={signOut}>Logout</Button>
@@ -197,7 +339,34 @@ export default function AdminPage() {
         </AppBar>
       </Box>
 
-      <Typography id="videos-title" variant='h1' textAlign={"center"}>videos</Typography>
+      <Drawer
+        sx={{ width: "250px", flexShrink: 0, '& .MuiDrawer-paper': { width: "250px", boxSizing: 'border-box', }, }}
+        variant="permanent"
+        anchor="left"
+      >
+        <Toolbar />
+        <Divider />
+        <List sx={{ padding: 3 }}>
+          <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+            <b><i>Welcome,</i></b>
+          </Typography>
+          <Typography variant="h4" sx={{ flexGrow: 1 }}>
+            {currentUser?.email?.split('@')[0]}
+          </Typography>
+        </List>
+        <Divider />
+        <List sx={{ padding: 3 }}>
+          <Typography color="secondary" variant="h4" component="div" sx={{ flexGrow: 1 }}>
+            <TreeIcon icon={<Construction/>} tooltipText='Coming Soon...'></TreeIcon>
+            Tools 
+          </Typography>
+          <Typography variant="subtitle1">Expand All</Typography>
+          <Typography variant="subtitle1">Collapse All</Typography>
+          <Typography variant="subtitle1">Search</Typography>
+        </List>
+      </Drawer>
+
+      <Typography color="secondary" variant='h1' textAlign={"center"}>videos</Typography>
       {displayTreeComponent()}
 
     </div>
