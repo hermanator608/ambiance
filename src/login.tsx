@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
+import './index.css';
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "./AuthProvider";
+
+//MUI Imports
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import './index.css';
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "./AuthProvider";
 import { CircularProgress } from "@mui/material";
 
 export default function LoginPage() {
@@ -39,7 +41,6 @@ export default function LoginPage() {
 
         setPassword("");
         setUsername("");
-
       })
   }
 
@@ -57,11 +58,11 @@ export default function LoginPage() {
       id="login-page"
       data-testid='login'
       component="form"
+      noValidate
+      autoComplete="off"
       sx={{
         '& > :not(style)': { m: 1, width: 'auto' },
       }}
-      noValidate
-      autoComplete="off"
     >
       <Typography color='white' variant="h4">Administrative Login Page</Typography>
       <TextField
@@ -95,16 +96,14 @@ export default function LoginPage() {
       <div className="error-placeholder">
         {error && <Typography color='white'>{error}</Typography>}
       </div>
-      <div className="login-button-parent">
-        <Button
-          variant="contained"
-          color='secondary'
-          size="large"
-          onClick={attemptLogin}
-        >
-          Sign In
-        </Button>
-      </div>
+      <Button
+        variant="contained"
+        color='secondary'
+        size="large"
+        onClick={attemptLogin}
+      >
+        Sign In
+      </Button>
     </Box>
   )
 }

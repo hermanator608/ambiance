@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import '../index.css';
+import { AmbianceCategory } from '../config/ambiance/types';
+import { AddCategoryFn, DeleteCategoryFn, EditCategoryFn } from '../types';
+
+//MUI Imports
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { AddCategoryFn, DeleteCategoryFn, EditCategoryFn } from '../types';
-import { AmbianceCategory } from '../config/ambiance/types';
-
 
 type CategoryEditorProps = {
   editCategory?: EditCategoryFn,
@@ -90,70 +91,69 @@ export default function CategoryEditor(props: CategoryEditorProps) {
   }
 
   return (
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1 },
-      }}
-      noValidate
-      autoComplete="off"
-    >
+    <Box component="form" noValidate autoComplete="off" sx={{'& > :not(style)': { m: 1 }}}>
       {addCategory
-        ? <TextField required color="secondary" size='small' label="Category ID" variant="outlined"
-          value={localCategoryID}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setLocalCategoryID(event.target.value);
-          }}
-        />
-        :
-        <TextField color="secondary" size='small' label="Category ID" variant="outlined"
-          value={categoryID}
-          disabled
-        />
+        ? <TextField 
+            required 
+            color="secondary" 
+            size='small' 
+            label="Category ID" 
+            variant="outlined"
+            value={localCategoryID}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setLocalCategoryID(event.target.value);
+            }}
+          />
+        : <TextField 
+            color="secondary" 
+            size='small' 
+            label="Category ID" 
+            variant="outlined"
+            value={categoryID}
+            disabled
+          />
       }
-      <TextField required color="secondary" size='small' label="Friendly Name" variant="outlined"
+
+      <TextField 
+        required 
+        color="secondary" 
+        size='small' 
+        label="Friendly Name" 
+        variant="outlined"
         value={category?.name}
         onChange={(e) => handleOnChange(e, "name")}
       />
-      <TextField required color="secondary" size='small' label="Icon" variant="outlined"
+      <TextField 
+        required 
+        color="secondary" 
+        size='small' 
+        label="Icon" 
+        variant="outlined"
         value={category?.icon}
         onChange={(e) => handleOnChange(e, "icon")}
       />
-
-      <Button
-        color="secondary"
-        variant='contained'
-        disabled={!!showDeleteAlert}
-        onClick={verifyEdit}
-      >
+      <Button color="secondary" variant='contained' disabled={!!showDeleteAlert || !!showEditAlert} onClick={verifyEdit}>
         Save
       </Button>
+
       {!addCategory &&
-        <Button
-          color='error'
-          variant='contained'
-          onClick={verifyDelete} disabled={!!showDeleteAlert}
-        >
+        <Button color='error' variant='contained' disabled={!!showDeleteAlert || !!showEditAlert} onClick={verifyDelete}>
           Delete
         </Button>
       }
 
       {showEditAlert &&
-        <Stack>
-          <Alert
-            severity="error"
-            variant='outlined'
-            action={
-              <Stack direction="row">
-                <Button sx={{ color: "white" }} size="small" onClick={saveChanges}>YES</Button>
-                <Button sx={{ color: "white" }} size="small" onClick={() => setShowEditAlert(false)}>NO</Button>
-              </Stack>
-            }
-          >
-            <AlertTitle>Save Changes?</AlertTitle>
-            This action cannot be undone
-          </Alert>
-        </Stack>
+        <Alert severity="error" variant='outlined'
+          action={
+            <Stack direction="row">
+              <Button sx={{ color: "white" }} size="small" onClick={saveChanges}>YES</Button>
+              <Button sx={{ color: "white" }} size="small" onClick={() => setShowEditAlert(false)}>NO</Button>
+            </Stack>
+          }
+        >
+          <AlertTitle>Save Changes?</AlertTitle>
+          This action cannot be undone
+        </Alert>
       }
 
       {showDeleteAlert &&
@@ -172,25 +172,16 @@ export default function CategoryEditor(props: CategoryEditorProps) {
             onChange={(e) => handleOnChangeDelete(e)}
           />
           <Stack direction="row">
-            <Button
-              sx={{ margin: 1 }}
-              variant="contained"
-              color='secondary'
-              onClick={clearDeleteAlert}
-            >
+            <Button sx={{ margin: 1 }} variant="contained" color='secondary' onClick={clearDeleteAlert}>
               Cancel
             </Button>
-            <Button
-              sx={{ margin: 1 }}
-              variant="contained"
-              color='error'
-              onClick={deleteCategoryAction}
-            >
+            <Button sx={{ margin: 1 }} variant="contained" color='error' onClick={deleteCategoryAction}>
               Delete
             </Button>
           </Stack>
         </Alert>
       }
+
     </Box>
   )
 }

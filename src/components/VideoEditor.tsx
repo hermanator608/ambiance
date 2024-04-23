@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import '../index.css';
 import { Ambiance } from '../config/ambiance/types';
+import { Channel } from '../config/ambiance/channels';
+import { EditVideoFn, DeleteVideoFn, AddVideoFn } from '../types';
+
+//MUI Imports
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { Channel } from '../config/ambiance/channels';
-import { EditVideoFn, DeleteVideoFn, AddVideoFn } from '../types';
 
 
 type VideoEditorProps = {
@@ -18,7 +20,6 @@ type VideoEditorProps = {
   deleteVideo?: DeleteVideoFn,
   addVideo?: AddVideoFn
 }
-
 
 export default function VideoEditor(props: VideoEditorProps) {
   const { currentVideo, documentId, editVideo, deleteVideo, addVideo } = props;
@@ -132,7 +133,7 @@ export default function VideoEditor(props: VideoEditorProps) {
 
 
   return (
-    <div id='Video-Editor'>
+    <div>
       <Stack component='form' className='text-field-stack' direction="column" spacing={2}>
         <TextField
           onChange={(e) => handleOnChange(e, "name")}
@@ -203,39 +204,43 @@ export default function VideoEditor(props: VideoEditorProps) {
 
 
       {showDeleteAlert &&
-        <Stack>
-          <Alert
-            severity="error"
-            variant='outlined'
-            action={
-              <Stack direction="row">
-                <Button sx={{ color: "white" }} size="small" onClick={deleteAction}>YES</Button>
-                <Button sx={{ color: "white" }} size="small" onClick={() => setShowDeleteAlert(false)}>NO</Button>
-              </Stack>
-            }
-          >
-            <AlertTitle>Delete Video?</AlertTitle>
-            This action cannot be undone
-          </Alert>
-        </Stack>
+        <Alert
+          severity="error"
+          variant='outlined'
+          action={
+            <Stack direction="row">
+              <Button sx={{ color: "white" }} size="small" onClick={deleteAction}>
+                YES
+              </Button>
+              <Button sx={{ color: "white" }} size="small" onClick={() => setShowDeleteAlert(false)}>
+                NO
+              </Button>
+            </Stack>
+          }
+        >
+          <AlertTitle>Delete Video?</AlertTitle>
+          This action cannot be undone
+        </Alert>
       }
 
       {showEditAlert &&
-        <Stack>
-          <Alert
-            severity="error"
-            variant='outlined'
-            action={
-              <Stack direction="row">
-                <Button sx={{ color: "white" }} size="small" onClick={editVideoAction}>YES</Button>
-                <Button sx={{ color: "white" }} color='secondary' size="small" onClick={() => setShowEditAlert(false)}>NO</Button>
-              </Stack>
-            }
-          >
-            <AlertTitle>Save Changes?</AlertTitle>
-            This action cannot be undone
-          </Alert>
-        </Stack>
+        <Alert
+          severity="error"
+          variant='outlined'
+          action={
+            <Stack direction="row">
+              <Button sx={{ color: "white" }} size="small" onClick={editVideoAction}>
+                YES
+              </Button>
+              <Button sx={{ color: "white" }} size="small" color='secondary' onClick={() => setShowEditAlert(false)}>
+                NO
+              </Button>
+            </Stack>
+          }
+        >
+          <AlertTitle>Save Changes?</AlertTitle>
+          This action cannot be undone
+        </Alert>
       }
 
       {editVideo &&
@@ -267,5 +272,4 @@ export default function VideoEditor(props: VideoEditorProps) {
       }
     </div>
   )
-
 }

@@ -1,37 +1,38 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './index.css';
 import { AuthContext } from "./AuthProvider";
-import { Alert, Button, ButtonGroup, Snackbar } from '@mui/material';
 import { collection, getFirestore, onSnapshot, doc, updateDoc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
+import { EditVideoFn, DeleteVideoFn, AddVideoFn, AddCategoryFn, DeleteCategoryFn, EditCategoryFn } from './types';
+import { Ambiance, AmbianceCategory } from './config/ambiance/types';
+import { TreeIcon } from './components/TreeIcon';
+import { AMBIANCE_COLLECTION } from './constants';
+import VideoEditor from './components/VideoEditor';
+import CategoryEditor from './components/CategoryEditor';
+import cloneDeep from 'lodash.clonedeep';
+//MUI Imports
+import { Alert, Button, ButtonGroup, Snackbar } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
+import Construction from '@mui/icons-material/Construction';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView } from '@mui/x-tree-view/TreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import { Ambiance, AmbianceCategory } from './config/ambiance/types';
-import BuildCircleIcon from '@mui/icons-material/BuildCircle';
-import VideoEditor from './components/VideoEditor';
-import CategoryEditor from './components/CategoryEditor';
-import { TreeIcon } from './components/TreeIcon';
-import { AMBIANCE_COLLECTION } from './constants';
-import cloneDeep from 'lodash.clonedeep';
-import { EditVideoFn, DeleteVideoFn, AddVideoFn, AddCategoryFn, DeleteCategoryFn, EditCategoryFn } from './types';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
+import { TreeView } from '@mui/x-tree-view/TreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { AlertProps } from '@mui/material';
-import Construction from '@mui/icons-material/Construction';
 
 
 type SubcategoryMap = Record<string, Ambiance[]>;
+
 /**
  * friendlyName is ambiance category name
  */
-
 type SubcategoryGroupingType = {
   friendlyName: string;
   videosBySubcategory: SubcategoryMap;
@@ -239,7 +240,6 @@ export default function AdminPage() {
         >
           <CategoryEditor editCategory={editCategory} deleteCategory={deleteCategory} categoryID={documentId} categoryDetails={data[documentId]}></CategoryEditor>
         </TreeItem>
-
         <Divider />
         {Object.entries(ambianceDisplay.videosBySubcategory).map(([subcategory, vids]) => (
           <TreeItem
@@ -320,8 +320,9 @@ export default function AdminPage() {
           {snackBarMessage}
         </Alert>
       </Snackbar>
+
       <Box sx={{ flexGrow: 1, display: "flex" }}>
-        <AppBar position="fixed" className="app-bar" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
           <Toolbar>
             <ButtonGroup color='secondary' variant='outlined' size='large' sx={{ marginLeft: "auto" }}>
               <Button>Analytics</Button>
@@ -358,8 +359,9 @@ export default function AdminPage() {
           <Typography variant="subtitle1">Search</Typography>
         </List>
       </Drawer>
-
-      <Typography color="secondary" variant='h1' textAlign={"center"}>videos</Typography>
+      
+      {/* videos-title id not used in css file, used for "scroll into view" videos button in app bar */}
+      <Typography id="videos-title" color="secondary" variant='h1' textAlign={"center"}>videos</Typography>
       {displayTreeComponent()}
 
     </div>
