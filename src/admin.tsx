@@ -8,7 +8,6 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ConstructionIcon from '@mui/icons-material/Construction';
 import AddIcon from '@mui/icons-material/Add';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeView } from '@mui/x-tree-view/TreeView';
@@ -16,7 +15,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { Ambiance, AmbianceCategory } from './config/ambiance/types';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import VideoEditor from './components/VideoEditor';
-import CategoryEditor from './components/AddCategory';
+import CategoryEditor from './components/CategoryEditor';
 import { TreeIcon } from './components/TreeIcon';
 import { AMBIANCE_COLLECTION } from './constants';
 import cloneDeep from 'lodash.clonedeep';
@@ -29,10 +28,10 @@ import Construction from '@mui/icons-material/Construction';
 
 
 type SubcategoryMap = Record<string, Ambiance[]>;
-
 /**
  * friendlyName is ambiance category name
  */
+
 type SubcategoryGroupingType = {
   friendlyName: string;
   videosBySubcategory: SubcategoryMap;
@@ -78,8 +77,7 @@ export default function AdminPage() {
     }
   }, [snackPack, snackBarMessage]);
 
-
-  const handleExited = () => {
+  const handleSnackBarExited = () => {
     setSnackBarMessage("");
     setOpen(false);
   }
@@ -159,9 +157,6 @@ export default function AdminPage() {
   }
 
   const addCategory: AddCategoryFn = async (documentId, documentName, icon) => {
-    // CHECK IF DOCUMENTID ALREADY EXISTS
-    // Probably smarter to check backend 
-
     const docRef = doc(db, AMBIANCE_COLLECTION, documentId);
     const docSnap = await getDoc(docRef);
 
@@ -197,7 +192,6 @@ export default function AdminPage() {
       handleAddSnackBarMessage("Removed category - " + documentId);
     });
   }
-
 
   const displayTreeComponent = () => {
     if (!data) {
@@ -309,14 +303,13 @@ export default function AdminPage() {
     )
   }
 
-
   return (
     <div id="admin-page" data-testid='admin'>
       <Snackbar
         open={open}
         autoHideDuration={6000}
         onClose={handleCloseSnackBar}
-        TransitionProps={{ onExited: handleExited }}
+        TransitionProps={{ onExited: handleSnackBarExited }}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert
