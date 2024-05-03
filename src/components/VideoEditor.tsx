@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import '../index.css';
 import { Ambiance } from '../config/ambiance/types';
+import { Channel } from '../config/ambiance/channels';
+import { EditVideoFn, DeleteVideoFn, AddVideoFn } from '../types';
+
+//MUI Imports
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { Channel } from '../config/ambiance/channels';
-import { EditVideoFn, DeleteVideoFn, AddVideoFn } from '../types';
 
 
 type VideoEditorProps = {
@@ -18,7 +20,6 @@ type VideoEditorProps = {
   deleteVideo?: DeleteVideoFn,
   addVideo?: AddVideoFn
 }
-
 
 export default function VideoEditor(props: VideoEditorProps) {
   const { currentVideo, documentId, editVideo, deleteVideo, addVideo } = props;
@@ -91,7 +92,7 @@ export default function VideoEditor(props: VideoEditorProps) {
   const handleOnChangeInteger = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: keyof Ambiance) => {
     let localInteger: number;
 
-    if(!event.target.value) {
+    if (!event.target.value) {
       localInteger = 0;
     } else {
       localInteger = parseInt(event.target.value);
@@ -132,123 +133,143 @@ export default function VideoEditor(props: VideoEditorProps) {
 
 
   return (
-    <div id='Video-Editor'>
-      <Stack className='text-field-stack' direction="column" spacing={1}>
+    <div>
+      <Stack component='form' className='text-field-stack' direction="column" spacing={2}>
         <TextField
-          defaultValue={localVideo?.name}
           onChange={(e) => handleOnChange(e, "name")}
-          helperText="Display Name"
+          label="Video Name"
           size='small'
-          variant="filled"
+          variant="outlined"
           required
+          color='secondary'
           value={localVideo?.name || ""}
         />
         <TextField
-          defaultValue={localVideo?.group}
           onChange={(e) => handleOnChange(e, "group")}
-          helperText="Subcategory"
-          variant="filled"
+          label="Subcategory"
+          variant="outlined"
           size='small'
           required
+          color='secondary'
           value={localVideo?.group || ""}
         />
         <TextField
-          defaultValue={localVideo?.code}
           onChange={(e) => handleOnChange(e, "code")}
-          helperText="YouTube URL"
-          variant="filled"
+          label="YouTube Watch Code"
+          variant="outlined"
           size='small'
           required
+          color='secondary'
           value={localVideo?.code || ""}
         />
         <TextField
-          defaultValue={localVideo?.channel?.name}
           onChange={(e) => handleOnChangeChannel(e, "name")}
-          helperText="Optional: YouTube channel Name"
-          variant="filled"
+          label="YouTube Channel"
+          variant="outlined"
           size='small'
+          color='secondary'
           value={localVideo?.channel?.name || ""}
         />
         <TextField
-          defaultValue={localVideo?.channel?.link}
           onChange={(e) => handleOnChangeChannel(e, "link")}
-          helperText="Optional: YouTube channel Link"
-          variant="filled"
+          label="YouTube Channel Link"
+          variant="outlined"
           size='small'
+          color='secondary'
           value={localVideo?.channel?.link || ""}
         />
         <TextField
-          defaultValue={localVideo?.startTimeS}
           onChange={(e) => handleOnChangeInteger(e, "startTimeS")}
-          helperText="Optional: Video start time (seconds)"
-          variant="filled"
+          label="Video Start Time"
+          variant="outlined"
           size='small'
           type='number'
-          inputProps={{min: "0"}}
+          color='secondary'
+          inputProps={{ min: "0" }}
           value={localVideo?.startTimeS}
         />
         <TextField
-          defaultValue={localVideo?.livestream ? "Yes" : "No"}
           onChange={(e) => handleOnChangeBoolean(e, "livestream")}
-          helperText="Optional: Yes / No livestream"
-          variant="filled"
+          label="LiveStream"
+          variant="outlined"
           size='small'
+          color='secondary'
           select
-          value={localVideo?.livestream}
+          value={!!localVideo?.livestream}
         >
-          <MenuItem key="true" value="true">Yes</MenuItem>
-          <MenuItem key="false" value="false">No</MenuItem>
+          <MenuItem key="true" value="true">True</MenuItem>
+          <MenuItem key="false" value="false">False</MenuItem>
         </TextField>
       </Stack>
 
 
       {showDeleteAlert &&
-        <Stack>
-          <Alert
-            severity="error"
-            action={
-              <Stack direction="row">
-                <Button color="inherit" size="small" onClick={deleteAction}>YES</Button>
-                <Button color="inherit" size="small" onClick={() => setShowDeleteAlert(false)}>NO</Button>
-              </Stack>
-            }
-          >
-            <AlertTitle>Delete Video?</AlertTitle>
-            This cannot be undone
-          </Alert>
-        </Stack>
+        <Alert
+          severity="error"
+          variant='outlined'
+          action={
+            <Stack direction="row">
+              <Button sx={{ color: "white" }} size="small" onClick={deleteAction}>
+                YES
+              </Button>
+              <Button sx={{ color: "white" }} size="small" onClick={() => setShowDeleteAlert(false)}>
+                NO
+              </Button>
+            </Stack>
+          }
+        >
+          <AlertTitle>Delete Video?</AlertTitle>
+          This action cannot be undone
+        </Alert>
       }
 
       {showEditAlert &&
-        <Stack>
-          <Alert
-            severity="error"
-            action={
-              <Stack direction="row">
-                <Button color="inherit" size="small" onClick={editVideoAction}>YES</Button>
-                <Button color="inherit" size="small" onClick={() => setShowEditAlert(false)}>NO</Button>
-              </Stack>
-            }
-          >
-            <AlertTitle>Save Changes?</AlertTitle>
-            This action cannot be undone
-          </Alert>
-        </Stack>
+        <Alert
+          severity="error"
+          variant='outlined'
+          action={
+            <Stack direction="row">
+              <Button sx={{ color: "white" }} size="small" onClick={editVideoAction}>
+                YES
+              </Button>
+              <Button sx={{ color: "white" }} size="small" color='secondary' onClick={() => setShowEditAlert(false)}>
+                NO
+              </Button>
+            </Stack>
+          }
+        >
+          <AlertTitle>Save Changes?</AlertTitle>
+          This action cannot be undone
+        </Alert>
       }
 
       {editVideo &&
         <Stack className="button-stack" direction="row" spacing={10}>
-          <Button onClick={verifyEdit} disabled={!!showEditAlert || !!showDeleteAlert} size='small' variant="contained" color='secondary'>Save Changes</Button>
-          <Button onClick={verifyDelete} disabled={!!showEditAlert || !!showDeleteAlert} variant="outlined" color="error">Delete Video</Button>
+          <Button
+            onClick={verifyEdit}
+            disabled={!!showEditAlert || !!showDeleteAlert}
+            size='small'
+            variant="contained"
+            color='secondary'
+          >
+            Save Changes
+          </Button>
+          <Button
+            onClick={verifyDelete}
+            disabled={!!showEditAlert || !!showDeleteAlert}
+            variant="contained"
+            color="error"
+          >
+            Delete Video
+          </Button>
         </Stack>
       }
 
       {addVideo &&
         <Stack className="button-stack" direction="row" spacing={10}>
-          <Button onClick={addVideoAction} size='small' variant="contained" color='secondary'>Add Video</Button>
+          <Button color="secondary" onClick={addVideoAction} size='small' variant="contained">Add Video</Button>
         </Stack>
       }
     </div>
   )
-
 }

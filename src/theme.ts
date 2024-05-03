@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { common } from '@mui/material/colors';
 
+//Theme for User UI
 export const theme = createTheme({
   palette: {
     primary: {
@@ -9,7 +10,6 @@ export const theme = createTheme({
     secondary: {
       main: common.black
     }
-
   },
   components: {
     MuiAutocomplete: {
@@ -58,4 +58,12 @@ export const theme = createTheme({
       }
     }
   }
+});
+
+//Dark mode Theme for Admin and Login interface
+export const adminTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+
 });

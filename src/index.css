@@ -35,26 +35,13 @@ code {
   padding-bottom: calc(30px + env(safe-area-inset-bottom));
 }
 
-/* body {
-  cursor: url("./images/cursors/wow_default.png"), default !important;
-}
-
-button,
-select,
-.pointer,
-.pause,
-a {
-  cursor: url("./images/cursors/wow_active.png"), pointer !important;
-} */
-
 h1,
 h3,
 p,
 span,
 button,
 select,
-input,
-.app-bar {
+input {
   filter: var(--brown-glow-drop-shadow);
 }
 
@@ -73,19 +60,13 @@ select {
 }
 
 #login-page *,
-#Video-Editor,
-#admin-page button {
+#admin-page * {
   --brown-glow-drop-shadow: none;
 }
 
 #login-page {
   text-align: center;
   padding-top: 50px;
-  color: black;
-}
-
-.login-title {
-  padding-bottom: 15px;
 }
 
 .error-placeholder {
@@ -94,10 +75,6 @@ select {
 
 #admin-page {
   padding: 100px 0 100px 0;
-}
-
-#videos-title {
-  color: white;
 }
 
 #tree-view {
