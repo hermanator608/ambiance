@@ -3,9 +3,11 @@ import './index.css';
 import { AuthContext } from "./AuthProvider";
 import { collection, getFirestore, onSnapshot, doc, updateDoc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { EditVideoFn, DeleteVideoFn, AddVideoFn, AddCategoryFn, DeleteCategoryFn, EditCategoryFn } from './types';
-import { Ambiance, AmbianceCategory } from './config/ambiance/types';
+import { AmbianceCategory } from './config/ambiance/types';
+import { AmbianceDisplayType } from "./types";
+import { groupVideosBySubcategory } from "./util/groupVideoBySubcategory";
 import { TreeIcon } from './components/TreeIcon';
-import { AMBIANCE_COLLECTION } from './constants';
+import { AMBIANCE_COLLECTION, AUTO_HIDE_SNACKBAR } from './constants';
 import VideoEditor from './components/VideoEditor';
 import CategoryEditor from './components/CategoryEditor';
 import cloneDeep from 'lodash.clonedeep';
@@ -15,6 +17,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
@@ -23,25 +26,10 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
+import { TreeItem  } from '@mui/x-tree-view/TreeItem';
 import { TreeView } from '@mui/x-tree-view/TreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { AlertProps } from '@mui/material';
 
-
-type SubcategoryMap = Record<string, Ambiance[]>;
-
-/**
- * friendlyName is ambiance category name
- */
-type SubcategoryGroupingType = {
-  friendlyName: string;
-  videosBySubcategory: SubcategoryMap;
-}
-
-/**
- * Key is documentId
- */
-type AmbianceDisplayType = Record<string, SubcategoryGroupingType>;
 
 export default function AdminPage() {
   const db = getFirestore();
@@ -51,7 +39,9 @@ export default function AdminPage() {
   const [alertSeverity, setAlertSeverity] = useState<AlertProps["severity"]>("info");
   const [snackPack, setSnackPack] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
+  // Get data from Firestore
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, AMBIANCE_COLLECTION), (snapshot) => {
       const dataMap = snapshot.docs.reduce<Record<string, AmbianceCategory>>((obj, item) => {
@@ -66,6 +56,7 @@ export default function AdminPage() {
     return unsubscribe;
   }, [db, setData]);
 
+  // Snackbar section
   useEffect(() => {
     if (snackPack.length && !snackBarMessage) {
       // Set a new snack when we don't have an active one
@@ -95,6 +86,37 @@ export default function AdminPage() {
     setOpen(false);
   };
 
+  // Expand / Collapse Tree Nodes 
+  const handleExpandedItemsChange = (
+    event: React.SyntheticEvent,
+    itemIds: string[],
+  ) => {
+    setExpandedItems(itemIds);
+  };
+
+  const handleExpandClick = () => {
+    if (!data) {
+      return;
+    }
+
+    const videosBySubCat = groupVideosBySubcategory(data);
+    const expandedItems: string[] = [];
+
+    Object.entries(videosBySubCat).forEach(([documentID, subcategoryGrouping]) => {
+      expandedItems.push(documentID);
+      Object.keys(subcategoryGrouping.videosBySubcategory).forEach((subcategory) => {
+        expandedItems.push(documentID + subcategory);
+      })
+    })
+
+    setExpandedItems((oldExpanded) =>
+      oldExpanded.length === 0
+        ? expandedItems
+        : [],
+    );
+  };
+
+
   const editVideo: EditVideoFn = async (documentId, videoUrlCode, newData) => {
     if (!data) {
       console.error("Ambiance data not available when attempting to editVideo");
@@ -115,6 +137,9 @@ export default function AdminPage() {
     }).then(() => {
       setAlertSeverity("success");
       handleAddSnackBarMessage("Successfully updated video - " + newData.name);
+    }).catch(() => {
+      setAlertSeverity("error");
+      handleAddSnackBarMessage("An error occurred. " + newData.name + " not updated.");
     });
 
   }
@@ -136,6 +161,9 @@ export default function AdminPage() {
     }).then(() => {
       setAlertSeverity("success");
       handleAddSnackBarMessage("Removed video - " + videoToDelete?.name);
+    }).catch(() => {
+      setAlertSeverity("error");
+      handleAddSnackBarMessage("An error occurred. " + videoToDelete?.name + " not removed.");
     });
   }
 
@@ -154,6 +182,9 @@ export default function AdminPage() {
     }).then(() => {
       setAlertSeverity("success");
       handleAddSnackBarMessage("Successfully added video - " + newData.name);
+    }).catch(() => {
+      setAlertSeverity("error");
+      handleAddSnackBarMessage("An error occurred. " + newData.name + " not added.");
     });
   }
 
@@ -173,6 +204,9 @@ export default function AdminPage() {
       }).then(() => {
         setAlertSeverity("success");
         handleAddSnackBarMessage("Successfully added category - " + documentId);
+      }).catch(() => {
+        setAlertSeverity("error");
+        handleAddSnackBarMessage("An error occurred. " + documentId + " category not added.");
       });
     }
   }
@@ -184,6 +218,9 @@ export default function AdminPage() {
     }).then(() => {
       setAlertSeverity("success");
       handleAddSnackBarMessage("Successfully updated category - " + documentId);
+    }).catch(() => {
+      setAlertSeverity("error");
+      handleAddSnackBarMessage("An error occurred. " + documentId + " category not updated.");
     });
   }
 
@@ -191,9 +228,17 @@ export default function AdminPage() {
     deleteDoc(doc(db, AMBIANCE_COLLECTION, documentId)).then(() => {
       setAlertSeverity("success");
       handleAddSnackBarMessage("Removed category - " + documentId);
+    }).catch(() => {
+      setAlertSeverity("error");
+      handleAddSnackBarMessage("An error occurred. " + documentId + " category not removed.");
     });
   }
 
+  /**
+   * Handles the tree display which takes all videos from each document / parent category
+   * and groups them by the sub category field on a video for better display
+   * @returns Tree view of all categories and videos grouped by subcategory 
+   */
   const displayTreeComponent = () => {
     if (!data) {
       console.error("Ambiance data not available when attempting to displayTreeComponent");
@@ -201,27 +246,7 @@ export default function AdminPage() {
     }
 
     // Map of documentId -> (Map of subcategory name -> videos in subcategory)
-    const newData: AmbianceDisplayType = {};
-    Object.entries(data).forEach(([documentId, value]) => {
-
-      // Map of subcategory name -> videos in subcategory
-      const groupedVideos: SubcategoryMap = {};
-      value.videos.forEach((vid) => {
-        // If subcategory already exists, concat to existing list of videos
-        if (groupedVideos[vid.group]) {
-          groupedVideos[vid.group] = groupedVideos[vid.group].concat(vid);
-        } else { // Create new key/value in map, with array of one video
-          groupedVideos[vid.group] = [vid];
-        }
-      });
-
-      // Add grouped videos to newData map using documentId as key
-      newData[documentId] = {
-        friendlyName: value.name,
-        videosBySubcategory: groupedVideos
-      };
-    })
-
+    const newData: AmbianceDisplayType = groupVideosBySubcategory(data);
 
     // key = ambiance category, i.e., animalCrossing, bg3
     const elements = Object.entries(newData).map(([documentId, ambianceDisplay], index) => (
@@ -282,6 +307,8 @@ export default function AdminPage() {
     return (
       <div id='tree-view'>
         <TreeView
+          expanded={expandedItems}
+          onNodeToggle={handleExpandedItemsChange}
           aria-label="file system navigator"
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
@@ -307,7 +334,7 @@ export default function AdminPage() {
     <div id="admin-page" data-testid='admin'>
       <Snackbar
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={AUTO_HIDE_SNACKBAR}
         onClose={handleCloseSnackBar}
         TransitionProps={{ onExited: handleSnackBarExited }}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -351,15 +378,17 @@ export default function AdminPage() {
         <Divider />
         <List sx={{ padding: 3 }}>
           <Typography color="secondary" variant="h4" component="div" sx={{ flexGrow: 1 }}>
-            <TreeIcon icon={<Construction/>} tooltipText='Coming Soon...'></TreeIcon>
-            Tools 
+            <TreeIcon icon={<Construction />} tooltipText='Coming Soon...'></TreeIcon>
+            Tools
           </Typography>
-          <Typography variant="subtitle1">Expand All</Typography>
-          <Typography variant="subtitle1">Collapse All</Typography>
-          <Typography variant="subtitle1">Search</Typography>
+
+          <TextField sx={{ marginTop: 3 }} label="Search" size='small' color='warning' />
+          <Button sx={{ marginTop: 2 }} color='warning' onClick={handleExpandClick}>
+            {expandedItems.length === 0 ? 'Expand all' : 'Collapse all'}
+          </Button>
         </List>
       </Drawer>
-      
+
       {/* videos-title id not used in css file, used for "scroll into view" videos button in app bar */}
       <Typography id="videos-title" color="secondary" variant='h1' textAlign={"center"}>videos</Typography>
       {displayTreeComponent()}

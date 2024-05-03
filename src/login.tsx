@@ -58,8 +58,7 @@ export default function LoginPage() {
       id="login-page"
       data-testid='login'
       component="form"
-      noValidate
-      autoComplete="off"
+      autoComplete="on"
       sx={{
         '& > :not(style)': { m: 1, width: 'auto' },
       }}

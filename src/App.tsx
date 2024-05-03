@@ -12,13 +12,13 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 const App: React.FC = () => {
 
-  const adminThemeMap = ["/login", "/admin"];
+  const adminThemeSet = new Set<string>(["/login", "/admin"]);
   let location = useLocation()
 
   return (
     <AuthProvider>
       <RecoilRoot>
-        <ThemeProvider theme={adminThemeMap.includes(location.pathname) ? adminTheme : theme}>
+        <ThemeProvider theme={adminThemeSet.has(location.pathname) ? adminTheme : theme}>
           <CssBaseline />
           <Routes>
             <Route path="/" element={<Main />} />
