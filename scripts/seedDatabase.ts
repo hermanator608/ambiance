@@ -4,6 +4,22 @@ import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { channels } from '../src/config/ambiance/channels';
 import { ambianceCategoryDetail, ambianceCategories } from "../src/config/ambiance/index";
 
+/*******************************************************************************************************
+ * READ ME:
+ * 
+ * To seed and/or re seed the database: 
+ *    - For now, due to time constraints, we will be changing  the database security settings in 
+ *    Google Firebase in order to seed or re seed the database. 
+ *    - Admins should change the security rules in the Firebase console for the Firestore Database to: 
+ *    allow read, write: if  true; 
+ *    - This will allow ANYONE to make read / write requests to the database for the time being
+ *    - Changing this security rule will allow the scripts below to run
+ *    - THIS RULE NEEDS TO BE CHANGED BACK TO: allow read, write: if request.auth != null; 
+ *    after you're done seeding the database. 
+ *    - This is a temporary solution and will be updated in the future 
+ **********************************************************************************************************/
+
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
