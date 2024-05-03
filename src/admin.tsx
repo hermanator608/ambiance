@@ -40,6 +40,7 @@ export default function AdminPage() {
   const [snackPack, setSnackPack] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [allNodeIds, setAllNodeIds] = useState<string[]>([]);
 
   // Get data from Firestore
   useEffect(() => {
@@ -51,11 +52,14 @@ export default function AdminPage() {
       }, {});
 
       setData(dataMap);
+      updateNodeIds(dataMap);
+
     });
 
     return unsubscribe;
   }, [db, setData]);
 
+  
   // Snackbar section
   useEffect(() => {
     if (snackPack.length && !snackBarMessage) {
@@ -86,7 +90,10 @@ export default function AdminPage() {
     setOpen(false);
   };
 
-  // Expand / Collapse Tree Nodes 
+
+  /**
+   * Handle user selected nodes
+   */
   const handleExpandedItemsChange = (
     event: React.SyntheticEvent,
     itemIds: string[],
@@ -94,12 +101,26 @@ export default function AdminPage() {
     setExpandedItems(itemIds);
   };
 
+  /**
+   * Clears expanded items if any are open, else expands all categories and subcategories
+   */
   const handleExpandClick = () => {
-    if (!data) {
+    setExpandedItems((oldExpanded) =>
+      oldExpanded.length === 0
+        ? allNodeIds
+        : [],
+    );
+  };
+
+  /**
+   * Generate list of all node ids for categories and subcategories and updates allNodeIds state 
+   */
+  const updateNodeIds = (dataMap: Record<string, AmbianceCategory>): void => {
+    if (!dataMap) {
       return;
     }
 
-    const videosBySubCat = groupVideosBySubcategory(data);
+    const videosBySubCat = groupVideosBySubcategory(dataMap);
     const expandedItems: string[] = [];
 
     Object.entries(videosBySubCat).forEach(([documentID, subcategoryGrouping]) => {
@@ -109,12 +130,8 @@ export default function AdminPage() {
       })
     })
 
-    setExpandedItems((oldExpanded) =>
-      oldExpanded.length === 0
-        ? expandedItems
-        : [],
-    );
-  };
+    setAllNodeIds(expandedItems);
+  }
 
 
   const editVideo: EditVideoFn = async (documentId, videoUrlCode, newData) => {
@@ -141,7 +158,6 @@ export default function AdminPage() {
       setAlertSeverity("error");
       handleAddSnackBarMessage("An error occurred. " + newData.name + " not updated.");
     });
-
   }
 
   const deleteVideo: DeleteVideoFn = async (documentId, videoUrlCode) => {
@@ -233,6 +249,7 @@ export default function AdminPage() {
       handleAddSnackBarMessage("An error occurred. " + documentId + " category not removed.");
     });
   }
+
 
   /**
    * Handles the tree display which takes all videos from each document / parent category
