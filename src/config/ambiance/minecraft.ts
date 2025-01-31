@@ -61,5 +61,11 @@ export const minecraft: Ambiance[] = [
     code: "kztxcbSVzD8",
     group: "Music & Ambience",
     channel: channels.CozyCraft
+  },
+  {
+    name: "Relaxing Longplay - Ocean Home",
+    code: "BvPwKtAAJ_M",
+    group: "Gameplay",
+    channel: channels.InfiniteDrift
   }
 ]

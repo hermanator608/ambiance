@@ -191,5 +191,9 @@ export const channels = {
   CozyCraft: {
     link: "https://www.youtube.com/@CozyCraftYT",
     name: "CozyCraft"
+  },
+  InfiniteDrift: {
+    name: "InfiniteDrift",
+    link: "https://www.youtube.com/@InfiniteDrift"
   }
 };
