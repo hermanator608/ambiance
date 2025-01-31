@@ -179,5 +179,17 @@ export const channels = {
   MerowyngerDE: {
     link: "https://www.youtube.com/@merowyngerDE",
     name: 'MerowyngerDE'
+  },
+  AmbientCrafts: {
+    link: "https://www.youtube.com/@AmbientCrafts",
+    name: 'AmbientCrafts'
+  },
+  HeavenCozy: {
+    link: "https://www.youtube.com/@heaven_cozy",
+    name: "Heaven Cozy"
+  },
+  CozyCraft: {
+    link: "https://www.youtube.com/@CozyCraftYT",
+    name: "CozyCraft"
   }
 };

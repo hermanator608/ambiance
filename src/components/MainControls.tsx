@@ -83,6 +83,18 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
           }
         />
         <Button
+          icon='minecraft'
+          highlighted={currentAmbianceCategoryName === 'minecraft'}
+          onClick={
+            logEventClickWrapper({
+              onClick: () => handleCategoryChanger('minecraft'),
+              eventData: {
+                actionId: 'minecraftCategory'
+              }
+            })
+          }
+        />
+        <Button
           icon='harryPotter'
           highlighted={currentAmbianceCategoryName === 'harryPotter'}
           onClick={

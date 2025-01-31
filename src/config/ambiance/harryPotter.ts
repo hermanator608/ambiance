@@ -82,10 +82,10 @@ export const harryPotter: Ambiance[] = [
   },
   {
     name: 'Ravenclaw Common Room',
-    code: 'xczn2_hYoUI',
+    code: '4CEq9LARLv4',
     group: 'Common Rooms',
     channel: channels['Ambient Worlds'],
-    startTimeS: 18
+    startTimeS: 13
   },
   {
     name: 'The Dark Arts',

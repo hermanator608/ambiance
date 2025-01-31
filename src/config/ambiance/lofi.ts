@@ -17,6 +17,13 @@ export const lofi: Ambiance[] = [
     channel: channels['Lofi Girl'],
   },
   {
+    name: 'dark ambient radio',
+    code: 'S_MOd40zlYU',
+    group: 'Lofi Girl',
+    livestream: true,
+    channel: channels['Lofi Girl'],
+  },
+  {
     name: 'Morning Coffee',
     code: '1fueZCTYkpA',
     group: 'Lofi Girl',
@@ -48,14 +55,14 @@ export const lofi: Ambiance[] = [
   },
   {
     name: 'Sleep/Chill',
-    code: 'rUxyKA_-grg',
+    code: '28KRPhVzCus',
     group: 'Lofi Girl',
     channel: channels['Lofi Girl'],
     livestream: true,
   },
   {
     name: 'Coffee Shop Hip-Hop Beats',
-    code: 'lP26UCnoH9s',
+    code: 'N_7cSl2oq3o',
     group: 'Coffee Shop',
     livestream: true,
     channel: channels['STEEZYASFUCK'],
@@ -69,14 +76,13 @@ export const lofi: Ambiance[] = [
   },
   {
     name: 'Rain Lofi',
-    code: '_0NOMNHi5BI',
+    code: 'GM2QNd1D-Sc',
     group: 'Miscellaneous Lofi',
-    livestream: true,
     channel: channels['lofi geek'],
   },
   {
     name: 'Lofi Hip Hop Beats 24/7 Radio',
-    code: 'IRp0zhUFi-M',
+    code: 'x0OLPEjna8A',
     group: 'Hip Hop',
     livestream: true,
     channel: channels['lofi geek'],
@@ -138,6 +144,12 @@ export const lofi: Ambiance[] = [
     livestream: true,
   },
   {
+    name: 'Chillhop Essentials Winter 2024',
+    code: 'kblfv8dKAk0',
+    group: 'Hip Hop',
+    channel: channels['Chillhop Music'],
+  },
+  {
     name: 'Japanese night cafe vibes',
     code: '9FvvbVI5rYA',
     group: 'Coffee Shop',
@@ -175,21 +187,6 @@ export const lofi: Ambiance[] = [
     code: '2gliGzb2_1I',
     group: 'Coffee Shop',
     channel: channels.TheJazzHopCafé,
-    livestream: true,
-  },
-  {
-    name: 'Tokyo Lofi Hip Hop',
-    code: 'JWlKA9wmO64',
-    group: 'Hip Hop',
-    livestream: true,
-    channel: channels['lofi geek'],
-  },
-  {
-    name: 'Space Lofi Hip Hop Radio',
-    code: '8Yqx3we3WJ4',
-    group: 'Hip Hop',
-    livestream: true,
-    channel: channels['lofi geek'],
   },
   {
     name: 'Overwatch - Lofi',
@@ -271,7 +268,7 @@ export const lofi: Ambiance[] = [
   },
   {
     name: 'Video Game Study Lounge',
-    code: 'hHxfGGJ_kDU',
+    code: 'mF3m7Jza2uc',
     group: 'Miscellaneous Gaming',
     livestream: true,
     channel: channels.GameChops,
@@ -284,14 +281,20 @@ export const lofi: Ambiance[] = [
   },
   {
     name: 'Mellow/chill instrumental beats',
-    code: 'QwXHcgZUnFI',
+    code: 'A3yOYJawFRI',
     group: 'Miscellaneous Lofi',
     livestream: true,
     channel: channels['College Music'],
   },
   {
+    name: 'STUDY and WORK AMBIENCE 24/7 for DEEP FOCUS',
+    code: 'Lofi Beats & Ocean Sounds',
+    group: 'Study With Me',
+    channel: channels['The Sherry Formula'],
+  },
+  {
     name: 'Good Vibes Only - Hip-Hop',
-    code: '_2sGsqzFXks',
+    code: 'Rvk5kBPv9RU',
     group: 'Hip Hop',
     livestream: true,
     channel: channels['LTB Music'],
@@ -300,7 +303,6 @@ export const lofi: Ambiance[] = [
     name: 'Coffee shop calm lofi',
     code: '78mYkbfsXRM',
     group: 'Coffee Shop',
-    livestream: true,
     channel: channels['lofi geek'],
   },
   {

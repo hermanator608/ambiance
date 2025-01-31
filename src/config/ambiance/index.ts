@@ -7,6 +7,7 @@ import { earth } from './earth';
 import { harryPotter } from './harryPotter';
 import { animalCrossing } from './animalCrossing';
 import { bg3 } from './bg3';
+import { minecraft } from './minecraft';
 
 export * from './types';
 export * from './wow';
@@ -18,6 +19,7 @@ export * from './earth';
 export * from './harryPotter';
 export * from './animalCrossing';
 export * from './bg3';
+export * from './minecraft';
 
 export const ambianceCategories = {
   worldOfWarcraft,
@@ -28,7 +30,8 @@ export const ambianceCategories = {
   earth,
   harryPotter,
   animalCrossing,
-  bg3
+  bg3,
+  minecraft
 };
 export type AmbianceName = keyof typeof ambianceCategories;
 
@@ -68,5 +71,9 @@ export const ambianceCategoryDetail = {
   bg3: {
     name: "Baldur's Gate 3",
     icon: "bg3"
+  },
+  minecraft: {
+    name: "Minecraft",
+    icon: "minecraft"
   }
 }

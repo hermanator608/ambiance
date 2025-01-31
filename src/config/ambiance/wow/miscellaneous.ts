@@ -42,7 +42,7 @@ export const miscellaneous = [
   },
   {
     name: 'Livestream',
-    code: 'GrkW4reUeDM',
+    code: 'yY1OPlyeJ2Y',
     group: 'Miscellaneous',
     livestream: true,
     channel: channels.Meisio,

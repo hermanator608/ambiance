@@ -80,10 +80,9 @@ export const coffee: Ambiance[] = [
   },
   {
     name: 'STUDY and WORK AMBIENCE 24/7 for DEEP FOCUS',
-    code: '6avAha_GoBQ',
+    code: 'b3qGFuCo6NI',
     group: 'Study With Me',
     channel: channels['The Sherry Formula'],
-    livestream: true,
   },
   {
     name: 'Relaxing Music in Cozy Coffee Shop Ambience',
