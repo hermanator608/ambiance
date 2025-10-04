@@ -9,6 +9,8 @@ import { animalCrossing } from './animalCrossing';
 import { bg3 } from './bg3';
 import { minecraft } from './minecraft';
 import { expedition33 } from './expedition33';
+import { IconProps } from '../../components/Icon';
+
 
 export * from './types';
 export * from './wow';
@@ -38,49 +40,55 @@ export const ambianceCategories = {
 };
 export type AmbianceName = keyof typeof ambianceCategories;
 
-export const ambianceCategoryDetail = {
+type AmbianceCategory = Record<AmbianceName, AmbianceCategoryDetail>;
+
+type AmbianceCategoryDetail = {
+  name: string;
+  icon: IconProps['icon'];
+};
+export const ambianceCategoryDetail: AmbianceCategory = {
   worldOfWarcraft: {
     name: "World of Warcraft",
     icon: "wow"
-  },
-  lofi: {
-    name: "Lofi",
-    icon: "lofi"
-  },
-  lotr: {
-    name: "The Lord of the Rings",
-    icon: "lotr"
-  },
-  zelda: {
-    name: "The Legend of Zelda",
-    icon: "zelda"
-  },
-  coffee: {
-    name: "Coffee",
-    icon: "coffee"
-  },
-  earth: {
-    name: "Earth",
-    icon: "world"
-  },
-  harryPotter: {
-    name: "Harry Potter",
-    icon: "harryPotter"
-  },
-  animalCrossing: {
-    name: "Animal Crossing",
-    icon: "animalCrossing"
   },
   bg3: {
     name: "Baldur's Gate 3",
     icon: "bg3"
   },
+  lotr: {
+    name: "The Lord of the Rings",
+    icon: "lotr"
+  },  
   minecraft: {
     name: "Minecraft",
     icon: "minecraft"
+  },  
+  harryPotter: {
+    name: "Harry Potter",
+    icon: "harryPotter"
+  },  
+  animalCrossing: {
+    name: "Animal Crossing",
+    icon: "animalCrossing"
+  },
+  zelda: {
+    name: "The Legend of Zelda",
+    icon: "zelda"
   },
   expedition33: {
     name: "Expedition 33",
-    icon: "expedition"
-  }
+    icon: "expedition33"
+  },
+  earth: {
+    name: "Earth",
+    icon: "world"
+  },  
+  coffee: {
+    name: "Coffee",
+    icon: "coffee"
+  },    
+  lofi: {
+    name: "Lofi",
+    icon: "lofi"
+  },
 }

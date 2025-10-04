@@ -25,7 +25,7 @@ import harryPotter from '../images/harryPotter.png';
 import animalCrossing from '../images/animalCrossing.png';
 import bg3  from '../images/bauldersGate3.png';
 import minecraft from '../images/minecraft.png';
-import expedition from '../images/expedition.png';
+import expedition33 from '../images/expedition33.png';
 import { IconBaseProps } from 'react-icons';
 
 
@@ -57,7 +57,7 @@ const ImgMap = {
   animalCrossing,
   bg3,
   minecraft,
-  expedition
+  expedition33
 };
 
 const size = 30;
