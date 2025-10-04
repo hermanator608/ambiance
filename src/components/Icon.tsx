@@ -21,11 +21,13 @@ import lofi from '../images/lofi.png';
 import wow from '../images/wow.png';
 import lotr from '../images/lotr.png';
 import zelda from '../images/zelda.png';
-import harryPotter from '../images/harryPotter.png'
-import animalCrossing from '../images/animalCrossing.png'
-import minecraft from '../images/minecraft.png'
-import { IconBaseProps } from 'react-icons';
+import harryPotter from '../images/harryPotter.png';
+import animalCrossing from '../images/animalCrossing.png';
 import bg3  from '../images/bauldersGate3.png';
+import minecraft from '../images/minecraft.png';
+import expedition from '../images/expedition.png';
+import { IconBaseProps } from 'react-icons';
+
 
 // https://react-icons.github.io/react-icons/icons?name=fa
 const IconMap = {
@@ -54,7 +56,8 @@ const ImgMap = {
   harryPotter,
   animalCrossing,
   bg3,
-  minecraft
+  minecraft,
+  expedition
 };
 
 const size = 30;

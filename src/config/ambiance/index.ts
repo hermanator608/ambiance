@@ -8,6 +8,7 @@ import { harryPotter } from './harryPotter';
 import { animalCrossing } from './animalCrossing';
 import { bg3 } from './bg3';
 import { minecraft } from './minecraft';
+import { expedition33 } from './expedition33';
 
 export * from './types';
 export * from './wow';
@@ -20,6 +21,7 @@ export * from './harryPotter';
 export * from './animalCrossing';
 export * from './bg3';
 export * from './minecraft';
+export * from './expedition33';
 
 export const ambianceCategories = {
   worldOfWarcraft,
@@ -31,7 +33,8 @@ export const ambianceCategories = {
   harryPotter,
   animalCrossing,
   bg3,
-  minecraft
+  minecraft,
+  expedition33
 };
 export type AmbianceName = keyof typeof ambianceCategories;
 
@@ -75,5 +78,9 @@ export const ambianceCategoryDetail = {
   minecraft: {
     name: "Minecraft",
     icon: "minecraft"
+  },
+  expedition33: {
+    name: "Expedition 33",
+    icon: "expedition"
   }
 }
