@@ -6,6 +6,7 @@ import { useRecoilState } from 'recoil';
 import { currentAmbianceCategoryNameState, currentAmbianceIndexState } from '../state';
 import { AmbianceName, ambianceCategories } from '../config/ambiance';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
+import { ambianceCategoryDetail } from '../config/ambiance/index';
 
 const controlStyle = {
   zIndex: 6,
@@ -19,7 +20,6 @@ const controlsButtonsStyle = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-
 };
 
 export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscreen}) => {
@@ -40,132 +40,32 @@ export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscre
     setCurrentAmbianceIndex(getRandomAmbianceIndex(ambianceCategories[category], currentAmbianceIndex))
   }
 
+  const ambianceButtons = Object.entries(ambianceCategoryDetail).map(([key, value]) => {
+    return (
+      <Button 
+        icon={value.icon}
+        highlighted={currentAmbianceCategoryName === key}
+        onClick={
+          logEventClickWrapper({
+            onClick: () => handleCategoryChanger(key as any),
+            eventData: {
+              //using value.icon to preserve previous event names 
+              actionId: value.icon + 'Category'
+            }
+          })
+        }
+      >
+      </Button>
+    )
+  })
+
   return (
     <div style={controlStyle}>
       <div style={controlsButtonsStyle}>
         <Button icon='fullscreen' onClick={handleClick} />
       </div>
       <div style={controlsButtonsStyle}>
-        <Button
-          icon='wow'
-          highlighted={currentAmbianceCategoryName === 'worldOfWarcraft'}
-          onClick={
-            logEventClickWrapper({
-              onClick: () => handleCategoryChanger('worldOfWarcraft'),
-              eventData: {
-                actionId: 'wowCategory'
-              }
-            })
-          }
-        />
-        <Button
-          icon='bg3'
-          highlighted={currentAmbianceCategoryName === 'bg3'}
-          onClick={
-            logEventClickWrapper({
-              onClick: () => handleCategoryChanger('bg3'),
-              eventData: {
-                actionId: 'bg3Category'
-              }
-            })
-          }
-        />
-        <Button
-          icon='lotr'
-          highlighted={currentAmbianceCategoryName === 'lotr'}
-          onClick={
-            logEventClickWrapper({
-              onClick: () => handleCategoryChanger('lotr'),
-              eventData: {
-                actionId: 'lotrCategory'
-              }
-            })
-          }
-        />
-        <Button
-          icon='minecraft'
-          highlighted={currentAmbianceCategoryName === 'minecraft'}
-          onClick={
-            logEventClickWrapper({
-              onClick: () => handleCategoryChanger('minecraft'),
-              eventData: {
-                actionId: 'minecraftCategory'
-              }
-            })
-          }
-        />
-        <Button
-          icon='harryPotter'
-          highlighted={currentAmbianceCategoryName === 'harryPotter'}
-          onClick={
-            logEventClickWrapper({
-              onClick: () => handleCategoryChanger('harryPotter'),
-              eventData: {
-                actionId: 'harryPotterCategory'
-              }
-            })
-          }
-        />
-        <Button
-          icon='animalCrossing'
-          highlighted={currentAmbianceCategoryName === 'animalCrossing'}
-          onClick={
-            logEventClickWrapper({
-              onClick: () => handleCategoryChanger('animalCrossing'),
-              eventData: {
-                actionId: 'animalCrossingCategory'
-              }
-            })
-          }
-        />
-        <Button
-          icon='zelda'
-          highlighted={currentAmbianceCategoryName === 'zelda'}
-          onClick={
-            logEventClickWrapper({
-              onClick: () => handleCategoryChanger('zelda'),
-              eventData: {
-                actionId: 'zeldaCategory'
-              }
-            })
-          }
-        />
-        <Button
-          icon='world'
-          highlighted={currentAmbianceCategoryName === 'earth'}
-          onClick={
-            logEventClickWrapper({
-              onClick: () => handleCategoryChanger('earth'),
-              eventData: {
-                actionId: 'worldCategory'
-              }
-            })
-          }
-        />
-        <Button
-          icon='coffee'
-          highlighted={currentAmbianceCategoryName === 'coffee'}
-          onClick={
-            logEventClickWrapper({
-              onClick: () => handleCategoryChanger('coffee'),
-              eventData: {
-                actionId: 'coffeeCategory'
-              }
-            })
-          }
-        />
-        <Button
-          icon='lofi'
-          highlighted={currentAmbianceCategoryName === 'lofi'}
-          onClick={
-            logEventClickWrapper({
-              onClick: () => handleCategoryChanger('lofi'),
-              eventData: {
-                actionId: 'lofiCategory'
-              }
-            })
-          }
-        />
+        { ambianceButtons }
       </div>
     </div>
   );

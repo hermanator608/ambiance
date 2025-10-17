@@ -24,6 +24,8 @@ import bg3Default from '../images/cursors/dnd_default.png';
 import bg3Active from '../images/cursors/dnd_active.png';
 import minecraftDefault from '../images/cursors/minecraft_default.png';
 import minecraftActive from '../images/cursors/minecraft_active.png';
+import expedition33Active from '../images/cursors/expedition33_active.png';
+import expedition33Default from '../images/cursors/expedition33_default.png';
 
 type MouseStyle = {
   default: string;
@@ -49,9 +51,11 @@ const getMouseStyle = (ambianceCategoryName: AmbianceName): MouseStyle | undefin
     case 'earth':
       return { default: earthDefault, pointer: earthActive };
     case 'bg3':
-        return { default: bg3Default, pointer: bg3Active};
+      return { default: bg3Default, pointer: bg3Active};
     case 'minecraft':
-        return { default: minecraftDefault, pointer: minecraftActive};
+      return { default: minecraftDefault, pointer: minecraftActive};
+    case 'expedition33':
+      return { default: expedition33Default , pointer: expedition33Active };
     default:
       return undefined;
   }

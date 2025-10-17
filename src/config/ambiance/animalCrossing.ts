@@ -39,12 +39,6 @@ export const animalCrossing: Ambiance[] = [
     channel: channels.asmrsoupe,
   },
   {
-    name: 'Animal Crossing New Horizons - Full OST',
-    code: 'zru-TLye9jo',
-    group: 'Soundtrack',
-    channel: channels.LynfinityMusic,
-  },
-  {
     name: 'Animal Crossing: New Horizons Gameplay',
     code: 'iKw2B4bsyYc',
     group: 'Gameplay',

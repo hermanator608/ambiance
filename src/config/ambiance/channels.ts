@@ -195,5 +195,13 @@ export const channels = {
   InfiniteDrift: {
     name: "InfiniteDrift",
     link: "https://www.youtube.com/@InfiniteDrift"
+  },
+  TetraTheMage: {
+    name: "TetraTheMage",
+    link: "https://www.youtube.com/@TetraTheMage"
+  },
+  GentleBitstreams: {
+    name: "Gentle Bitstreams",
+    link: "https://www.youtube.com/@GentleBitstreams"
   }
 };
