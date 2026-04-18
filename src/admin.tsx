@@ -408,7 +408,7 @@ export default function AdminPage() {
       </Drawer>
 
       {/* videos-title id not used in css file, used for "scroll into view" videos button in app bar */}
-      <Typography id="videos-title" color="secondary" variant='h1' textAlign={"center"}>videos</Typography>
+      <Typography id="videos-title" color="secondary" variant='h1' sx={{ textAlign: 'center' }}>videos</Typography>
       {displayTreeComponent()}
 
     </div>

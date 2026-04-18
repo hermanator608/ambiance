@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import styled, { css } from 'styled-components';
-import { ReactPlayerProps } from 'react-player';
 import { FullScreenHandle } from 'react-full-screen';
 import { Slider, SliderProps } from '@mui/material';
 import { FlexColumn } from '../globalStyles';
@@ -15,7 +14,7 @@ import { DotDotDot } from './DotDotDot';
 import { Pause } from './Pause';
 import { ambianceCategories } from '../config/ambiance';
 
-const reactPlayerStyle: ReactPlayerProps['style'] = {
+const reactPlayerStyle: React.ComponentProps<typeof ReactPlayer>['style'] = {
   pointerEvents: 'none',
   userSelect: 'none',
   zIndex: -1,

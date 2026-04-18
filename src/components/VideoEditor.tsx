@@ -185,7 +185,7 @@ export default function VideoEditor(props: VideoEditorProps) {
           size='small'
           type='number'
           color='secondary'
-          inputProps={{ min: "0" }}
+          slotProps={{ htmlInput: { min: 0 } }}
           value={localVideo?.startTimeS}
         />
         <TextField
