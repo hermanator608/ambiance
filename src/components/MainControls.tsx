@@ -2,8 +2,7 @@ import React from 'react'
 import Button from './Button';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import { FullScreenHandle } from 'react-full-screen';
-import { useRecoilState } from 'recoil';
-import { currentAmbianceCategoryNameState, currentAmbianceIndexState } from '../state';
+import { useAppStore } from '../state';
 import { AmbianceName, ambianceCategories } from '../config/ambiance';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
 import { ambianceCategoryDetail } from '../config/ambiance/index';
@@ -23,10 +22,10 @@ const controlsButtonsStyle = {
 };
 
 export const MainControls: React.FC<{fullscreen: FullScreenHandle}> = ({fullscreen}) => {
-  const [currentAmbianceIndex, setCurrentAmbianceIndex] = useRecoilState(
-    currentAmbianceIndexState(undefined),
-  );
-  const [currentAmbianceCategoryName, setCurrentAmbianceCategoryNameState] = useRecoilState(currentAmbianceCategoryNameState)
+  const currentAmbianceIndex = useAppStore((s) => s.currentAmbianceIndex);
+  const setCurrentAmbianceIndex = useAppStore((s) => s.setCurrentAmbianceIndex);
+  const currentAmbianceCategoryName = useAppStore((s) => s.currentAmbianceCategoryName);
+  const setCurrentAmbianceCategoryNameState = useAppStore((s) => s.setCurrentAmbianceCategoryName);
 
   const handleClick = logEventClickWrapper({
     onClick: () => fullscreen.active ? fullscreen.exit() : fullscreen.enter(),

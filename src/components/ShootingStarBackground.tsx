@@ -1,7 +1,6 @@
 import React from 'react'
-import { useRecoilState } from 'recoil';
 import styled, { css, keyframes } from 'styled-components';
-import { videoShownState } from '../state';
+import { useAppStore } from '../state';
 
 const starsCount = 20
 
@@ -125,7 +124,7 @@ const ShootingStar = styled.div`
 `;
 
 export const ShootingStartBackground: React.FC = () => {
-  const [videoShown] = useRecoilState(videoShownState);
+  const videoShown = useAppStore((s) => s.videoShown);
   if (videoShown) return null;
 
   const shootingStars: React.ReactElement[] = []
