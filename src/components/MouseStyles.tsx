@@ -1,8 +1,7 @@
 import React from 'react';
-import { useRecoilValue } from 'recoil';
 import { createGlobalStyle } from 'styled-components';
 import { AmbianceName } from '../config/ambiance';
-import { currentAmbianceCategoryNameState } from '../state';
+import { useAppStore } from '../state';
 
 import wowDefault from '../images/cursors/wow_default.png';
 import wowActive from '../images/cursors/wow_active.png';
@@ -62,7 +61,7 @@ const getMouseStyle = (ambianceCategoryName: AmbianceName): MouseStyle | undefin
 };
 
 export const MouseStyles: React.FC = () => {
-  const ambianceName = useRecoilValue(currentAmbianceCategoryNameState);
+  const ambianceName = useAppStore((s) => s.currentAmbianceCategoryName);
 
   const currentMouse = getMouseStyle(ambianceName);
 

@@ -1,9 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import ReactPlayer, {
-  YouTubePlayerProps as ReactPlayerYouTubeProps,
-} from 'react-player/youtube';
+import ReactPlayer from 'react-player';
 import styled, { css } from 'styled-components';
-import { ReactPlayerProps } from 'react-player';
 import { FullScreenHandle } from 'react-full-screen';
 import { Slider, SliderProps } from '@mui/material';
 import { FlexColumn } from '../globalStyles';
@@ -11,22 +8,23 @@ import { Icon } from './Icon';
 import Button from './Button';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import debounce from 'lodash.debounce';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  currentAmbianceCategoryNameState,
-  currentAmbianceIndexState,
-  videoShownState,
-} from '../state';
+import { useAppStore } from '../state';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
 import { DotDotDot } from './DotDotDot';
 import { Pause } from './Pause';
 import { ambianceCategories } from '../config/ambiance';
 
-const reactPlayerStyle: ReactPlayerProps['style'] = {
+const reactPlayerStyle: React.ComponentProps<typeof ReactPlayer>['style'] = {
   pointerEvents: 'none',
   userSelect: 'none',
   zIndex: -1,
   borderRadius: '8px',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
 };
 
 const commonStyles = css`
@@ -61,7 +59,8 @@ const ReactPlayerContainer = styled.div<{ hidden: boolean; fullscreen: boolean }
           background: black;
         `}
 
-  iframe {
+  iframe,
+  video {
     ${commonStyles}
   }
 `;
@@ -143,11 +142,11 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
   fullscreen,
 }) => {
   // Global State
-  const [videoShown, setVideoShown] = useRecoilState(videoShownState);
-  const [currentAmbianceIndex, setCurrentAmbianceIndex] = useRecoilState(
-    currentAmbianceIndexState(undefined),
-  );
-  const ambianceName = useRecoilValue(currentAmbianceCategoryNameState);
+  const videoShown = useAppStore((s) => s.videoShown);
+  const setVideoShown = useAppStore((s) => s.setVideoShown);
+  const currentAmbianceIndex = useAppStore((s) => s.currentAmbianceIndex);
+  const setCurrentAmbianceIndex = useAppStore((s) => s.setCurrentAmbianceIndex);
+  const ambianceName = useAppStore((s) => s.currentAmbianceCategoryName);
 
   // Local State
   const [isPlaying, setIsPlaying] = useState(true);
@@ -155,7 +154,7 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
   const [totalTime, setTotalTime] = useState<number | undefined>(0);
   const [currentTime, setCurrentTime] = useState<number | undefined>(0);
 
-  const reactPlayerRef = useRef<ReactPlayer>(null);
+  const reactPlayerRef = useRef<HTMLVideoElement>(null);
 
   const ambiances = ambianceCategories[ambianceName];
   const currentAmbiance = ambiances[currentAmbianceIndex];
@@ -179,17 +178,31 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
   // };
 
   const handleRestart = () => {
-    reactPlayerRef.current?.seekTo(currentAmbiance.startTimeS || 1, 'seconds');
+    if (!reactPlayerRef.current) {
+      return;
+    }
+
+    reactPlayerRef.current.currentTime = currentAmbiance.startTimeS || 1;
   };
 
   const handleStarted = () => {
-    setTotalTime(reactPlayerRef.current?.getDuration());
+    if (!reactPlayerRef.current) {
+      return;
+    }
+
+    const duration = reactPlayerRef.current.duration;
+    if (Number.isFinite(duration)) {
+      setTotalTime(duration);
+    }
   };
 
   const handleFastForward = () => {
-    const nextTime = (currentTime || 0) + 60 * 10; // Add 10 minutes
+    if (!reactPlayerRef.current) {
+      return;
+    }
 
-    reactPlayerRef.current?.seekTo(nextTime, 'seconds');
+    const nextTime = (reactPlayerRef.current.currentTime || 0) + 60 * 10; // Add 10 minutes
+    reactPlayerRef.current.currentTime = nextTime;
   };
 
   const debounceVolumeHandler = useMemo(() => {
@@ -202,15 +215,16 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
     return debounce(handleVolume, 100);
   }, [setVolume]);
 
-  const handleOnProgress: ReactPlayerYouTubeProps['onProgress'] = (data) => {
-    setCurrentTime(data.playedSeconds);
+  const handleTimeUpdate: React.ReactEventHandler<HTMLVideoElement> = (event) => {
+    setCurrentTime(event.currentTarget.currentTime);
+    const duration = event.currentTarget.duration;
+    if (Number.isFinite(duration)) {
+      setTotalTime(duration);
+    }
   };
 
   const logData = { currentAmbiance: currentAmbiance.name };
-  let url = `https://www.youtube.com/embed/${currentAmbiance.code}`;
-  if (!currentAmbiance.livestream || !!currentAmbiance.startTimeS) {
-    url += `?start=${currentAmbiance.startTimeS || 1}`;
-  }
+  const url = `https://www.youtube.com/watch?v=${currentAmbiance.code}`;
 
   return (
     <>
@@ -314,21 +328,16 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
           <ReactPlayer
             controls={false}
             playing={isPlaying}
-            url={url}
+            src={url}
             style={reactPlayerStyle}
-            width="100vw"
-            height="200vw"
             volume={volume}
             config={{
-              playerVars: {
-                modestbranding: true,
-                color: 'black',
-                onUnstarted: () => {
-                  console.error('Failed to auto-start');
-                },
-              },
+              youtube: {
+                color: 'white',
+                start: currentAmbiance.startTimeS || 1,
+              }
             }}
-            playsinline={true}
+            playsInline={true}
             // onReady={handleOnReady}
             // onError={} // TODO: Implement Error Handling
             onPlay={() => setIsPlaying(true)}
@@ -337,7 +346,7 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
             // onBufferEnd={() => setIsBuffering(false)}
             onStart={handleStarted}
             onEnded={handleShuffle}
-            onProgress={handleOnProgress}
+            onTimeUpdate={handleTimeUpdate}
             ref={reactPlayerRef}
           />
         </InnerContainer>

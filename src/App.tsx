@@ -2,7 +2,6 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { Main } from './Main';
 import { theme, adminTheme } from './theme';
-import { RecoilRoot } from 'recoil';
 import { Route, Routes, useLocation } from "react-router-dom";
 import LoginPage from './login';
 import AdminPage from './admin';
@@ -17,24 +16,22 @@ const App: React.FC = () => {
 
   return (
     <AuthProvider>
-      <RecoilRoot>
-        <ThemeProvider theme={adminThemeSet.has(location.pathname) ? adminTheme : theme}>
-          <CssBaseline />
-          <Routes>
-            <Route path="/" element={<Main />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route
-              path="/admin"
-              element={
-                <RequireAuth>
-                  <AdminPage />
-                </RequireAuth>
-              }
-            />
-            <Route path="*" element={<Main />} />
-          </Routes>
-        </ThemeProvider>
-      </RecoilRoot>
+      <ThemeProvider theme={adminThemeSet.has(location.pathname) ? adminTheme : theme}>
+        <CssBaseline />
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/admin"
+            element={
+              <RequireAuth>
+                <AdminPage />
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<Main />} />
+        </Routes>
+      </ThemeProvider>
     </AuthProvider>
   );
 };

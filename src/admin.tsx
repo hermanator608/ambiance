@@ -27,7 +27,7 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import { TreeItem  } from '@mui/x-tree-view/TreeItem';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { AlertProps } from '@mui/material';
 
 
@@ -95,7 +95,7 @@ export default function AdminPage() {
    * Handle user selected nodes
    */
   const handleExpandedItemsChange = (
-    event: React.SyntheticEvent,
+    event: React.SyntheticEvent | null,
     itemIds: string[],
   ) => {
     setExpandedItems(itemIds);
@@ -270,15 +270,18 @@ export default function AdminPage() {
       <TreeItem
         sx={{ padding: 1 }}
         key={documentId}
-        nodeId={documentId}
+        itemId={documentId}
         label={<Typography variant='h6'>{ambianceDisplay.friendlyName}</Typography>}
       >
         <TreeItem
-          expandIcon={<TreeIcon tooltipText='Edit Category' icon={<BuildCircleIcon />} />}
-          collapseIcon={<TreeIcon tooltipText='Close Editor' icon={<BuildCircleIcon color='error' />} />}
           key={documentId + 'edit_category'}
-          nodeId={documentId + 'edit_category'}
-          label={<p>Edit <i><b>{ambianceDisplay.friendlyName}</b></i> Category</p>}
+          itemId={documentId + 'edit_category'}
+          label={
+            <>
+              <TreeIcon tooltipText='Edit Category' icon={<BuildCircleIcon />} />
+              &nbsp; Edit <i><b>{ambianceDisplay.friendlyName}</b></i> Category
+            </>
+          }
         >
           <CategoryEditor editCategory={editCategory} deleteCategory={deleteCategory} categoryID={documentId} categoryDetails={data[documentId]}></CategoryEditor>
         </TreeItem>
@@ -286,25 +289,27 @@ export default function AdminPage() {
         {Object.entries(ambianceDisplay.videosBySubcategory).map(([subcategory, vids]) => (
           <TreeItem
             key={documentId + subcategory}
-            nodeId={documentId + subcategory}
+            itemId={documentId + subcategory}
             label={<Typography variant='subtitle1'>{subcategory}</Typography>}
           >
             {vids.map(vid => (
               <TreeItem
-                expandIcon={<TreeIcon tooltipText='Edit Video' icon={<BuildCircleIcon />} />}
-                collapseIcon={<TreeIcon tooltipText='Close Editor' icon={<BuildCircleIcon color='error' />} />}
                 key={documentId + subcategory + vid.code + "edit_video"}
-                nodeId={documentId + subcategory + vid.code + "edit_video"}
-                label={vid.name}
+                itemId={documentId + subcategory + vid.code + "edit_video"}
+                label={
+                  <>
+                    <TreeIcon tooltipText='Edit Video' icon={<BuildCircleIcon />} />
+                    &nbsp; {vid.name}
+                  </>
+                }
               >
                 <VideoEditor currentVideo={vid} documentId={documentId} editVideo={editVideo} deleteVideo={deleteVideo} />
               </TreeItem>
             ))}
             <TreeItem
               key={documentId + subcategory + "add_video"}
-              nodeId={documentId + subcategory + "add_video"}
-              expandIcon={<TreeIcon tooltipText='Add Video' icon={<AddIcon />} />}
-              collapseIcon={<TreeIcon tooltipText='Close Editor' icon={<BuildCircleIcon color='error' />} />}
+              itemId={documentId + subcategory + "add_video"}
+              label={<TreeIcon tooltipText='Add Video' icon={<AddIcon />} />}
             >
               <VideoEditor documentId={documentId} addVideo={addVideo} currentVideo={{ group: subcategory }}></VideoEditor>
             </TreeItem>
@@ -312,9 +317,8 @@ export default function AdminPage() {
         ))}
         <TreeItem
           key={documentId + "new_video"}
-          nodeId={documentId + "new_video"}
-          expandIcon={<TreeIcon tooltipText='Add Video' icon={<AddIcon />} />}
-          collapseIcon={<TreeIcon tooltipText='Close Editor' icon={<BuildCircleIcon color='error' />} />}
+          itemId={documentId + "new_video"}
+          label={<TreeIcon tooltipText='Add Video' icon={<AddIcon />} />}
         >
           <VideoEditor documentId={documentId} addVideo={addVideo}></VideoEditor>
         </TreeItem>
@@ -323,26 +327,23 @@ export default function AdminPage() {
 
     return (
       <div id='tree-view'>
-        <TreeView
-          expanded={expandedItems}
-          onNodeToggle={handleExpandedItemsChange}
+        <SimpleTreeView
+          expandedItems={expandedItems}
+          onExpandedItemsChange={handleExpandedItemsChange}
           aria-label="file system navigator"
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
+          slots={{ collapseIcon: ExpandMoreIcon, expandIcon: ChevronRightIcon }}
           sx={{ height: '100%', flexGrow: 1, maxWidth: 900, overflowY: 'auto', paddingLeft: 10 }}
         >
           {elements}
           <TreeItem
             sx={{ padding: 1 }}
-            nodeId='add_category'
-            expandIcon={<TreeIcon tooltipText='New Category' icon={<AddIcon />} />}
-            collapseIcon={<TreeIcon tooltipText='Close Editor' icon={<BuildCircleIcon color='error' />} />}
+            itemId='add_category'
+            label={<Typography variant='h6'><TreeIcon tooltipText='New Category' icon={<AddIcon />} />&nbsp;<i>New Ambiance Category</i></Typography>}
           >
-            <Typography variant='h6'><i>New Ambiance Category</i></Typography>
             <Divider />
             <CategoryEditor addCategory={addCategory}></CategoryEditor>
           </TreeItem>
-        </TreeView>
+        </SimpleTreeView>
       </div>
     )
   }
@@ -353,7 +354,7 @@ export default function AdminPage() {
         open={open}
         autoHideDuration={AUTO_HIDE_SNACKBAR}
         onClose={handleCloseSnackBar}
-        TransitionProps={{ onExited: handleSnackBarExited }}
+        slotProps={{ transition: { onExited: handleSnackBarExited } }}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert
@@ -407,7 +408,7 @@ export default function AdminPage() {
       </Drawer>
 
       {/* videos-title id not used in css file, used for "scroll into view" videos button in app bar */}
-      <Typography id="videos-title" color="secondary" variant='h1' textAlign={"center"}>videos</Typography>
+      <Typography id="videos-title" color="secondary" variant='h1' sx={{ textAlign: 'center' }}>videos</Typography>
       {displayTreeComponent()}
 
     </div>

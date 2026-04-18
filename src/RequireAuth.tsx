@@ -1,8 +1,8 @@
 import React from "react";
 import { AuthContext } from "./AuthProvider";
-import { Navigate, useLocation } from "react-router";
+import { Navigate, useLocation } from "react-router-dom";
 
-export function RequireAuth({ children }: { children: JSX.Element }) {
+export function RequireAuth({ children }: { children: React.ReactElement }) {
   let auth = React.useContext(AuthContext);
   let location = useLocation();
 

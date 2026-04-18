@@ -5,10 +5,8 @@ import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import Button from './Button';
 import Fade from '@mui/material/Fade';
 import { Twitter } from './Twitter';
-import { useRecoilValue } from 'recoil';
-import { currentAmbianceIndexState } from '../state';
+import { useAppStore } from '../state';
 import { ambianceCategories } from '../config/ambiance';
-import { currentAmbianceCategoryNameState } from '../state';
 
 const Container = styled.div`
   z-index: 6;
@@ -52,8 +50,8 @@ const Links = styled.div`
 `;
 
 export const Info: React.FC = () => {
-  const currentAmbianceIndex = useRecoilValue(currentAmbianceIndexState(undefined));
-  const ambianceName = useRecoilValue(currentAmbianceCategoryNameState);
+  const currentAmbianceIndex = useAppStore((s) => s.currentAmbianceIndex);
+  const ambianceName = useAppStore((s) => s.currentAmbianceCategoryName);
   const ambiances = ambianceCategories[ambianceName];
   const currentAmbiance = ambiances[currentAmbianceIndex];
 
