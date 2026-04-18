@@ -20,3 +20,14 @@ Object.defineProperty(HTMLMediaElement.prototype, 'pause', {
   configurable: true,
   value: vi.fn(),
 });
+
+// JSDOM does not fully implement TextTrackList. Some media libs (e.g. youtube-video-element)
+// assume `textTracks.addEventListener` exists.
+Object.defineProperty(HTMLMediaElement.prototype, 'textTracks', {
+  configurable: true,
+  get: () => ({
+    length: 0,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  }),
+});
