@@ -6,7 +6,7 @@ import { ambianceCategories, ambianceCategoryDetail } from '../config/ambiance';
 export type AmbianceCatalog = Record<string, AmbianceCategory>;
 
 const LOCAL_STORAGE_KEY = 'ambiance:catalog:v1';
-const DEFAULT_TTL_MS = 1000 * 60 * 60 * 2; // 2h
+const DEFAULT_TTL_MS = 1000 * 60 * 60 * 24; // 24h
 
 type CachedCatalog = {
   fetchedAtMs: number;
