@@ -34,7 +34,20 @@ export const readCatalogFromLocalStorage = (): CachedCatalog | undefined => {
     if (!raw) return undefined;
     const parsed = JSON.parse(raw) as CachedCatalog;
     if (!parsed || typeof parsed !== 'object') return undefined;
-    if (!parsed.catalog || typeof parsed.fetchedAtMs !== 'number') return undefined;
+    const hasValidFetchedAt = typeof parsed.fetchedAtMs === 'number' && Number.isFinite(parsed.fetchedAtMs);
+    const hasValidCatalog =
+      typeof (parsed as any).catalog === 'object'
+      && (parsed as any).catalog !== null
+      && !Array.isArray((parsed as any).catalog);
+
+    if (!hasValidFetchedAt || !hasValidCatalog) {
+      try {
+        window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+      } catch {
+        // ignore
+      }
+      return undefined;
+    }
     return parsed;
   } catch {
     return undefined;

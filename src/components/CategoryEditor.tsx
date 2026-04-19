@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../index.css';
 import { AmbianceCategory } from '../config/ambiance/types';
 import { AddCategoryFn, DeleteCategoryFn, EditCategoryFn } from '../types';
-import { Icon, IMG_ICON_NAMES, toIconId } from './Icon';
+import { Icon, IMG_ICON_NAMES, toIconId, validateIconId, type IconId } from './Icon';
 
 //MUI Imports
 import Box from '@mui/material/Box';
@@ -39,11 +39,46 @@ export default function CategoryEditor(props: CategoryEditorProps) {
   const [showDeleteAlert, setShowDeleteAlert] = useState<Boolean>(false);
   const [showEditAlert, setShowEditAlert] = useState<Boolean>(false);
   const [deleteCategoryID, setDeleteCategoryID] = useState<string>("");
+  const [validatedIconId, setValidatedIconId] = useState<IconId | ''>(() => {
+    const initial = (categoryDetails?.icon ?? '').trim();
+    return toIconId(initial) ?? '';
+  });
+  const [isIconValidating, setIsIconValidating] = useState(false);
 
   const rawIconValue = (category?.icon ?? '').trim();
-  const normalizedIconValue = toIconId(rawIconValue) ?? '';
+  const normalizedIconValue = validatedIconId;
 
-  const canSave = !!localCategoryID && !!category?.name && !!normalizedIconValue;
+  useEffect(() => {
+    let cancelled = false;
+
+    const run = async () => {
+      const value = rawIconValue.trim();
+      if (!value) {
+        setValidatedIconId('');
+        setIsIconValidating(false);
+        return;
+      }
+
+      setIsIconValidating(true);
+      const resolved = await validateIconId(value);
+      if (cancelled) return;
+
+      setValidatedIconId(resolved ?? '');
+      setIsIconValidating(false);
+    };
+
+    void run().catch(() => {
+      if (cancelled) return;
+      setValidatedIconId('');
+      setIsIconValidating(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [rawIconValue]);
+
+  const canSave = !!localCategoryID && !!category?.name && !!normalizedIconValue && !isIconValidating;
 
   const verifyDelete = () => {
     setShowDeleteAlert(true);
@@ -207,17 +242,29 @@ export default function CategoryEditor(props: CategoryEditorProps) {
             label="Icon"
             variant="outlined"
             onKeyDown={stopTreeKeyDown}
-            error={!normalizedIconValue}
+            error={!normalizedIconValue && !isIconValidating}
             helperText={
               <span>
                 Choose a built-in image icon from the dropdown, or paste an icon name from{' '}
-                <a href="https://react-icons.github.io/react-icons/icons?name=gi" target="_blank" rel="noreferrer">Game Icons (Gi)</a>,{' '}
-                <a href="https://react-icons.github.io/react-icons/icons?name=fa" target="_blank" rel="noreferrer">Font Awesome (Fa)</a>, or{' '}
-                <a href="https://react-icons.github.io/react-icons/icons?name=md" target="_blank" rel="noreferrer">Material Design (Md)</a>{' '}
+                <a href="https://react-icons.github.io/react-icons/icons/gi" target="_blank" rel="noreferrer">Game Icons (Gi)</a>,{' '}
+                <a href="https://react-icons.github.io/react-icons/icons/fa" target="_blank" rel="noreferrer">Font Awesome (Fa)</a>, or{' '}
+                <a href="https://react-icons.github.io/react-icons/icons/md" target="_blank" rel="noreferrer">Material Design (Md)</a>{' '}
                 (example: <code>GiCampfire</code>). 
                 
                 To add a new custom built-in icon, the icon file must be added to the repo and registered in{' '}
                 <code>IconMap</code>/<code>ImgMap</code>.
+
+                {isIconValidating ? (
+                  <>
+                    <br />
+                    Validating icon…
+                  </>
+                ) : rawIconValue && !normalizedIconValue ? (
+                  <>
+                    <br />
+                    Icon not found.
+                  </>
+                ) : null}
               </span>
             }
             slotProps={{

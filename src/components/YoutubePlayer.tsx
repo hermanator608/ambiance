@@ -270,28 +270,27 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
     reactPlayerRef.current.currentTime = nextTime;
   };
 
-  const debounceVolumeHandler = useMemo(() => {
-    const handleVolume: NonNullable<SliderProps['onChange']> = (_event, value) => {
-      const newVolume = Array.isArray(value) ? value[0] : value;
-      setVolume(newVolume);
-    };
+  const handleVolumeChange: NonNullable<SliderProps['onChange']> = useCallback((_event, value) => {
+    const newVolume = Array.isArray(value) ? value[0] : value;
+    setVolume(newVolume);
+  }, []);
 
-    return debounce(handleVolume, 100);
-  }, [setVolume]);
+  const persistVolumeDebounced = useMemo(() => {
+    return debounce((nextVolume: number) => {
+      try {
+        window.localStorage.setItem(VOLUME_STORAGE_KEY, String(nextVolume));
+      } catch {
+        // ignore
+      }
+    }, 200);
+  }, [VOLUME_STORAGE_KEY]);
 
   useEffect(() => {
+    persistVolumeDebounced(volume);
     return () => {
-      debounceVolumeHandler.cancel();
+      persistVolumeDebounced.cancel();
     };
-  }, [debounceVolumeHandler]);
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(VOLUME_STORAGE_KEY, String(volume));
-    } catch {
-      // ignore
-    }
-  }, [volume]);
+  }, [persistVolumeDebounced, volume]);
 
   const handleTimeUpdate: React.ReactEventHandler<HTMLVideoElement> = (event) => {
     setCurrentTime(event.currentTarget.currentTime);
@@ -377,7 +376,7 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
           <VolumeSlider
             value={volume}
             aria-label="Volume"
-            onChange={debounceVolumeHandler}
+            onChange={handleVolumeChange}
             valueLabelDisplay="off"
             step={0.02}
             marks

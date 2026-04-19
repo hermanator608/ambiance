@@ -58,7 +58,7 @@ import { IconBaseProps } from 'react-icons';
  */
 
 
-// https://react-icons.github.io/react-icons/icons?name=fa
+// https://react-icons.github.io/react-icons/icons/fa
 /** Curated, app-owned set of vector icons (small + tree-shaken). */
 const IconMap = {
   play: FaPlay,
@@ -181,6 +181,32 @@ export function toIconId(value: string | undefined | null): IconId | undefined {
   if (isFaIconName(value)) return value;
   if (isMdIconName(value)) return value;
   return undefined;
+}
+
+/**
+ * Validates that an icon id is actually renderable.
+ *
+ * - Curated icons (`IconMap`/`ImgMap`) are always valid.
+ * - Pack icons (`Gi*`/`Fa*`/`Md*`) are only valid if the export exists in the corresponding module.
+ */
+export async function validateIconId(value: string | undefined | null): Promise<IconId | undefined> {
+  const trimmed = value?.trim();
+  if (!trimmed) return undefined;
+
+  if (isKnownIconName(trimmed)) {
+    return trimmed;
+  }
+
+  const pack = getReactIconPack(trimmed);
+  if (!pack) return undefined;
+
+  try {
+    const mod = await loadReactIconModule(pack);
+    const candidate = mod[trimmed];
+    return typeof candidate === 'function' ? (trimmed as IconId) : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function isImgType(name: KnownIconName): name is ImgName {
