@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import './index.css';
 import { AuthContext } from "./AuthProvider";
-import { collection, getFirestore, onSnapshot, doc, updateDoc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
+import { collection, getFirestore, onSnapshot, doc, updateDoc, setDoc, deleteDoc, getDoc, Timestamp } from "firebase/firestore";
 import { EditVideoFn, DeleteVideoFn, AddVideoFn, AddCategoryFn, DeleteCategoryFn, EditCategoryFn } from './types';
 import { AmbianceCategory } from './config/ambiance/types';
 import { AmbianceDisplayType } from "./types";
@@ -12,7 +12,7 @@ import VideoEditor from './components/VideoEditor';
 import CategoryEditor from './components/CategoryEditor';
 import cloneDeep from 'lodash.clonedeep';
 //MUI Imports
-import { Alert, Button, ButtonGroup, Snackbar } from '@mui/material';
+import { Alert, Button, ButtonGroup, Snackbar, Tooltip } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -22,6 +22,7 @@ import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import Construction from '@mui/icons-material/Construction';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -30,17 +31,84 @@ import { TreeItem  } from '@mui/x-tree-view/TreeItem';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { AlertProps } from '@mui/material';
 
+type ReportInfo = {
+  count: number;
+  lastReportedAtMs?: number;
+};
+
+function formatReportTooltip(reportInfo: ReportInfo): string {
+  const last = reportInfo.lastReportedAtMs ? new Date(reportInfo.lastReportedAtMs).toLocaleString() : undefined;
+  return `Reports: ${reportInfo.count}${last ? ` • Last: ${last}` : ''}`;
+}
+
+function toMillis(value: unknown): number | undefined {
+  if (!value) return undefined;
+  if (value instanceof Timestamp) return value.toMillis();
+  if (value instanceof Date) return value.getTime();
+  if (typeof value === 'number') return value;
+  if (typeof (value as any).toMillis === 'function') return (value as any).toMillis();
+  return undefined;
+}
+
+function VideoEditExpandIcon() {
+  return <BuildCircleIcon color="secondary" fontSize="small" />;
+}
+
+function AddExpandIcon() {
+  return <AddIcon color="secondary" fontSize="small" />;
+}
+
+function ReportBadge({ reportInfo }: { reportInfo?: ReportInfo }) {
+  if (!reportInfo || reportInfo.count <= 0) {
+    return null;
+  }
+
+  return (
+    <Tooltip title={formatReportTooltip(reportInfo)}>
+      <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5, color: 'error.main', flexShrink: 0 }}>
+        <ReportProblemIcon fontSize="small" color="error" />
+        <Typography component="span" variant="body2" sx={{ color: 'error.main', fontWeight: 700 }}>
+          {reportInfo.count}
+        </Typography>
+      </Box>
+    </Tooltip>
+  );
+}
+
 
 export default function AdminPage() {
   const db = getFirestore();
   const { currentUser, signOut } = useContext(AuthContext);
   const [data, setData] = useState<Record<string, AmbianceCategory>>();
+  const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
+  const [reportsByCategoryAndCode, setReportsByCategoryAndCode] = useState<Record<string, Record<string, ReportInfo>>>({});
+  const [showReportedOnly, setShowReportedOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const expandedItemsBeforeReportedRef = useRef<string[] | null>(null);
   const [snackBarMessage, setSnackBarMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState<AlertProps["severity"]>("info");
   const [snackPack, setSnackPack] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [allNodeIds, setAllNodeIds] = useState<string[]>([]);
+
+  const collapseItem = (itemId: string) => {
+    setExpandedItems((prev) => prev.filter((id) => id !== itemId));
+  };
+
+  const expandItems = (itemIds: string[]) => {
+    setExpandedItems((prev) => Array.from(new Set([...prev, ...itemIds])));
+  };
+
+  const expandToVideo = (categoryId: string, subcategory: string, videoCode: string) => {
+    const subcategoryId = categoryId + subcategory;
+    const videoItemId = categoryId + subcategory + videoCode + 'edit_video';
+    expandItems([categoryId, subcategoryId, videoItemId]);
+  };
+
+  const getReportCount = (categoryId: string, videoCode: string): number => {
+    return reportsByCategoryAndCode?.[categoryId]?.[videoCode]?.count ?? 0;
+  };
 
   // Get data from Firestore
   useEffect(() => {
@@ -58,6 +126,29 @@ export default function AdminPage() {
 
     return unsubscribe;
   }, [db, setData]);
+
+  // Get reports from Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'reports'), (snapshot) => {
+      const next: Record<string, Record<string, ReportInfo>> = {};
+
+      snapshot.docs.forEach((d) => {
+        const data = d.data() as any;
+        const categoryId = data.categoryId as string | undefined;
+        const code = data.videoCode as string | undefined;
+        const count = data.count as number | undefined;
+        const lastReportedAtMs = toMillis(data.lastReportedAt);
+
+        if (!categoryId || !code || typeof count !== 'number') return;
+        if (!next[categoryId]) next[categoryId] = {};
+        next[categoryId][code] = { count, lastReportedAtMs };
+      });
+
+      setReportsByCategoryAndCode(next);
+    });
+
+    return unsubscribe;
+  }, [db]);
 
   
   // Snackbar section
@@ -133,6 +224,26 @@ export default function AdminPage() {
     setAllNodeIds(expandedItems);
   }
 
+  const getReportedExpandedNodeIds = (): string[] => {
+    if (!data) {
+      return [];
+    }
+
+    const grouped: AmbianceDisplayType = groupVideosBySubcategory(data);
+    const ids = new Set<string>();
+
+    Object.entries(grouped).forEach(([documentId, display]) => {
+      Object.entries(display.videosBySubcategory).forEach(([subcategory, vids]) => {
+        const hasReportedVideo = vids.some((vid) => getReportCount(documentId, vid.code) > 0);
+        if (!hasReportedVideo) return;
+        ids.add(documentId);
+        ids.add(documentId + subcategory);
+      });
+    });
+
+    return Array.from(ids);
+  };
+
 
   const editVideo: EditVideoFn = async (documentId, videoUrlCode, newData) => {
     if (!data) {
@@ -186,22 +297,24 @@ export default function AdminPage() {
   const addVideo: AddVideoFn = async (documentId, newData) => {
     if (!data) {
       console.error("Ambiance data not available when attempting to addVideo");
-      return;
+      throw new Error('Ambiance data not available');
     }
 
     const newVideos = cloneDeep(data[documentId].videos);
     newVideos.push(newData);
 
     const docRef = doc(db, AMBIANCE_COLLECTION, documentId);
-    return updateDoc(docRef, {
-      videos: newVideos
-    }).then(() => {
+    try {
+      await updateDoc(docRef, {
+        videos: newVideos
+      });
       setAlertSeverity("success");
       handleAddSnackBarMessage("Successfully added video - " + newData.name);
-    }).catch(() => {
+    } catch (err) {
       setAlertSeverity("error");
       handleAddSnackBarMessage("An error occurred. " + newData.name + " not added.");
-    });
+      throw err;
+    }
   }
 
   const addCategory: AddCategoryFn = async (documentId, documentName, icon) => {
@@ -262,68 +375,167 @@ export default function AdminPage() {
       return;
     }
 
+    const query = searchQuery.trim().toLowerCase();
+    const isSearching = query.length > 0;
+    const hideCreateNodes = showReportedOnly || isSearching;
+
     // Map of documentId -> (Map of subcategory name -> videos in subcategory)
     const newData: AmbianceDisplayType = groupVideosBySubcategory(data);
 
     // key = ambiance category, i.e., animalCrossing, bg3
-    const elements = Object.entries(newData).map(([documentId, ambianceDisplay], index) => (
+    const elements = Object.entries(newData).flatMap(([documentId, ambianceDisplay]) => {
+      const categoryMatches = isSearching
+        ? (ambianceDisplay.friendlyName ?? '').toLowerCase().includes(query) || documentId.toLowerCase().includes(query)
+        : false;
+
+      const filteredSubcategories = Object.entries(ambianceDisplay.videosBySubcategory).flatMap(([subcategory, vids]) => {
+        const subcategoryMatches = isSearching ? subcategory.toLowerCase().includes(query) : false;
+
+        const filteredVids = showReportedOnly
+          ? vids.filter((vid) => getReportCount(documentId, vid.code) > 0)
+          : vids;
+
+        const searchedVids = isSearching
+          ? filteredVids.filter((vid) => {
+              if (categoryMatches || subcategoryMatches) return true;
+              const name = (vid.name ?? '').toLowerCase();
+              const code = (vid.code ?? '').toLowerCase();
+              return name.includes(query) || code.includes(query);
+            })
+          : filteredVids;
+
+        if (searchedVids.length === 0) {
+          return [];
+        }
+
+        return [[subcategory, searchedVids] as const];
+      });
+
+      if (showReportedOnly && filteredSubcategories.length === 0) {
+        return [];
+      }
+
+      if (isSearching && !categoryMatches && filteredSubcategories.length === 0) {
+        return [];
+      }
+
+      const categoryVideoCount = filteredSubcategories.reduce((acc, [, vids]) => acc + vids.length, 0);
+      const newVideoItemId = documentId + "new_video";
+
+      return [(
       <TreeItem
         sx={{ padding: 1 }}
         key={documentId}
         itemId={documentId}
-        label={<Typography variant='h6'>{ambianceDisplay.friendlyName}</Typography>}
+        label={
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, minWidth: 0 }}>
+              <Typography variant='h6' sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {ambianceDisplay.friendlyName}
+              </Typography>
+              <Typography variant='body2' color='text.secondary'>({categoryVideoCount})</Typography>
+            </Box>
+            <TreeIcon
+              tooltipText={editingCategoryId === documentId ? 'Close Category Editor' : 'Edit Category'}
+              icon={<BuildCircleIcon />}
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditingCategoryId((prev) => (prev === documentId ? null : documentId));
+                setExpandedItems((prev) => (prev.includes(documentId) ? prev : [...prev, documentId]));
+              }}
+            />
+          </Box>
+        }
       >
-        <TreeItem
-          key={documentId + 'edit_category'}
-          itemId={documentId + 'edit_category'}
-          label={
-            <>
-              <TreeIcon tooltipText='Edit Category' icon={<BuildCircleIcon />} />
-              &nbsp; Edit <i><b>{ambianceDisplay.friendlyName}</b></i> Category
-            </>
-          }
-        >
-          <CategoryEditor editCategory={editCategory} deleteCategory={deleteCategory} categoryID={documentId} categoryDetails={data[documentId]}></CategoryEditor>
-        </TreeItem>
+        {editingCategoryId === documentId && (
+          <Box sx={{ paddingLeft: 4, paddingTop: 1, paddingBottom: 1 }} onClick={(e) => e.stopPropagation()}>
+            <CategoryEditor
+              editCategory={editCategory}
+              deleteCategory={deleteCategory}
+              categoryID={documentId}
+              categoryDetails={data[documentId]}
+            />
+          </Box>
+        )}
         <Divider />
-        {Object.entries(ambianceDisplay.videosBySubcategory).map(([subcategory, vids]) => (
-          <TreeItem
-            key={documentId + subcategory}
-            itemId={documentId + subcategory}
-            label={<Typography variant='subtitle1'>{subcategory}</Typography>}
-          >
-            {vids.map(vid => (
+        {filteredSubcategories.map(([subcategory, vids]) => {
+          const subcategoryAddItemId = documentId + subcategory + "add_video";
+
+          return (
+            <TreeItem
+              key={documentId + subcategory}
+              itemId={documentId + subcategory}
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, minWidth: 0 }}>
+                  <Typography variant='subtitle1' sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {subcategory}
+                  </Typography>
+                  <Typography variant='body2' color='text.secondary'>({vids.length})</Typography>
+                </Box>
+              }
+            >
+            {vids.map((vid) => {
+              const reportInfo = reportsByCategoryAndCode?.[documentId]?.[vid.code];
+
+              return (
               <TreeItem
                 key={documentId + subcategory + vid.code + "edit_video"}
                 itemId={documentId + subcategory + vid.code + "edit_video"}
+                slots={{ expandIcon: VideoEditExpandIcon, collapseIcon: VideoEditExpandIcon }}
                 label={
-                  <>
-                    <TreeIcon tooltipText='Edit Video' icon={<BuildCircleIcon />} />
-                    &nbsp; {vid.name}
-                  </>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, width: '100%' }}>
+                    <Typography sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {vid.name}{vid.invalid ? ' (invalid)' : ''}
+                    </Typography>
+                    <ReportBadge reportInfo={reportInfo} />
+                  </Box>
                 }
               >
                 <VideoEditor currentVideo={vid} documentId={documentId} editVideo={editVideo} deleteVideo={deleteVideo} />
               </TreeItem>
-            ))}
-            <TreeItem
-              key={documentId + subcategory + "add_video"}
-              itemId={documentId + subcategory + "add_video"}
-              label={<TreeIcon tooltipText='Add Video' icon={<AddIcon />} />}
-            >
-              <VideoEditor documentId={documentId} addVideo={addVideo} currentVideo={{ group: subcategory }}></VideoEditor>
+              );
+            })}
+            {!hideCreateNodes ? (
+              <TreeItem
+                key={subcategoryAddItemId}
+                itemId={subcategoryAddItemId}
+                slots={{ expandIcon: AddExpandIcon, collapseIcon: AddExpandIcon }}
+                label={<Typography variant="body2" sx={{ fontStyle: 'italic' }}>Add video</Typography>}
+              >
+                <VideoEditor
+                  documentId={documentId}
+                  addVideo={async (docId, newData) => {
+                    await addVideo(docId, newData);
+                    collapseItem(subcategoryAddItemId);
+                    expandToVideo(docId, subcategory, newData.code);
+                  }}
+                  currentVideo={{ group: subcategory }}
+                ></VideoEditor>
+              </TreeItem>
+            ) : null}
             </TreeItem>
+          );
+        })}
+        {!hideCreateNodes ? (
+          <TreeItem
+            key={newVideoItemId}
+            itemId={newVideoItemId}
+            slots={{ expandIcon: AddExpandIcon, collapseIcon: AddExpandIcon }}
+            label={<Typography variant="body2" sx={{ fontStyle: 'italic' }}>Add video in a new subcategory</Typography>}
+          >
+            <VideoEditor
+              documentId={documentId}
+              addVideo={async (docId, newData) => {
+                await addVideo(docId, newData);
+                collapseItem(newVideoItemId);
+                expandToVideo(docId, newData.group, newData.code);
+              }}
+            ></VideoEditor>
           </TreeItem>
-        ))}
-        <TreeItem
-          key={documentId + "new_video"}
-          itemId={documentId + "new_video"}
-          label={<TreeIcon tooltipText='Add Video' icon={<AddIcon />} />}
-        >
-          <VideoEditor documentId={documentId} addVideo={addVideo}></VideoEditor>
-        </TreeItem>
+        ) : null}
       </TreeItem>
-    ));
+      )];
+    });
 
     return (
       <div id='tree-view'>
@@ -335,14 +547,17 @@ export default function AdminPage() {
           sx={{ height: '100%', flexGrow: 1, maxWidth: 900, overflowY: 'auto', paddingLeft: 10 }}
         >
           {elements}
-          <TreeItem
-            sx={{ padding: 1 }}
-            itemId='add_category'
-            label={<Typography variant='h6'><TreeIcon tooltipText='New Category' icon={<AddIcon />} />&nbsp;<i>New Ambiance Category</i></Typography>}
-          >
-            <Divider />
-            <CategoryEditor addCategory={addCategory}></CategoryEditor>
-          </TreeItem>
+          {!hideCreateNodes ? (
+            <TreeItem
+              sx={{ padding: 1 }}
+              itemId='add_category'
+              slots={{ expandIcon: AddExpandIcon, collapseIcon: AddExpandIcon }}
+              label={<Typography variant='h6'><i>Add New Ambiance Category</i></Typography>}
+            >
+              <Divider />
+              <CategoryEditor addCategory={addCategory}></CategoryEditor>
+            </TreeItem>
+          ) : null}
         </SimpleTreeView>
       </div>
     )
@@ -389,7 +604,11 @@ export default function AdminPage() {
           <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
             <b><i>Welcome,</i></b>
           </Typography>
-          <Typography variant="h4" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h4"
+            sx={{ flexGrow: 1, maxWidth: '100%', whiteSpace: 'normal', overflowWrap: 'anywhere', wordBreak: 'break-word' }}
+            title={currentUser?.email?.split('@')[0]}
+          >
             {currentUser?.email?.split('@')[0]}
           </Typography>
         </List>
@@ -400,7 +619,36 @@ export default function AdminPage() {
             Tools
           </Typography>
 
-          <TextField sx={{ marginTop: 3 }} label="Search" size='small' color='warning' />
+          <TextField
+            sx={{ marginTop: 3 }}
+            label="Search"
+            size='small'
+            color='warning'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <Button
+            sx={{ marginTop: 2 }}
+            color={showReportedOnly ? 'error' : 'warning'}
+            variant={showReportedOnly ? 'contained' : 'outlined'}
+            onClick={() => {
+              setShowReportedOnly((prev) => {
+                const next = !prev;
+
+                if (next) {
+                  expandedItemsBeforeReportedRef.current = expandedItems;
+                  setExpandedItems(getReportedExpandedNodeIds());
+                } else {
+                  setExpandedItems(expandedItemsBeforeReportedRef.current ?? []);
+                  expandedItemsBeforeReportedRef.current = null;
+                }
+
+                return next;
+              });
+            }}
+          >
+            {showReportedOnly ? 'Viewing reported' : 'View reported'}
+          </Button>
           <Button sx={{ marginTop: 2 }} color='warning' onClick={handleExpandClick}>
             {expandedItems.length === 0 ? 'Expand all' : 'Collapse all'}
           </Button>

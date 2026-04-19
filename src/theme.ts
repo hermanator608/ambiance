@@ -14,6 +14,31 @@ export const theme = createTheme({
   components: {
     MuiAutocomplete: {
       styleOverrides: {
+        paper: {
+          backgroundColor: 'rgba(0,0,0,0.55)',
+          backgroundImage: 'none',
+          color: common.white,
+        },
+        listbox: {
+          color: common.white,
+        },
+        option: {
+          color: common.white,
+          '&.Mui-focused': {
+            filter: 'var(--brown-glow-drop-shadow)',
+            backgroundColor: 'rgba(0,0,0,0.35)',
+          },
+          '&[aria-selected="true"]': {
+            filter: 'var(--brown-glow-drop-shadow)',
+            backgroundColor: 'rgba(0,0,0,0.35)',
+          },
+        },
+        groupLabel: {
+          color: common.white,
+          backgroundColor: 'black',
+          fontWeight: 700,
+          zIndex: 1,
+        },
         input: {
           color: common.white
         },
@@ -29,6 +54,17 @@ export const theme = createTheme({
     },
     MuiOutlinedInput: {
       styleOverrides: {
+        root: {
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: common.white,
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: common.white,
+          },
+          '&:hover': {
+            filter: 'var(--white-glow-drop-shadow)',
+          },
+        },
         notchedOutline: {
           borderColor: common.white
         },

@@ -48,3 +48,9 @@ yarn-error.log*
 
 *.log
 *.cache
+
+# Firebase service account keys (never commit)
+firebase-adminsdk-*.json
+*serviceAccount*.json
+serviceAccountKey*.json
+ambiance-fa477-firebase-adminsdk-5y9u3-99b65eeee9.json

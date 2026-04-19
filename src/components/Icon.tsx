@@ -16,7 +16,10 @@ import {
   FaCoffee,
   FaGlobeAmericas,
   FaShareAlt,
+  FaStar,
+  FaRegStar,
 } from 'react-icons/fa';
+import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 import lofi from '../images/lofi.png';
 import wow from '../images/wow.png';
 import lotr from '../images/lotr.png';
@@ -45,7 +48,10 @@ const IconMap = {
   twitter: FaTwitter,
   coffee: FaCoffee,
   world: FaGlobeAmericas,
-  share: FaShareAlt
+  share: FaShareAlt,
+  favoriteOn: FaStar,
+  favoriteOff: FaRegStar,
+  random: GiPerspectiveDiceSixFacesRandom
 };
 
 const ImgMap = {
@@ -69,15 +75,33 @@ const CustomImg = styled.img`
 
 export type IconName = keyof typeof IconMap;
 export type ImgName = keyof typeof ImgMap;
+export type KnownIconName = IconName | ImgName;
+
+export const KNOWN_ICON_NAMES: readonly KnownIconName[] = Object.freeze(
+  [...(Object.keys(IconMap) as IconName[]), ...(Object.keys(ImgMap) as ImgName[])].sort(),
+);
 
 export interface IconProps {
-  icon: IconName | ImgName;
+  icon: KnownIconName;
   color?: IconBaseProps['color']
   size?: number
 }
 
-function isImgType(name: IconName | ImgName): name is ImgName {
-  return Object.keys(ImgMap).includes(name);
+function hasOwn(obj: object, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}
+
+export function isKnownIconName(value: string): value is KnownIconName {
+  return hasOwn(IconMap, value) || hasOwn(ImgMap, value);
+}
+
+export function toKnownIconName(value: string | undefined | null): KnownIconName | undefined {
+  if (!value) return undefined;
+  return isKnownIconName(value) ? value : undefined;
+}
+
+function isImgType(name: KnownIconName): name is ImgName {
+  return hasOwn(ImgMap, name);
 }
 
 export const Icon: React.FC<IconProps> = ({ icon, color, size }) => {
@@ -86,7 +110,10 @@ export const Icon: React.FC<IconProps> = ({ icon, color, size }) => {
 
     return <CustomImg src={imgSrc} alt={icon} />;
   } else {
-    const IconComponent = IconMap[icon];
+    const IconComponent = (IconMap as Record<string, any>)[icon];
+    if (!IconComponent) {
+      return null;
+    }
 
     return <IconComponent color={!!color ? color : "white"} size={!!size ? size : 30} />;
   }

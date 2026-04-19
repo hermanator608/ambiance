@@ -1,4 +1,4 @@
-import { Ambiance } from "./config/ambiance";
+import type { Ambiance } from "./config/ambiance/types";
 
 export type EditVideoFn = (documentId: string, videoUrlCode: string, newData: Ambiance) => Promise<void>;
 export type DeleteVideoFn = (documentId: string, videoUrlCode: string) => Promise<void>;

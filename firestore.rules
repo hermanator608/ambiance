@@ -1,0 +1,65 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn();
+    }
+
+    function isValidReportCreate() {
+      return request.resource.data.keys().hasOnly([
+          'categoryId',
+          'videoCode',
+          'count',
+          'createdAt',
+          'lastReportedAt'
+        ])
+        && request.resource.data.categoryId is string
+        && request.resource.data.videoCode is string
+        && request.resource.data.count is int
+        && request.resource.data.count == 1
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.lastReportedAt is timestamp;
+    }
+
+    function isValidReportIncrement() {
+      return request.resource.data.keys().hasOnly([
+          'categoryId',
+          'videoCode',
+          'count',
+          'createdAt',
+          'lastReportedAt'
+        ])
+        && request.resource.data.categoryId == resource.data.categoryId
+        && request.resource.data.videoCode == resource.data.videoCode
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.count is int
+        && resource.data.count is int
+        && request.resource.data.count == resource.data.count + 1
+        && request.resource.data.lastReportedAt is timestamp
+        && request.resource.data.lastReportedAt >= resource.data.lastReportedAt;
+    }
+
+    match /ambiance/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /reports/{reportId} {
+      // Public can write reports (anonymous), but only in a constrained schema.
+      // Admin UI can read them.
+      allow read: if isAdmin();
+      allow create: if isValidReportCreate();
+      allow update: if isValidReportIncrement();
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

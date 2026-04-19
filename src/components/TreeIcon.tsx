@@ -1,13 +1,19 @@
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import { ReactElement } from 'react';
+import type { MouseEventHandler, ReactElement } from 'react';
 
+type TreeIconProps = {
+  tooltipText: string;
+  icon: ReactElement;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
+};
 
-export const TreeIcon: React.FC<{ tooltipText: string, icon: ReactElement }> = ({ tooltipText, icon }) => {
+export function TreeIcon({ tooltipText, icon, onClick, disabled }: TreeIconProps) {
 
   return (
     <Tooltip title={tooltipText}>
-      <IconButton color="secondary" size="small">
+      <IconButton color="secondary" size="small" onClick={onClick} disabled={disabled}>
         {icon}
       </IconButton>
     </Tooltip>
