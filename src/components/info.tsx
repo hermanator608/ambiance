@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import Button from './Button';
@@ -55,7 +55,7 @@ export const Info: React.FC = () => {
   const ambiances = catalog[currentAmbianceCategoryId]?.videos ?? [];
   const currentAmbiance = ambiances[currentAmbianceIndex] ?? ambiances[0];
 
-  const channelsFromVideos = (() => {
+  const channelsFromVideos = useMemo(() => {
     const byLinkOrName = new Map<string, Channel>();
 
     Object.values(catalog).forEach((category) => {
@@ -71,7 +71,7 @@ export const Info: React.FC = () => {
     });
 
     return Array.from(byLinkOrName.values()).sort((a, b) => a.name.localeCompare(b.name));
-  })();
+  }, [catalog]);
 
   const [showInfo, setShowInfo] = useState(false);
   const onClick = () => setShowInfo(!showInfo);
@@ -83,8 +83,9 @@ export const Info: React.FC = () => {
           <h3>Thank you to the following channels for the videos!</h3>
           <Links>
             {channelsFromVideos.map(({ link, name }) => {
+              const key = link || name;
               return (
-                <span>
+                <span key={key}>
                   <a target="_blank" rel="noopener noreferrer" href={link}>{name}</a>
                 </span>
               );

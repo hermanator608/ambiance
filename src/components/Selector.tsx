@@ -56,7 +56,7 @@ export const Selector: React.FC = () => {
         renderOption={(props, option) => (
           <Box component='li' {...props}>
             {option.live === true 
-              ? <><Icon icon='live' color='black' size={20}/> &nbsp; {option.title}</>
+              ? <><Icon icon='live'/> &nbsp; {option.title}</>
               : <>{option.title}</>
             }
           </Box>

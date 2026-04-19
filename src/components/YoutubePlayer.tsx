@@ -280,6 +280,12 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
   }, [setVolume]);
 
   useEffect(() => {
+    return () => {
+      debounceVolumeHandler.cancel();
+    };
+  }, [debounceVolumeHandler]);
+
+  useEffect(() => {
     try {
       window.localStorage.setItem(VOLUME_STORAGE_KEY, String(volume));
     } catch {

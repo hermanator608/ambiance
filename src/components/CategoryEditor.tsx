@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import '../index.css';
 import { AmbianceCategory } from '../config/ambiance/types';
 import { AddCategoryFn, DeleteCategoryFn, EditCategoryFn } from '../types';
-import { Icon, KNOWN_ICON_NAMES, toKnownIconName } from './Icon';
+import { Icon, IMG_ICON_NAMES, toIconId } from './Icon';
 
 //MUI Imports
 import Box from '@mui/material/Box';
+import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+import InputAdornment from '@mui/material/InputAdornment';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
@@ -17,17 +18,20 @@ type CategoryEditorProps = {
   editCategory?: EditCategoryFn,
   deleteCategory?: DeleteCategoryFn,
   addCategory?: AddCategoryFn,
+  onAddSuccess?: (categoryId: string) => void,
   categoryDetails?: Partial<AmbianceCategory>,
   categoryID?: string
 }
 
 export default function CategoryEditor(props: CategoryEditorProps) {
-  const { editCategory, deleteCategory, addCategory, categoryDetails, categoryID } = props;
+  const { editCategory, deleteCategory, addCategory, onAddSuccess, categoryDetails, categoryID } = props;
   const [localCategoryID, setLocalCategoryID] = useState<string | undefined>(categoryID);
   const normalizeCategory = (details?: Partial<AmbianceCategory>): Partial<AmbianceCategory> => {
     return {
       ...(details ?? {}),
-      icon: toKnownIconName(details?.icon) ?? '',
+      // Preserve the raw stored value so we don't silently wipe an unknown icon id.
+      // Validation happens via `toIconId()` when determining `canSave`.
+      icon: details?.icon ?? '',
     };
   };
 
@@ -36,7 +40,8 @@ export default function CategoryEditor(props: CategoryEditorProps) {
   const [showEditAlert, setShowEditAlert] = useState<Boolean>(false);
   const [deleteCategoryID, setDeleteCategoryID] = useState<string>("");
 
-  const normalizedIconValue = toKnownIconName(category?.icon) ?? '';
+  const rawIconValue = (category?.icon ?? '').trim();
+  const normalizedIconValue = toIconId(rawIconValue) ?? '';
 
   const canSave = !!localCategoryID && !!category?.name && !!normalizedIconValue;
 
@@ -51,7 +56,7 @@ export default function CategoryEditor(props: CategoryEditorProps) {
 
     // Creating a new category should save immediately (no confirmation).
     if (addCategory) {
-      saveChanges();
+      void saveChanges();
       return;
     }
     setShowEditAlert(true);
@@ -62,20 +67,20 @@ export default function CategoryEditor(props: CategoryEditorProps) {
     setDeleteCategoryID("");
   }
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     if (addCategory) {
-      addCategoryAction();
+      await addCategoryAction();
     } else {
-      editCategoryAction();
+      await editCategoryAction();
     }
     setShowEditAlert(false);
   }
 
-  const editCategoryAction = () => {
+  const editCategoryAction = async () => {
     if (!editCategory || !localCategoryID || !category?.name || !normalizedIconValue) {
       return;
     }
-    editCategory(localCategoryID, category.name, normalizedIconValue);
+    await editCategory(localCategoryID, category.name, normalizedIconValue);
   }
 
   const deleteCategoryAction = () => {
@@ -91,13 +96,19 @@ export default function CategoryEditor(props: CategoryEditorProps) {
     setShowDeleteAlert(false);
   }
 
-  const addCategoryAction = () => {
+  const addCategoryAction = async () => {
     if (!addCategory || !localCategoryID || !category?.name || !normalizedIconValue) {
       return;
     }
-    addCategory(localCategoryID, category.name, normalizedIconValue)
-    setCategory({ icon: '', name: '' });
-    setLocalCategoryID("");
+
+    try {
+      await addCategory(localCategoryID, category.name, normalizedIconValue);
+      setCategory({ icon: '', name: '' });
+      setLocalCategoryID("");
+      onAddSuccess?.(localCategoryID);
+    } catch {
+      // Errors/snackbars are handled by the caller.
+    }
   }
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: keyof AmbianceCategory) => {
@@ -156,47 +167,73 @@ export default function CategoryEditor(props: CategoryEditorProps) {
         error={!category?.name}
         helperText={!category?.name ? 'Required' : ' '}
       />
-      <TextField 
-        required 
-        color="secondary" 
-        size='small' 
-        label="Icon"
-        variant="outlined"
-        select
-        value={normalizedIconValue}
-        onKeyDown={stopTreeKeyDown}
-        onChange={(e) => handleOnChange(e, "icon")}
-        error={!normalizedIconValue}
-        helperText={!normalizedIconValue ? 'Required (fixed set)' : ' '}
-        slotProps={{
-          select: {
-            renderValue: (selected: unknown) => {
-              const selectedValue = String(selected ?? '');
-              const iconName = toKnownIconName(selectedValue);
-              if (!iconName) {
-                return '(no icon)';
-              }
-
-              return (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                  <Icon icon={iconName} />
-                  {iconName}
-                </span>
-              );
-            },
-          },
+      <Autocomplete
+        freeSolo
+        options={IMG_ICON_NAMES as unknown as string[]}
+        value={rawIconValue}
+        inputValue={rawIconValue}
+        onChange={(_event, value) => {
+          const nextValue = String(value ?? '').trim();
+          setCategory((prev) => ({
+            ...(prev ?? {}),
+            icon: nextValue,
+          }));
         }}
-      >
-        <MenuItem value="">(no icon)</MenuItem>
-        {KNOWN_ICON_NAMES.map((iconName) => (
-          <MenuItem key={iconName} value={iconName}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-              <Icon icon={iconName} />
-              {iconName}
-            </span>
-          </MenuItem>
-        ))}
-      </TextField>
+        onInputChange={(_event, value) => {
+          setCategory((prev) => ({
+            ...(prev ?? {}),
+            icon: value,
+          }));
+        }}
+        renderOption={(props, option) => {
+          const iconId = toIconId(option);
+          return (
+            <Box component="li" {...props}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 30, display: 'inline-flex', justifyContent: 'center' }}>
+                  {iconId ? <Icon icon={iconId} /> : null}
+                </span>
+                {option}
+              </span>
+            </Box>
+          );
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            required
+            color="secondary"
+            size="small"
+            label="Icon"
+            variant="outlined"
+            onKeyDown={stopTreeKeyDown}
+            error={!normalizedIconValue}
+            helperText={
+              <span>
+                Choose a built-in image icon from the dropdown, or paste an icon name from{' '}
+                <a href="https://react-icons.github.io/react-icons/icons?name=gi" target="_blank" rel="noreferrer">Game Icons (Gi)</a>,{' '}
+                <a href="https://react-icons.github.io/react-icons/icons?name=fa" target="_blank" rel="noreferrer">Font Awesome (Fa)</a>, or{' '}
+                <a href="https://react-icons.github.io/react-icons/icons?name=md" target="_blank" rel="noreferrer">Material Design (Md)</a>{' '}
+                (example: <code>GiCampfire</code>). 
+                
+                To add a new custom built-in icon, the icon file must be added to the repo and registered in{' '}
+                <code>IconMap</code>/<code>ImgMap</code>.
+              </span>
+            }
+            slotProps={{
+              ...(params as any).slotProps,
+              input: {
+                ...((params as any).slotProps?.input ?? {}),
+                startAdornment: normalizedIconValue ? (
+                  <InputAdornment position="start">
+                    <Icon icon={normalizedIconValue} />
+                  </InputAdornment>
+                ) : undefined,
+              },
+            }}
+          />
+        )}
+      />
 
       <Button
         type="button"

@@ -7,6 +7,7 @@ import { AmbianceCategory } from './config/ambiance/types';
 import { AmbianceDisplayType } from "./types";
 import { groupVideosBySubcategory } from "./util/groupVideoBySubcategory";
 import { TreeIcon } from './components/TreeIcon';
+import { Icon, toIconId } from './components/Icon';
 import { AMBIANCE_COLLECTION, AUTO_HIDE_SNACKBAR } from './constants';
 import VideoEditor from './components/VideoEditor';
 import CategoryEditor from './components/CategoryEditor';
@@ -319,24 +320,30 @@ export default function AdminPage() {
 
   const addCategory: AddCategoryFn = async (documentId, documentName, icon) => {
     const docRef = doc(db, AMBIANCE_COLLECTION, documentId);
-    const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      setAlertSeverity("error");
-      handleAddSnackBarMessage("Ambiance Category - " + documentId + " already exists");
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setAlertSeverity("error");
+        handleAddSnackBarMessage("Ambiance Category - " + documentId + " already exists");
+        throw new Error('Category already exists');
+      }
 
-    } else {
-      setDoc(doc(db, AMBIANCE_COLLECTION, documentId), {
+      await setDoc(doc(db, AMBIANCE_COLLECTION, documentId), {
         name: documentName,
         icon: icon,
         videos: []
-      }).then(() => {
-        setAlertSeverity("success");
-        handleAddSnackBarMessage("Successfully added category - " + documentId);
-      }).catch(() => {
+      });
+
+      setAlertSeverity("success");
+      handleAddSnackBarMessage("Successfully added category - " + documentId);
+    } catch (err) {
+      // If we already reported a specific error (exists), don't overwrite.
+      if ((err as any)?.message !== 'Category already exists') {
         setAlertSeverity("error");
         handleAddSnackBarMessage("An error occurred. " + documentId + " category not added.");
-      });
+      }
+      throw err;
     }
   }
 
@@ -363,6 +370,16 @@ export default function AdminPage() {
     });
   }
 
+  const handleCategoryAdded = (categoryId: string) => {
+    // Close the "Add New Ambiance Category" panel and open the newly created category editor.
+    setExpandedItems((prev) => {
+      const next = prev.filter((id) => id !== 'add_category');
+      next.push(categoryId);
+      return Array.from(new Set(next));
+    });
+    setEditingCategoryId(categoryId);
+  };
+
 
   /**
    * Handles the tree display which takes all videos from each document / parent category
@@ -384,6 +401,7 @@ export default function AdminPage() {
 
     // key = ambiance category, i.e., animalCrossing, bg3
     const elements = Object.entries(newData).flatMap(([documentId, ambianceDisplay]) => {
+      const iconId = toIconId(data?.[documentId]?.icon);
       const categoryMatches = isSearching
         ? (ambianceDisplay.friendlyName ?? '').toLowerCase().includes(query) || documentId.toLowerCase().includes(query)
         : false;
@@ -429,7 +447,12 @@ export default function AdminPage() {
         itemId={documentId}
         label={
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, minWidth: 0 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
+              {iconId ? (
+                <Box sx={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0 }}>
+                  <Icon icon={iconId} />
+                </Box>
+              ) : null}
               <Typography variant='h6' sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {ambianceDisplay.friendlyName}
               </Typography>
@@ -466,7 +489,7 @@ export default function AdminPage() {
               key={documentId + subcategory}
               itemId={documentId + subcategory}
               label={
-                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, minWidth: 0 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
                   <Typography variant='subtitle1' sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {subcategory}
                   </Typography>
@@ -555,7 +578,7 @@ export default function AdminPage() {
               label={<Typography variant='h6'><i>Add New Ambiance Category</i></Typography>}
             >
               <Divider />
-              <CategoryEditor addCategory={addCategory}></CategoryEditor>
+              <CategoryEditor addCategory={addCategory} onAddSuccess={handleCategoryAdded}></CategoryEditor>
             </TreeItem>
           ) : null}
         </SimpleTreeView>
