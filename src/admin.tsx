@@ -13,7 +13,7 @@ import VideoEditor from './components/VideoEditor';
 import CategoryEditor from './components/CategoryEditor';
 import cloneDeep from 'lodash.clonedeep';
 //MUI Imports
-import { Alert, Button, ButtonGroup, Snackbar, Tooltip } from '@mui/material';
+import { Alert, Button, ButtonGroup, Popover, Snackbar, Tooltip } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -24,6 +24,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import Construction from '@mui/icons-material/Construction';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -83,6 +84,13 @@ export default function AdminPage() {
   const [data, setData] = useState<Record<string, AmbianceCategory>>();
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
   const [reportsByCategoryAndCode, setReportsByCategoryAndCode] = useState<Record<string, Record<string, ReportInfo>>>({});
+  const [pendingClearReport, setPendingClearReport] = useState<{
+    anchorEl: HTMLButtonElement;
+    categoryId: string;
+    videoCode: string;
+    videoName?: string;
+  } | null>(null);
+  const [isClearingReport, setIsClearingReport] = useState(false);
   const [showReportedOnly, setShowReportedOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const expandedItemsBeforeReportedRef = useRef<string[] | null>(null);
@@ -109,6 +117,32 @@ export default function AdminPage() {
 
   const getReportCount = (categoryId: string, videoCode: string): number => {
     return reportsByCategoryAndCode?.[categoryId]?.[videoCode]?.count ?? 0;
+  };
+
+  const closeClearReportPopover = () => {
+    if (isClearingReport) return;
+    setPendingClearReport(null);
+  };
+
+  const confirmClearReport = async () => {
+    if (!pendingClearReport) return;
+
+    const { categoryId, videoCode, videoName } = pendingClearReport;
+    const reportId = `${categoryId}_${videoCode}`;
+    const ref = doc(db, 'reports', reportId);
+
+    setIsClearingReport(true);
+    try {
+      await deleteDoc(ref);
+      setAlertSeverity('success');
+      handleAddSnackBarMessage(`Cleared reports for ${videoName ?? videoCode}`);
+      setPendingClearReport(null);
+    } catch {
+      setAlertSeverity('error');
+      handleAddSnackBarMessage(`Failed to clear reports for ${videoName ?? videoCode}`);
+    } finally {
+      setIsClearingReport(false);
+    }
   };
 
   // Get data from Firestore
@@ -499,6 +533,7 @@ export default function AdminPage() {
             >
             {vids.map((vid) => {
               const reportInfo = reportsByCategoryAndCode?.[documentId]?.[vid.code];
+              const hasReports = (reportInfo?.count ?? 0) > 0;
 
               return (
               <TreeItem
@@ -510,7 +545,24 @@ export default function AdminPage() {
                     <Typography sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {vid.name}{vid.invalid ? ' (invalid)' : ''}
                     </Typography>
-                    <ReportBadge reportInfo={reportInfo} />
+                    <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5, flexShrink: 0 }}>
+                      <ReportBadge reportInfo={reportInfo} />
+                      {hasReports ? (
+                        <TreeIcon
+                          tooltipText="Clear reports"
+                          icon={<DeleteSweepIcon fontSize="small" />}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPendingClearReport({
+                              anchorEl: e.currentTarget,
+                              categoryId: documentId,
+                              videoCode: vid.code,
+                              videoName: vid.name,
+                            });
+                          }}
+                        />
+                      ) : null}
+                    </Box>
                   </Box>
                 }
               >
@@ -588,6 +640,35 @@ export default function AdminPage() {
 
   return (
     <div id="admin-page" data-testid='admin'>
+      <Popover
+        open={Boolean(pendingClearReport)}
+        anchorEl={pendingClearReport?.anchorEl ?? null}
+        onClose={closeClearReportPopover}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        disableRestoreFocus
+      >
+        <Box sx={{ p: 1, display: 'flex', alignItems: 'center', gap: 1, maxWidth: 260 }}>
+          <Typography variant="body2" sx={{ flex: 1 }}>
+            Clear reports{pendingClearReport?.videoName ? ` for “${pendingClearReport.videoName}”` : ''}?
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, flexShrink: 0 }}>
+            <Button
+              size="small"
+              color="error"
+              variant="contained"
+              disabled={isClearingReport}
+              onClick={() => void confirmClearReport()}
+            >
+              Clear
+            </Button>
+            <Button size="small" disabled={isClearingReport} onClick={closeClearReportPopover}>
+              Cancel
+            </Button>
+          </Box>
+        </Box>
+      </Popover>
+
       <Snackbar
         open={open}
         autoHideDuration={AUTO_HIDE_SNACKBAR}

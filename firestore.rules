@@ -55,7 +55,7 @@ service cloud.firestore {
       allow read: if isAdmin();
       allow create: if isValidReportCreate();
       allow update: if isValidReportIncrement();
-      allow delete: if false;
+      allow delete: if isAdmin();
     }
 
     match /{document=**} {
