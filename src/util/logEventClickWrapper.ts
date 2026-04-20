@@ -1,4 +1,4 @@
-import { getAnalytics, logEvent as logEventFirebase} from "firebase/analytics"
+import { getAnalytics, logEvent as logEventFirebase } from "firebase/analytics"
 
 type OnClickWrapperProps = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -7,7 +7,7 @@ type OnClickWrapperProps = {
   }
 }
 
-const logEvent = (eventData: OnClickWrapperProps['eventData']): void => {
+export const logEventAction = (eventData: OnClickWrapperProps['eventData']): void => {
   if (process.env.NODE_ENV === 'development') {
     return
   }
@@ -20,7 +20,7 @@ export const logEventClickWrapper = (props: OnClickWrapperProps): React.MouseEve
   const {onClick, eventData} = props
 
   const onClickHandler: React.MouseEventHandler<HTMLButtonElement> = (event) => {
-    logEvent(eventData)
+    logEventAction(eventData)
 
     onClick?.(event)
   }

@@ -58,7 +58,7 @@ export default function VideoEditor(props: VideoEditorProps) {
     setShowEditAlert(false);
   }
 
-  const addVideoAction = () => {
+  const addVideoAction = async () => {
     if (!localVideo || !addVideo) {
       return;
     }
@@ -68,8 +68,12 @@ export default function VideoEditor(props: VideoEditorProps) {
       return;
     }
 
-    addVideo(documentId, localVideo as Ambiance);
-    setLocalVideo({});
+    try {
+      await addVideo(documentId, localVideo as Ambiance);
+      setLocalVideo({});
+    } catch {
+      // Snackbar/toast handled by caller; keep form data for retry.
+    }
   }
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: keyof Ambiance) => {
@@ -131,12 +135,17 @@ export default function VideoEditor(props: VideoEditorProps) {
     setLocalVideo(newVidData);
   }
 
+  const stopTreeKeyDown: React.KeyboardEventHandler = (e) => {
+    e.stopPropagation();
+  }
+
 
   return (
     <div>
       <Stack component='form' className='text-field-stack' direction="column" spacing={2}>
         <TextField
           onChange={(e) => handleOnChange(e, "name")}
+          onKeyDown={stopTreeKeyDown}
           label="Video Name"
           size='small'
           variant="outlined"
@@ -146,6 +155,7 @@ export default function VideoEditor(props: VideoEditorProps) {
         />
         <TextField
           onChange={(e) => handleOnChange(e, "group")}
+          onKeyDown={stopTreeKeyDown}
           label="Subcategory"
           variant="outlined"
           size='small'
@@ -155,6 +165,7 @@ export default function VideoEditor(props: VideoEditorProps) {
         />
         <TextField
           onChange={(e) => handleOnChange(e, "code")}
+          onKeyDown={stopTreeKeyDown}
           label="YouTube Watch Code"
           variant="outlined"
           size='small'
@@ -164,6 +175,7 @@ export default function VideoEditor(props: VideoEditorProps) {
         />
         <TextField
           onChange={(e) => handleOnChangeChannel(e, "name")}
+          onKeyDown={stopTreeKeyDown}
           label="YouTube Channel"
           variant="outlined"
           size='small'
@@ -172,6 +184,7 @@ export default function VideoEditor(props: VideoEditorProps) {
         />
         <TextField
           onChange={(e) => handleOnChangeChannel(e, "link")}
+          onKeyDown={stopTreeKeyDown}
           label="YouTube Channel Link"
           variant="outlined"
           size='small'
@@ -180,6 +193,7 @@ export default function VideoEditor(props: VideoEditorProps) {
         />
         <TextField
           onChange={(e) => handleOnChangeInteger(e, "startTimeS")}
+          onKeyDown={stopTreeKeyDown}
           label="Video Start Time"
           variant="outlined"
           size='small'
@@ -190,6 +204,7 @@ export default function VideoEditor(props: VideoEditorProps) {
         />
         <TextField
           onChange={(e) => handleOnChangeBoolean(e, "livestream")}
+          onKeyDown={stopTreeKeyDown}
           label="LiveStream"
           variant="outlined"
           size='small'

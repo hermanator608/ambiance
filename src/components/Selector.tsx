@@ -5,7 +5,6 @@ import TextField from '@mui/material/TextField';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useAppStore } from '../state';
 import type { UseAutocompleteProps } from '@mui/base/useAutocomplete';
-import { ambianceCategories } from '../config/ambiance';
 import { Icon } from './Icon';
 import { Box } from '@mui/material';
 
@@ -14,21 +13,20 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-
-  fieldset:hover {
-    border-color: #2196f3 !important;
-  }
 `;
 
 type Option = { title: string; id: string; group: string; index: number; live?: boolean };
 
 export const Selector: React.FC = () => {
-  const currentAmbianceName = useAppStore((s) => s.currentAmbianceCategoryName);
+  const catalog = useAppStore((s) => s.catalog);
+  const currentAmbianceCategoryId = useAppStore((s) => s.currentAmbianceCategoryId);
   const currentAmbianceIndex = useAppStore((s) => s.currentAmbianceIndex);
   const setCurrentAmbianceIndex = useAppStore((s) => s.setCurrentAmbianceIndex);
   const matches = useMediaQuery('(min-width:500px)');
 
-  const options = ambianceCategories[currentAmbianceName].map<Option>((a, index) => ({
+  const videos = catalog[currentAmbianceCategoryId]?.videos ?? [];
+
+  const options = videos.map<Option>((a, index) => ({
     title: a.name,
     id: a.code,
     group: a.group,
@@ -58,7 +56,7 @@ export const Selector: React.FC = () => {
         renderOption={(props, option) => (
           <Box component='li' {...props}>
             {option.live === true 
-              ? <><Icon icon='live' color='black' size={20}/> &nbsp; {option.title}</>
+              ? <><Icon icon='live'/> &nbsp; {option.title}</>
               : <>{option.title}</>
             }
           </Box>

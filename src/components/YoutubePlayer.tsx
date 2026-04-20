@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import styled, { css } from 'styled-components';
 import { FullScreenHandle } from 'react-full-screen';
@@ -6,13 +6,13 @@ import { Slider, SliderProps } from '@mui/material';
 import { FlexColumn } from '../globalStyles';
 import { Icon } from './Icon';
 import Button from './Button';
-import { logEventClickWrapper } from '../util/logEventClickWrapper';
+import { logEventAction, logEventClickWrapper } from '../util/logEventClickWrapper';
 import debounce from 'lodash.debounce';
 import { useAppStore } from '../state';
 import { getRandomAmbianceIndex } from '../util/getRandomAmbianceIndex';
 import { DotDotDot } from './DotDotDot';
 import { Pause } from './Pause';
-import { ambianceCategories } from '../config/ambiance';
+import { doc, getFirestore, serverTimestamp, setDoc, updateDoc, increment } from 'firebase/firestore';
 
 const reactPlayerStyle: React.ComponentProps<typeof ReactPlayer>['style'] = {
   pointerEvents: 'none',
@@ -141,29 +141,94 @@ const MarginDiv = styled.div`
 export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
   fullscreen,
 }) => {
+  const VOLUME_STORAGE_KEY = 'ambiance:volume:v1';
+
+  const readInitialVolume = (): number => {
+    try {
+      const raw = window.localStorage.getItem(VOLUME_STORAGE_KEY);
+      if (!raw) return 1;
+      const parsed = Number.parseFloat(raw);
+      if (!Number.isFinite(parsed)) return 1;
+      // clamp to [0,1]
+      return Math.max(0, Math.min(1, parsed));
+    } catch {
+      return 1;
+    }
+  };
+
   // Global State
   const videoShown = useAppStore((s) => s.videoShown);
   const setVideoShown = useAppStore((s) => s.setVideoShown);
   const currentAmbianceIndex = useAppStore((s) => s.currentAmbianceIndex);
   const setCurrentAmbianceIndex = useAppStore((s) => s.setCurrentAmbianceIndex);
-  const ambianceName = useAppStore((s) => s.currentAmbianceCategoryName);
+  const catalog = useAppStore((s) => s.catalog);
+  const currentAmbianceCategoryId = useAppStore((s) => s.currentAmbianceCategoryId);
 
   // Local State
   const [isPlaying, setIsPlaying] = useState(true);
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(readInitialVolume);
   const [totalTime, setTotalTime] = useState<number | undefined>(0);
   const [currentTime, setCurrentTime] = useState<number | undefined>(0);
 
   const reactPlayerRef = useRef<HTMLVideoElement>(null);
+  const lastReportedRef = useRef<{ categoryId: string; code: string; atMs: number } | null>(null);
 
-  const ambiances = ambianceCategories[ambianceName];
-  const currentAmbiance = ambiances[currentAmbianceIndex];
+  const ambiances = catalog[currentAmbianceCategoryId]?.videos ?? [];
+  const currentAmbiance = ambiances[currentAmbianceIndex] ?? ambiances[0];
+
+  const reportVideoFailure = useCallback(async (categoryId: string, code: string, name: string) => {
+    // Throttle: avoid spamming increments if player fires repeated errors for same video.
+    const now = Date.now();
+    const last = lastReportedRef.current;
+    if (last && last.categoryId === categoryId && last.code === code && now - last.atMs < 30_000) {
+      return;
+    }
+    lastReportedRef.current = { categoryId, code, atMs: now };
+
+    logEventAction({ actionId: 'videoError', categoryId, code, currentAmbiance: name });
+
+    const db = getFirestore();
+    const reportId = `${categoryId}_${code}`;
+    const ref = doc(db, 'reports', reportId);
+
+    try {
+      await updateDoc(ref, {
+        count: increment(1),
+        lastReportedAt: serverTimestamp(),
+      });
+    } catch {
+      // If doc doesn't exist yet (or update not allowed), create it.
+      try {
+        await setDoc(ref, {
+          categoryId,
+          videoCode: code,
+          count: 1,
+          createdAt: serverTimestamp(),
+          lastReportedAt: serverTimestamp(),
+        });
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
 
   // Handlers
   const handleShuffle = useCallback(() => {
     const randomAbianceIndex = getRandomAmbianceIndex(ambiances, currentAmbianceIndex);
     setCurrentAmbianceIndex(randomAbianceIndex);
   }, [currentAmbianceIndex, setCurrentAmbianceIndex, ambiances]);
+
+  const handleError = useCallback(async () => {
+    if (!currentAmbiance) {
+      return;
+    }
+
+    await reportVideoFailure(currentAmbianceCategoryId, currentAmbiance.code, currentAmbiance.name);
+
+    // Always try to move forward after an error.
+    const nextIndex = getRandomAmbianceIndex(ambiances, currentAmbianceIndex);
+    setCurrentAmbianceIndex(nextIndex);
+  }, [ambiances, currentAmbiance, currentAmbianceCategoryId, currentAmbianceIndex, reportVideoFailure, setCurrentAmbianceIndex]);
 
   // const handleSkip = () => {
   //   setCurrentAmbianceIndex((currentAmbianceIndex + 1) % ambiances.length);
@@ -205,15 +270,27 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
     reactPlayerRef.current.currentTime = nextTime;
   };
 
-  const debounceVolumeHandler = useMemo(() => {
-    const handleVolume: NonNullable<SliderProps['onChange']> = (_event, value) => {
-      const newVolume = Array.isArray(value) ? value[0] : value;
-      console.log(newVolume);
-      setVolume(newVolume);
-    };
+  const handleVolumeChange: NonNullable<SliderProps['onChange']> = useCallback((_event, value) => {
+    const newVolume = Array.isArray(value) ? value[0] : value;
+    setVolume(newVolume);
+  }, []);
 
-    return debounce(handleVolume, 100);
-  }, [setVolume]);
+  const persistVolumeDebounced = useMemo(() => {
+    return debounce((nextVolume: number) => {
+      try {
+        window.localStorage.setItem(VOLUME_STORAGE_KEY, String(nextVolume));
+      } catch {
+        // ignore
+      }
+    }, 200);
+  }, [VOLUME_STORAGE_KEY]);
+
+  useEffect(() => {
+    persistVolumeDebounced(volume);
+    return () => {
+      persistVolumeDebounced.cancel();
+    };
+  }, [persistVolumeDebounced, volume]);
 
   const handleTimeUpdate: React.ReactEventHandler<HTMLVideoElement> = (event) => {
     setCurrentTime(event.currentTarget.currentTime);
@@ -222,6 +299,10 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
       setTotalTime(duration);
     }
   };
+
+  if (!currentAmbiance) {
+    return null;
+  }
 
   const logData = { currentAmbiance: currentAmbiance.name };
   const url = `https://www.youtube.com/watch?v=${currentAmbiance.code}`;
@@ -293,9 +374,9 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
         </MediaControlContainer>
         <MediaContainerBase>
           <VolumeSlider
-            defaultValue={1}
+            value={volume}
             aria-label="Volume"
-            onChange={debounceVolumeHandler}
+            onChange={handleVolumeChange}
             valueLabelDisplay="off"
             step={0.02}
             marks
@@ -339,7 +420,7 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
             }}
             playsInline={true}
             // onReady={handleOnReady}
-            // onError={} // TODO: Implement Error Handling
+            onError={handleError}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
             // onBuffer={() => setIsBuffering(true)}

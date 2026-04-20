@@ -1,6 +1,5 @@
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
-import { AmbianceName } from '../config/ambiance';
 import { useAppStore } from '../state';
 
 import wowDefault from '../images/cursors/wow_default.png';
@@ -31,8 +30,8 @@ type MouseStyle = {
   pointer: string;
 };
 
-const getMouseStyle = (ambianceCategoryName: AmbianceName): MouseStyle | undefined => {
-  switch (ambianceCategoryName) {
+const getMouseStyle = (ambianceCategoryId: string): MouseStyle | undefined => {
+  switch (ambianceCategoryId) {
     case 'worldOfWarcraft':
       return { default: wowDefault, pointer: wowActive };
     case 'zelda':
@@ -61,13 +60,13 @@ const getMouseStyle = (ambianceCategoryName: AmbianceName): MouseStyle | undefin
 };
 
 export const MouseStyles: React.FC = () => {
-  const ambianceName = useAppStore((s) => s.currentAmbianceCategoryName);
+  const ambianceName = useAppStore((s) => s.currentAmbianceCategoryId);
 
   const currentMouse = getMouseStyle(ambianceName);
 
   const GlobalMouseStyles = createGlobalStyle`
     body {
-      cursor: url(${currentMouse?.default}), default !important;
+      cursor: ${currentMouse ? `url(${currentMouse.default}), default` : 'default'} !important;
     }
 
     button,
@@ -75,7 +74,7 @@ export const MouseStyles: React.FC = () => {
     .pointer,
     .pause,
     a {
-      cursor: url(${currentMouse?.pointer}), pointer !important;
+      cursor: ${currentMouse ? `url(${currentMouse.pointer}), pointer` : 'pointer'} !important;
     }
   `;
 

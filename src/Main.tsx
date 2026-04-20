@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import styled from 'styled-components';
 import { Info } from './components/info';
@@ -8,6 +8,7 @@ import { Selector } from './components/Selector';
 import { ShootingStartBackground } from './components/ShootingStarBackground';
 import { YoutubePlayer } from './components/YoutubePlayer';
 import { FlexColumn } from './globalStyles';
+import { useAppStore } from './state';
 
 const SpreadDiv = styled.div`
   display: flex;
@@ -18,6 +19,12 @@ const SpreadDiv = styled.div`
 
 export const Main: React.FC = () => {
   const fullscreen = useFullScreenHandle()
+
+  const refreshCatalog = useAppStore((s) => s.refreshCatalog);
+
+  useEffect(() => {
+    refreshCatalog();
+  }, [refreshCatalog]);
 
 
 

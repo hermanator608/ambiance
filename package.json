@@ -46,7 +46,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "analyzeBuild": "source-map-explorer 'dist/assets/*.js'",
-    "seedDatabase": "ts-node ./scripts/seedDatabase.ts"
+    "seedDatabase": "ts-node ./scripts/seedDatabaseAdmin.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -72,6 +72,7 @@
     "@vitejs/plugin-react": "^5.0.0",
     "@types/lodash.debounce": "^4.0.9",
     "@types/styled-components": "^5.1.36",
+    "dotenv": "^17.2.2",
     "jsdom": "^26.0.0",
     "source-map-explorer": "^2.5.3",
     "vite": "^7.0.0",

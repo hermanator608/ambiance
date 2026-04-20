@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { channels } from '../config/ambiance/channels';
 import { logEventClickWrapper } from '../util/logEventClickWrapper';
 import Button from './Button';
 import Fade from '@mui/material/Fade';
 import { Twitter } from './Twitter';
 import { useAppStore } from '../state';
-import { ambianceCategories } from '../config/ambiance';
+import type { Channel } from '../config/ambiance/channels';
 
 const Container = styled.div`
   z-index: 6;
@@ -51,9 +50,28 @@ const Links = styled.div`
 
 export const Info: React.FC = () => {
   const currentAmbianceIndex = useAppStore((s) => s.currentAmbianceIndex);
-  const ambianceName = useAppStore((s) => s.currentAmbianceCategoryName);
-  const ambiances = ambianceCategories[ambianceName];
-  const currentAmbiance = ambiances[currentAmbianceIndex];
+  const catalog = useAppStore((s) => s.catalog);
+  const currentAmbianceCategoryId = useAppStore((s) => s.currentAmbianceCategoryId);
+  const ambiances = catalog[currentAmbianceCategoryId]?.videos ?? [];
+  const currentAmbiance = ambiances[currentAmbianceIndex] ?? ambiances[0];
+
+  const channelsFromVideos = useMemo(() => {
+    const byLinkOrName = new Map<string, Channel>();
+
+    Object.values(catalog).forEach((category) => {
+      const categoryVideos = category.videos ?? [];
+      categoryVideos.forEach((video) => {
+        if (!video.channel?.name || !video.channel?.link) return;
+
+        const key = video.channel.link || video.channel.name;
+        if (!byLinkOrName.has(key)) {
+          byLinkOrName.set(key, { name: video.channel.name, link: video.channel.link });
+        }
+      });
+    });
+
+    return Array.from(byLinkOrName.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [catalog]);
 
   const [showInfo, setShowInfo] = useState(false);
   const onClick = () => setShowInfo(!showInfo);
@@ -64,10 +82,11 @@ export const Info: React.FC = () => {
         <InfoSection>
           <h3>Thank you to the following channels for the videos!</h3>
           <Links>
-            {Object.values(channels).map(({ link, name }) => {
+            {channelsFromVideos.map(({ link, name }) => {
+              const key = link || name;
               return (
-                <span>
-                  <a href={link}>{name}</a>
+                <span key={key}>
+                  <a target="_blank" rel="noopener noreferrer" href={link}>{name}</a>
                 </span>
               );
             })}
@@ -86,7 +105,7 @@ export const Info: React.FC = () => {
         </InfoSection>
       </Fade>
       <Container style={{ flexDirection: 'row', justifyItems: 'center' }}>
-        {currentAmbiance.channel && (
+        {currentAmbiance?.channel && (
           <a style={{ color: 'white', fontSize: '24px' }} href={currentAmbiance.channel?.link}>{currentAmbiance.channel?.name}</a>
         )}
 
