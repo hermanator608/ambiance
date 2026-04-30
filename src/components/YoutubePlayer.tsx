@@ -216,6 +216,7 @@ export const YoutubePlayer: React.FC<{ fullscreen: FullScreenHandle }> = ({
   const handleShuffle = useCallback(() => {
     const randomAbianceIndex = getRandomAmbianceIndex(ambiances, currentAmbianceIndex);
     setCurrentAmbianceIndex(randomAbianceIndex);
+    setIsPlaying(true);
   }, [currentAmbianceIndex, setCurrentAmbianceIndex, ambiances]);
 
   const handleError = useCallback(async () => {
